@@ -77,8 +77,11 @@ body {
 
 /* ── Logo ── */
 #logo.logo {
-  width: var(--logo-size);
-  height: var(--logo-size);
+  /* width: var(--logo-size); */
+  /* height: var(--logo-size); */
+  /* just hardcoded for reliability */
+  width: 120px !important;
+  height: 120px !important;
   object-fit: contain;
   transform-origin: center;
   animation: spin var(--logo-spin-duration) linear infinite;
