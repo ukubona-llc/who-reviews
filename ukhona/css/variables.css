@@ -8,7 +8,8 @@
   /* ── Layout ── */
   --max-wrap:  1120px;
   --pad-x:       24px;
-  --header-h:    64px;   /* actual header height — logo is 40px + 12px padding each side */
+  --header-h:   110px;   /* matches main ukubona-llc.github.io header */
+
 
   /* ── Spacing scale ── */
   --space-xs:   0.5rem;
@@ -44,7 +45,7 @@
   --transition: all .3s cubic-bezier(.4,0,.2,1);
 
   /* ── Logo ── */
-  --logo-size:          40px;   /* rendered size in the header */
+  --logo-size:          80px;   /* matches main ukubona-llc.github.io */
   --logo-spin-duration: 60s;
 
   /* ── ROYGBIV curriculum colours ── */
