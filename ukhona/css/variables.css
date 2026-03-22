@@ -1,80 +1,94 @@
-/* ========================================
-   VARIABLES.CSS - Single Source of Truth
-   ======================================== */
+/* ================================================================
+   VARIABLES.CSS — Single Source of Truth
+   Ukubona × WHO India · ROYGBIV 5-level curriculum
+   ================================================================ */
 
 :root {
-    /* Layout */
-    --max-wrap: 1120px;
-    --pad-x: 24px;
-    --header-h: 160px;
-    
-    /* Spacing Scale */
-    --space-xs: 0.5rem;
-    --space-sm: 1rem;
-    --space-md: 1.5rem;
-    --space-lg: 2.5rem;
-    --space-xl: 4rem;
-    --space-2xl: 6rem;
-    --s-1: 8px; 
-    --s-2: 12px; 
-    --s-3: 16px; 
-    --s-4: 24px;
-    --s-5: 32px; 
-    --s-6: 48px; 
-    --s-7: 64px; 
-    --s-8: 96px;
 
-    /* Gradients */
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-    --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --accent-blue: #667eea;
-    --accent-purple: #764ba2;
+  /* ── Layout ── */
+  --max-wrap:  1120px;
+  --pad-x:       24px;
+  --header-h:    64px;   /* actual header height — logo is 40px + 12px padding each side */
 
-    /* Effects */
-    --blur: 20px;
-    --radius: 16px;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Logo */
-    --logo-size: 140px;
-    --logo-spin-duration: 60s;
+  /* ── Spacing scale ── */
+  --space-xs:   0.5rem;
+  --space-sm:   1rem;
+  --space-md:   1.5rem;
+  --space-lg:   2.5rem;
+  --space-xl:   4rem;
+  --space-2xl:  6rem;
 
-    /* Light Theme Colors */
-    --light-bg: #fafafa;
-    --light-surface: rgba(255, 255, 255, 0.9);
-    --light-glass: rgba(0, 0, 0, 0.02);
-    --light-border: rgba(0, 0, 0, 0.08);
-    --light-text: #1a1a1a;
-    --light-text-secondary: rgba(0, 0, 0, 0.7);
+  --s-1:  8px;
+  --s-2: 12px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
 
-    /* Dark Theme Colors */
-    --dark-bg: #0a0a0f;
-    --dark-surface: rgba(15, 15, 25, 0.8);
-    --dark-glass: rgba(255, 255, 255, 0.05);
-    --dark-border: rgba(255, 255, 255, 0.1);
-    --dark-text: #ffffff;
-    --dark-text-secondary: rgba(255, 255, 255, 0.7);
+  /* ── Gradients ── */
+  --primary-gradient:   linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --warning-gradient:   linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --accent-gradient:    linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --success-gradient:   linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+
+  --accent-blue:   #667eea;
+  --accent-purple: #764ba2;
+
+  /* ── Effects ── */
+  --blur:       20px;
+  --radius:     16px;
+  --shadow:     0 8px 32px rgba(0,0,0,.12);
+  --transition: all .3s cubic-bezier(.4,0,.2,1);
+
+  /* ── Logo ── */
+  --logo-size:          40px;   /* rendered size in the header */
+  --logo-spin-duration: 60s;
+
+  /* ── ROYGBIV curriculum colours ── */
+  --l1: #ff4444;   /* Red    · Level I   · A Priori      · L₀(t)     */
+  --l2: #ff8c00;   /* Orange · Level II  · Weights       · wᵢ        */
+  --l3: #ffd43b;   /* Yellow · Level III · Composite     · ΣwᵢLᵢ     */
+  --l4: #51cf66;   /* Green  · Level IV  · Error         · εᵢ+σ+λ    */
+  --l5: #4fc3f7;   /* Blue   · Level V   · Posteriori    · L₀(t+1)   */
+
+  /* ── Primary surface colour (warm parchment) ── */
+  --primary: #c9b99a;
+
+  /* ── Light theme raw values ── */
+  --light-bg:             #fafafa;
+  --light-surface:        rgba(255,255,255,.9);
+  --light-glass:          rgba(0,0,0,.02);
+  --light-border:         rgba(0,0,0,.08);
+  --light-text:           #1a1a1a;
+  --light-text-secondary: rgba(0,0,0,.65);
+
+  /* ── Dark theme raw values ── */
+  --dark-bg:             #0a0a0f;
+  --dark-surface:        rgba(15,15,25,.85);
+  --dark-glass:          rgba(255,255,255,.05);
+  --dark-border:         rgba(255,255,255,.09);
+  --dark-text:           #f0ede6;
+  --dark-text-secondary: rgba(240,237,230,.55);
 }
 
-/* Theme Switching */
+/* ── Theme switching ── */
 [data-theme="light"] {
-    --bg: var(--light-bg);
-    --surface: var(--light-surface);
-    --glass: var(--light-glass);
-    --border: var(--light-border);
-    --text: var(--light-text);
-    --text-secondary: var(--light-text-secondary);
+  --bg:             var(--light-bg);
+  --surface:        var(--light-surface);
+  --glass:          var(--light-glass);
+  --border:         var(--light-border);
+  --text:           var(--light-text);
+  --text-secondary: var(--light-text-secondary);
 }
 
 [data-theme="dark"] {
-    --bg: var(--dark-bg);
-    --surface: var(--dark-surface);
-    --glass: var(--dark-glass);
-    --border: var(--dark-border);
-    --text: var(--dark-text);
-    --text-secondary: var(--dark-text-secondary);
+  --bg:             var(--dark-bg);
+  --surface:        var(--dark-surface);
+  --glass:          var(--dark-glass);
+  --border:         var(--dark-border);
+  --text:           var(--dark-text);
+  --text-secondary: var(--dark-text-secondary);
 }

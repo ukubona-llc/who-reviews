@@ -5,23 +5,40 @@
       <span class="chip">To see, blindly</span>
       <span class="chip">To forage, stochastically</span>
       <span class="chip">To rehearse, consequentially</span>
+      <span class="chip">θ → L(θ) → ∇L → −η∇L → θ′</span>
     </div>
 
     <div class="footer-level-trail">
-      <a href="#" class="trail-dot" data-level="1" data-dest="ukhona/html/level1/session1.html" title="Level 1 · Foundations">
+
+      <a href="#" class="trail-dot" data-level="1" data-dest="ukhona/html/level1/session1.html" title="Level I · Red · A Priori · L₀(t)">
         <span class="trail-pip"></span>
-        <span class="trail-label">Foundations</span>
+        <span class="trail-label">A Priori</span>
       </a>
       <span class="trail-line"></span>
-      <a href="#" class="trail-dot" data-level="2" data-dest="ukhona/html/level2/session1.html" title="Level 2 · Exploration">
+
+      <a href="#" class="trail-dot" data-level="2" data-dest="ukhona/html/level2/session1.html" title="Level II · Orange · Weights · wᵢ">
         <span class="trail-pip"></span>
-        <span class="trail-label">Exploration</span>
+        <span class="trail-label">Weights</span>
       </a>
       <span class="trail-line"></span>
-      <a href="#" class="trail-dot" data-level="3" data-dest="ukhona/html/level3/session1.html" title="Level 3 · Integration">
+
+      <a href="#" class="trail-dot" data-level="3" data-dest="ukhona/html/level3/session1.html" title="Level III · Yellow · Composite Loss · ΣwᵢLᵢ">
         <span class="trail-pip"></span>
-        <span class="trail-label">Integration</span>
+        <span class="trail-label">Composite</span>
       </a>
+      <span class="trail-line"></span>
+
+      <a href="#" class="trail-dot" data-level="4" data-dest="ukhona/html/level4/session1.html" title="Level IV · Green · Error · εᵢ + σ + λ">
+        <span class="trail-pip"></span>
+        <span class="trail-label">Error</span>
+      </a>
+      <span class="trail-line"></span>
+
+      <a href="#" class="trail-dot" data-level="5" data-dest="ukhona/html/level5/session1.html" title="Level V · Blue · Posteriori · L₀(t+1)">
+        <span class="trail-pip"></span>
+        <span class="trail-label">Posteriori</span>
+      </a>
+
     </div>
 
     <div class="footer-micro">
@@ -39,6 +56,7 @@
     justify-content: center;
     gap: 0;
     margin: 1.25rem 0 1rem;
+    flex-wrap: nowrap;
   }
 
   .trail-dot {
@@ -48,6 +66,7 @@
     gap: .35rem;
     text-decoration: none;
     position: relative;
+    flex-shrink: 0;
   }
 
   .trail-pip {
@@ -60,61 +79,101 @@
     display: block;
   }
 
-  .trail-dot[data-level="1"] .trail-pip { border-color: #4fc3f7; }
-  .trail-dot[data-level="2"] .trail-pip { border-color: #69db7c; }
+  /* ROYGBIV resting border colours */
+  .trail-dot[data-level="1"] .trail-pip { border-color: #ff4444; }
+  .trail-dot[data-level="2"] .trail-pip { border-color: #ff8c00; }
   .trail-dot[data-level="3"] .trail-pip { border-color: #ffd43b; }
+  .trail-dot[data-level="4"] .trail-pip { border-color: #51cf66; }
+  .trail-dot[data-level="5"] .trail-pip { border-color: #4fc3f7; }
 
+  /* hover + active fill */
   .trail-dot:hover .trail-pip,
-  .trail-dot.active .trail-pip {
-    transform: scale(1.4);
-  }
+  .trail-dot.active .trail-pip { transform: scale(1.5); }
+
   .trail-dot[data-level="1"]:hover .trail-pip,
-  .trail-dot[data-level="1"].active .trail-pip { background: #4fc3f7; box-shadow: 0 0 8px #4fc3f7; }
+  .trail-dot[data-level="1"].active  .trail-pip { background: #ff4444; box-shadow: 0 0 8px #ff4444; }
   .trail-dot[data-level="2"]:hover .trail-pip,
-  .trail-dot[data-level="2"].active .trail-pip { background: #69db7c; box-shadow: 0 0 8px #69db7c; }
+  .trail-dot[data-level="2"].active  .trail-pip { background: #ff8c00; box-shadow: 0 0 8px #ff8c00; }
   .trail-dot[data-level="3"]:hover .trail-pip,
-  .trail-dot[data-level="3"].active .trail-pip { background: #ffd43b; box-shadow: 0 0 8px #ffd43b; }
+  .trail-dot[data-level="3"].active  .trail-pip { background: #ffd43b; box-shadow: 0 0 8px #ffd43b; }
+  .trail-dot[data-level="4"]:hover .trail-pip,
+  .trail-dot[data-level="4"].active  .trail-pip { background: #51cf66; box-shadow: 0 0 8px #51cf66; }
+  .trail-dot[data-level="5"]:hover .trail-pip,
+  .trail-dot[data-level="5"].active  .trail-pip { background: #4fc3f7; box-shadow: 0 0 8px #4fc3f7; }
+
+  /* completed levels — filled, dimmer glow */
+  .trail-dot.completed .trail-pip {
+    transform: scale(1.1);
+    opacity: .65;
+  }
+  .trail-dot[data-level="1"].completed .trail-pip { background: #ff4444; }
+  .trail-dot[data-level="2"].completed .trail-pip { background: #ff8c00; }
+  .trail-dot[data-level="3"].completed .trail-pip { background: #ffd43b; }
+  .trail-dot[data-level="4"].completed .trail-pip { background: #51cf66; }
+  .trail-dot[data-level="5"].completed .trail-pip { background: #4fc3f7; }
 
   .trail-label {
     font-family: 'Inter', sans-serif;
-    font-size: .55rem;
-    letter-spacing: .15em;
+    font-size: .5rem;
+    letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--text-secondary);
-    opacity: .6;
+    opacity: .5;
     transition: var(--transition);
+    white-space: nowrap;
   }
 
-  .trail-dot:hover .trail-label { opacity: 1; color: var(--text); }
+  .trail-dot:hover .trail-label,
+  .trail-dot.active .trail-label { opacity: 1; color: var(--text); }
 
   .trail-line {
     flex: 1;
-    max-width: 80px;
+    max-width: 60px;
+    min-width: 12px;
     height: 1px;
     background: var(--border);
-    margin: 0 .5rem;
-    margin-bottom: 1.1rem; /* align with pip center */
+    margin: 0 .35rem;
+    margin-bottom: 1.1rem; /* align with pip centre */
+  }
+
+  /* active line lights up toward the current level */
+  .trail-line.lit { background: color-mix(in srgb, var(--text-secondary) 40%, transparent); }
+
+  @media (max-width: 400px) {
+    .trail-label { display: none; }
+    .trail-line  { max-width: 24px; }
   }
 </style>
 
 <script>
   (function () {
     function initTrail() {
-      // Find the site root by walking up to where index.html lives
       const path = window.location.pathname;
-      const rootMatch = path.match(/^(.*?\/who-i\/|.*?\/repos-00\/|\/)/);
+
+      /* ── root detection (works for GitHub Pages subdirectory or bare domain) ── */
+      const rootMatch = path.match(/^(.*?\/who-i\/|.*?\/who-reviews\/|.*?\/repos-00\/|\/)/);
       const root = rootMatch ? rootMatch[1] : '/';
 
-      // Wire up trail dot hrefs
+      /* ── wire hrefs ── */
       document.querySelectorAll('.trail-dot[data-dest]').forEach(dot => {
         dot.href = root + dot.dataset.dest;
       });
 
-      // Highlight current level
+      /* ── detect current level ── */
       const levelMatch = path.match(/level(\d)/);
-      const active = levelMatch ? levelMatch[1] : null;
+      const current = levelMatch ? parseInt(levelMatch[1], 10) : 0;
+
       document.querySelectorAll('.trail-dot').forEach(dot => {
-        dot.classList.toggle('active', dot.dataset.level === active);
+        const lvl = parseInt(dot.dataset.level, 10);
+        dot.classList.toggle('active',    lvl === current);
+        dot.classList.toggle('completed', lvl < current);
+      });
+
+      /* ── light up connecting lines up to (but not including) current ── */
+      const lines = document.querySelectorAll('.trail-line');
+      lines.forEach((line, i) => {
+        /* line[i] connects dot[i] to dot[i+1]; light it if both are completed/current */
+        line.classList.toggle('lit', i + 1 < current);
       });
     }
 
