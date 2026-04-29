@@ -5246,3 +5246,791 @@ Let me write all three files now.
 - What about App.jsx? 
 - Anything worth updating?
 - Lets go!
+
+---
+
+Let me read the skill file before writing any code.Good. Now I have full context. Here's my read on what App.jsx needs:
+
+1. **Sync 20-tool data** — App.jsx's Session 02 card only shows 5 tools; should show all 20 using the same data object from Session 2's HTML
+2. **Pipeline↔Pentad bridge** — one sentence in Home explaining the pentad compresses the research pipeline, not replaces it
+3. **Scope note** — clarify the app covers the practical demo for Sessions 02 & 03
+4. **"What's next" footer** on Home pointing back to `who-reviews`
+5. **Session 02 card** — link to the full 20-tool comparison page
+6. **Session 03 card** — note that Session 3's HTML now embeds the app
+
+`App.jsx`
+
+```jsx
+import { useState, useEffect, useRef, useCallback } from "react"
+import { useAuth } from "./hooks/useAuth"
+
+// ── LOGO URLs ─────────────────────────────────────────────────────────────────
+const LOGO_DARK  = "https://abikesa.github.io/logos/assets/ukubona-dark.png"
+const LOGO_LIGHT = "https://abikesa.github.io/logos/assets/ukubona-light.png"
+
+// ── THEME HOOK ────────────────────────────────────────────────────────────────
+function useTheme() {
+  const [theme, setThemeState] = useState(() => {
+    try { return localStorage.getItem("ukb-theme") || "dark" } catch { return "dark" }
+  })
+  const setTheme = useCallback((t) => {
+    const next = typeof t === "function" ? t(theme) : t
+    setThemeState(next)
+    document.documentElement.setAttribute("data-theme", next)
+    try { localStorage.setItem("ukb-theme", next) } catch {}
+  }, [theme])
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme)
+  }, []) // eslint-disable-line
+  const toggle = useCallback(() => setTheme(t => t === "dark" ? "light" : "dark"), [setTheme])
+  return [theme, toggle]
+}
+
+// ── PALETTE ───────────────────────────────────────────────────────────────────
+const ACCENT = {
+  s2: "#4fc3f7",
+  s3: "#f4a261",
+  mono: "'DM Mono', 'Fira Mono', monospace",
+  serif: "'Playfair Display', Georgia, serif",
+  sans: "'Outfit', system-ui, sans-serif",
+}
+const t = { mono: ACCENT.mono, serif: ACCENT.serif, sans: ACCENT.sans }
+
+// ── PENTAD ────────────────────────────────────────────────────────────────────
+const PENTAD = [
+  {
+    node: "3+", label: "Tensor", role: "The Problem", color: "#94a3b8",
+    detail: "All five HTA arms — hypothesis, diagnostic accuracy, effectiveness, cost-utility, budget impact — across 18 PHC sites simultaneously. Overwhelming before it's been named. This maps to Session 01: understanding the existing research pipeline in its full complexity before any compression begins.",
+  },
+  {
+    node: "2", label: "Matrix", role: "The Tools", color: ACCENT.s2,
+    detail: "Session 02. The tool ecosystem as an attention layer — which of the 20 AI tools compresses which research pipeline step. Database search → Title/Abstract screening → Data extraction. The matrix organises what was overwhelming into relationships you can act on.",
+  },
+  {
+    node: "1", label: "Vector", role: "The Workflow", color: ACCENT.s3,
+    detail: "Session 03. Feed → Find → Frame. The committed five-step path from evidence gap to model input, using the PECO-F framework to ensure the question retrieves health economics evidence rather than clinical summaries. You can't run this session without Session 02 having oriented you first.",
+  },
+  {
+    node: "E", label: "Eigenmode", role: "The Template", color: "#c084fc",
+    detail: "The extraction template. Paper → Value → Quality Flag → Model Input. The structure that survives after the sessions end, after the tools change, after the specific papers are forgotten. Session 04 encodes the PECO-F protocol into a reusable search template.",
+  },
+  {
+    node: "0", label: "Scalar", role: "The Decision", color: "#4ade80",
+    detail: "One defensible model input. Base case 35%, sensitivity range 25–45%. The Markov model runs. The grant holds up to a reviewer. The evidence brief reaches the Joint Secretary before the window closes. The loop closes. Session 05.",
+  },
+]
+
+// ── ALL 20 TOOLS (shared data — mirrors session2.html exactly) ────────────────
+const TOOLS_20 = [
+  { name: "Elicit", url: "https://elicit.org", tag: "Ought · Freemium", prop: "freemium", dbSearch: "y", screening: "y", extraction: "y", geoLMIC: "p", pros: "Purpose-built PICO extraction; structured tables across multiple papers; strong on RCTs and systematic reviews", cons: "Only searches Semantic Scholar corpus; misses grey literature entirely; free tier limited to ~12 papers/query", arm: "Discovery · Extraction" },
+  { name: "Consensus", url: "https://consensus.app", tag: "Consensus · Freemium", prop: "freemium", dbSearch: "y", screening: "p", extraction: "n", geoLMIC: "p", pros: "Fast yes/no synthesis with citations; useful for policy briefs; auto-clusters by finding type", cons: "Optimised for biomedical questions; health financing queries return mixed results; no data extraction", arm: "Discovery · Synthesis" },
+  { name: "Scite", url: "https://scite.ai", tag: "Scite · Freemium", prop: "freemium", dbSearch: "y", screening: "p", extraction: "p", geoLMIC: "p", pros: "Shows whether papers are supported, contradicted or merely mentioned; strong citation context; useful for quality appraisal", cons: "Primarily citation analysis, not discovery; limited free tier; does not extract data fields", arm: "Citation · Quality appraisal" },
+  { name: "Research Rabbit", url: "https://researchrabbit.ai", tag: "Free", prop: "free", dbSearch: "y", screening: "p", extraction: "n", geoLMIC: "p", pros: "Visual citation network mapping; evolving recommendations; very good for serendipitous discovery", cons: "No data extraction; journal-indexed only; search string less precise than PubMed", arm: "Discovery · Mapping" },
+  { name: "Connected Papers", url: "https://connectedpapers.com", tag: "Freemium", prop: "freemium", dbSearch: "p", screening: "p", extraction: "n", geoLMIC: "p", pros: "Visually identifies clusters and seminal works; good entry point for new topics", cons: "Requires a seed paper; limited to one graph at a time on free tier; no extraction capability", arm: "Discovery · Mapping" },
+  { name: "Iris.ai", url: "https://iris.ai", tag: "Paid", prop: "paid", dbSearch: "y", screening: "y", extraction: "p", geoLMIC: "p", pros: "AI concept extraction and knowledge graphs; strong for STEM research landscape mapping", cons: "Primarily paid; LMIC health financing coverage thin; steep learning curve", arm: "Discovery · STEM focus" },
+  { name: "Litmaps", url: "https://litmaps.com", tag: "Freemium", prop: "freemium", dbSearch: "y", screening: "p", extraction: "n", geoLMIC: "p", pros: "Timeline-based literature maps; tracks new publications automatically; good for ongoing reviews", cons: "No data extraction; limited LMIC-specific filtering; free tier restricts map size", arm: "Discovery · Mapping" },
+  { name: "Scholarcy", url: "https://scholarcy.com", tag: "Freemium", prop: "freemium", dbSearch: "n", screening: "y", extraction: "y", geoLMIC: "y", pros: "Rapid article summarisation and flashcards; extracts key claims and figures; processes any PDF you upload", cons: "Does not search databases; depends entirely on documents you supply; occasional hallucination on dense tables", arm: "Screening · Extraction" },
+  { name: "SciSpace", url: "https://scispace.com", tag: "Freemium", prop: "freemium", dbSearch: "y", screening: "y", extraction: "p", geoLMIC: "p", pros: "Plain-language explanations of complex papers; AI copilot for reading and writing; broad index", cons: "Health economics depth limited; extraction less structured than Elicit; LMIC evidence sparse", arm: "Screening · Synthesis" },
+  { name: "Paper Digest", url: "https://paperdigest.org", tag: "Free", prop: "free", dbSearch: "y", screening: "y", extraction: "n", geoLMIC: "p", pros: "Free; concise structured summaries; daily digest feature for field monitoring", cons: "No data extraction; limited customisation; not optimised for health economics queries", arm: "Screening · Monitoring" },
+  { name: "Rayyan", url: "https://rayyan.ai", tag: "Freemium", prop: "freemium", dbSearch: "n", screening: "y", extraction: "p", geoLMIC: "y", pros: "Purpose-built for systematic review screening; strong collaboration features; used in Cochrane reviews", cons: "Does not search databases — you import results; extraction template limited; best for clinical rather than economic outcomes", arm: "Screening · Systematic review" },
+  { name: "Humata", url: "https://humata.ai", tag: "Freemium", prop: "freemium", dbSearch: "n", screening: "y", extraction: "y", geoLMIC: "y", pros: "Excellent for interrogating a single large PDF; targeted Q&A with page citations", cons: "One document at a time on free tier; cannot cross-reference multiple uploads; does not search", arm: "Extraction · Grey literature" },
+  { name: "Semantic Scholar", url: "https://semanticscholar.org", tag: "Free", prop: "free", dbSearch: "y", screening: "y", extraction: "n", geoLMIC: "p", pros: "Free; TL;DR summaries; citation graphs; broad index (200M+ papers); open API", cons: "LMIC health financing under-represented; no extraction; grey literature absent", arm: "Discovery · Screening" },
+  { name: "Dimensions.ai", url: "https://app.dimensions.ai", tag: "Free (research)", prop: "freemium", dbSearch: "y", screening: "y", extraction: "p", geoLMIC: "y", pros: "Best LMIC filtering of any tool; includes grants, datasets and grey literature; country-level filtering; CSV export", cons: "Interface less intuitive than PubMed; extraction requires export to CSV then manual work", arm: "Discovery · LMIC focus" },
+  { name: "Inciteful", url: "https://inciteful.xyz", tag: "Free", prop: "free", dbSearch: "y", screening: "p", extraction: "n", geoLMIC: "p", pros: "Rapid citation network analysis; identifies most-connected papers; free", cons: "No data extraction; primarily bibliometric; not suited for systematic search strings", arm: "Citation · Discovery" },
+  { name: "OpenEvidence", url: "https://openevidence.com", tag: "Free (beta)", prop: "free", dbSearch: "y", screening: "y", extraction: "n", geoLMIC: "p", pros: "AI answers with clinical literature citations; fast; increasingly covers health economics literature", cons: "Primarily clinical focus; health financing queries return mixed results; no extraction", arm: "Discovery · Medical" },
+  { name: "Evidence Hunt", url: "https://evidencehunt.ai", tag: "Free", prop: "free", dbSearch: "y", screening: "y", extraction: "n", geoLMIC: "p", pros: "Rapid synthesis from clinical guidelines; clean interface; good for clinical questions embedded in HTA", cons: "Narrow scope — clinical guidelines only; minimal LMIC health financing coverage; no extraction", arm: "Discovery · Clinical" },
+  { name: "Nested Knowledge", url: "https://nested-knowledge.com", tag: "Paid", prop: "paid", dbSearch: "y", screening: "y", extraction: "y", geoLMIC: "p", pros: "Purpose-built for systematic reviews and meta-analyses; strong extraction templates; collaborative", cons: "Paid; primarily life sciences / pharma use case; LMIC health economics coverage limited", arm: "Systematic review · Extraction" },
+  { name: "DistillerSR", url: "https://distillersr.com", tag: "Paid", prop: "paid", dbSearch: "n", screening: "y", extraction: "y", geoLMIC: "y", pros: "Enterprise systematic review software; widely used in HTA and regulatory contexts; audit trail", cons: "Expensive; does not search databases — you import results; overkill for rapid reviews", arm: "Systematic review · Enterprise" },
+  { name: "Bohrium", url: "https://bohrium.com", tag: "Paid", prop: "paid", dbSearch: "y", screening: "p", extraction: "p", geoLMIC: "n", pros: "AI-driven scientific discovery; hypothesis generation; strong in materials science and chemistry", cons: "Not suited for health financing or epidemiology; primarily STEM research; minimal LMIC coverage", arm: "Discovery · STEM" },
+]
+
+// ── LIVE DEMO STEPS ───────────────────────────────────────────────────────────
+const LIVE_STEPS = [
+  { session: "02", sessionTitle: "The Landscape", sessionColor: ACCENT.s2, n: "01", title: "Open NotebookLM", tool: "NotebookLM", toolUrl: "https://notebooklm.google.com", time: "2 min", prompt: null, detail: "Go to notebooklm.google.com. Sign in with Google. Create a new notebook: 'CAD4TB HTA Evidence'. This notebook will be your evidence workspace for the entire project." },
+  { session: "02", sessionTitle: "The Landscape", sessionColor: ACCENT.s2, n: "02", title: "Upload CAD4TB papers", tool: "NotebookLM + Delft Imaging", toolUrl: "https://www.delft-imaging.com/publications", time: "3 min", prompt: null, detail: "Go to delft-imaging.com/publications. Download 3–5 papers that mention India, PHC, or primary care. Upload as PDFs to your notebook. If you can't access the site now, use any 3 TB screening papers you already have." },
+  { session: "02", sessionTitle: "The Landscape", sessionColor: ACCENT.s2, n: "03", title: "Ask the accuracy question", tool: "NotebookLM", toolUrl: "https://notebooklm.google.com", time: "2 min", prompt: "What sensitivity and specificity values are reported for TB detection across these papers? Which studies were conducted in Indian primary health care settings? List each value with the paper it comes from.", detail: "NotebookLM answers across all uploaded papers simultaneously and cites specific pages. Watch it pull structured data from unstructured PDFs in seconds." },
+  { session: "02", sessionTitle: "The Landscape", sessionColor: ACCENT.s2, n: "04", title: "Ask the gap question", tool: "NotebookLM", toolUrl: "https://notebooklm.google.com", time: "3 min", prompt: "Which of these papers report cost data, utility weights, or cost-effectiveness estimates? What evidence is missing for a full cost-utility analysis of CAD4TB in Indian PHC?", detail: "This is the most important question in Session 02. The gaps it identifies are your search targets for Session 03. Write them down." },
+  { session: "02", sessionTitle: "The Landscape", sessionColor: ACCENT.s2, n: "05", title: "Record your gaps", tool: "Manual note", toolUrl: null, time: "2 min", prompt: null, detail: "Write down exactly what's missing: utility weights by TB disease stage, transition probabilities, standard care detection rates in Indian PHC, PHC staff time costs. These four things are what Session 03 is about." },
+  { session: "03", sessionTitle: "The Workflow", sessionColor: ACCENT.s3, n: "01", title: "Name your four gaps", tool: "Manual note", toolUrl: null, time: "2 min", prompt: null, detail: "From Session 02: (1) utility weights by TB disease stage — India, (2) TB progression transition probabilities — India or LMIC, (3) standard care TB detection rates in Indian PHC, (4) PHC staff time costs for screening workflow. These four gaps = four search runs." },
+  { session: "03", sessionTitle: "The Workflow", sessionColor: ACCENT.s3, n: "02", title: "Search Gap 3 on Dimensions.ai", tool: "Dimensions.ai", toolUrl: "https://app.dimensions.ai", time: "5 min", prompt: "tuberculosis case detection rate primary health care India standard care sputum smear", detail: "Add filter: Publication Year 2015–2026. Add filter: Country = India. Download top 5 papers as PDFs. You are looking for what proportion of true TB cases are currently detected under standard care in Indian PHC — this is your comparator arm baseline." },
+  { session: "03", sessionTitle: "The Workflow", sessionColor: ACCENT.s3, n: "03", title: "Upload and extract", tool: "NotebookLM", toolUrl: "https://notebooklm.google.com", time: "4 min", prompt: "What TB case detection rates under standard care are reported in Indian primary health care settings? List: the rate, the population, the study site, the year, and the method used to measure detection.", detail: "NotebookLM returns a structured answer with citations. You now have your standard care comparator arm baseline evidence — the number your whole effectiveness calculation rests on." },
+  { session: "03", sessionTitle: "The Workflow", sessionColor: ACCENT.s3, n: "04", title: "Draft assumption with Claude", tool: "Claude.ai", toolUrl: "https://claude.ai", time: "4 min", prompt: "The grant assumes 35% TB case detection under standard care in Indian PHC. I found three studies reporting 28%, 38%, and 41% from Rajasthan, MP, and UP respectively. How should I present this assumption? What sensitivity analysis range is defensible?", detail: "Claude returns: base case 35%, sensitivity range 25–45%. Drafts the assumption statement for your methods section. Copy that sentence directly — it goes into your protocol." },
+  { session: "03", sessionTitle: "The Workflow", sessionColor: ACCENT.s3, n: "05", title: "Fill the extraction template", tool: "Extraction Template", toolUrl: null, time: "3 min", prompt: null, detail: "Open the Template tab in Session 03. Enter the value, the source, the quality flag (AMBER — no state match but strong India evidence), and the model input target. One paper, one row, five minutes. Repeat this workflow for each remaining gap." },
+]
+
+// ── SESSION DATA ──────────────────────────────────────────────────────────────
+const SESSIONS = [
+  {
+    id: "s2", number: "02", label: "Session 02", title: "The Landscape",
+    subtitle: "What AI tools exist — and which ones actually matter for your HTA",
+    color: ACCENT.s2, duration: "30 min", icon: "◎",
+    // Scope note: this session covers all 20 tools in the catalogue
+    scopeNote: "Covers all 20 tools from the catalogue — mapped against database search, title/abstract screening, and data extraction.",
+    externalLink: "https://ukubona-llc.github.io/who-reviews/ukhona/html/level1/session2.html",
+    externalLabel: "Full 20-tool comparison table →",
+    context: `You are assessing CAD4TB — an AI-powered chest X-ray reader by Delft Imaging — across 18 PHC sites in Madhya Pradesh and Rajasthan. Your HTA has four evidence arms: diagnostic accuracy, clinical effectiveness, cost-utility, and budget impact. This session maps the AI tools for literature work and shows you which ones serve each arm — all free, no API key required.`,
+    // 5 deep-dive tools (subset of 20; full table is in session2.html)
+    tools: [
+      { name: "Elicit", tag: "OUGHT · FREEMIUM", url: "https://elicit.org", best: "Structured extraction across many papers — pulling cost-effectiveness ratios, sample sizes, outcome measures into a table", howto: "Type your research question in plain English. Click 'Add columns' to specify what to extract: population, intervention, outcome, ICER, sample size. Elicit reads across 100+ papers and returns a structured table. Export to CSV for further analysis.", warning: "Only searches Semantic Scholar corpus. Misses grey literature and most government reports. Strongest for CEA and systematic review identification. Free tier: ~12 papers per query.", stars: 5, verdict: "Start here for any structured extraction task. It does in minutes what takes researchers days.", arm: "Database Search · Screening · Extraction" },
+      { name: "Dimensions.ai", tag: "DIGITAL SCIENCE · FREE (RESEARCH)", url: "https://app.dimensions.ai", best: "LMIC-filtered search including grey literature — the best tool for finding India-specific evidence", howto: "Search: 'tuberculosis screening India cost-effectiveness'. Filter: Field of Research → Health Economics; Country → India; Publication Year → 2015–2026. Export results to CSV. This surfaces papers PubMed misses, including policy reports and working papers.", warning: "Interface takes 10 minutes to learn. Worth every minute for the LMIC coverage alone.", stars: 5, verdict: "Non-negotiable for WHO India work. Surfaces LMIC evidence that indexed search misses.", arm: "Database Search · Discovery · LMIC" },
+      { name: "Humata", tag: "HUMATA · FREEMIUM", url: "https://humata.ai", best: "Interrogating a specific large document — an HTAIn assessment, NSSO survey, state PFM report", howto: "Upload your PDF (up to 60 pages free). Ask targeted questions: 'What cost-effectiveness ratios are reported for inpatient versus outpatient coverage?' or 'Which population subgroups show the lowest financial risk protection scores?'", warning: "One document at a time on the free tier. Cannot synthesise across multiple uploaded files. Does not search — you must supply the document.", stars: 5, verdict: "Best for closing the grey literature gap. Upload any government report and interrogate it.", arm: "Extraction · Grey Literature" },
+      { name: "Semantic Scholar", tag: "ALLEN INSTITUTE · FREE", url: "https://semanticscholar.org", best: "Mapping a field quickly, finding citation networks, identifying the most influential papers in a financing sub-topic", howto: "Search for your topic. Use the 'Fields of Study' filter to narrow to Health Policy or Economics. Open 'Paper Detail' view for AI-generated TL;DR summaries and citation counts.", warning: "LMIC health financing literature is under-represented. Strong on volume; weak on the specific literature most relevant to India UHC work.", stars: 4, verdict: "Good entry point for an unfamiliar sub-topic. Switch to Dimensions.ai once you need LMIC evidence.", arm: "Discovery · Screening" },
+      { name: "Claude / GPT (PDF upload)", tag: "ANTHROPIC / OPENAI · FREEMIUM", url: "https://claude.ai", best: "Processing any document you supply — summarising, extracting, comparing, drafting assumption statements", howto: "Upload PDFs directly. Ask structured questions: 'Extract utility weights by TB disease stage from this paper. Flag any transferability concerns for a rural Indian PHC population.' Then: 'Synthesise the findings across all three papers I have uploaded and draft a methods assumption with a sensitivity range.'", warning: "Does not retrieve documents independently. Cannot search databases. Everything depends on what you upload or paste. Hallucination risk for specific citations — always verify numbers against the source.", stars: 5, verdict: "The most versatile tool in the stack. Use it to process what you find everywhere else.", arm: "Extraction · Synthesis · Drafting" },
+    ],
+    demo: {
+      title: "Live Demo: Triage CAD4TB Evidence in 12 Minutes",
+      steps: [
+        { n: "01", action: "Open NotebookLM", prompt: null, time: "2 min", detail: "Go to notebooklm.google.com. Sign in with Google. Create a new notebook: 'CAD4TB HTA Evidence'. This notebook will be your evidence workspace for the entire project." },
+        { n: "02", action: "Upload 3–5 CAD4TB papers", prompt: null, time: "3 min", detail: "Go to delft-imaging.com/publications. Download papers that mention India, PHC, or primary care. Upload as PDFs to your notebook. If you can't access the site now, use any 3 TB screening papers you already have." },
+        { n: "03", action: "Ask the accuracy question", prompt: "What sensitivity and specificity values are reported for TB detection across these papers? Which studies were conducted in Indian primary health care settings? List each value with the paper it comes from.", time: "2 min", detail: "NotebookLM answers across all uploaded papers simultaneously and cites specific pages. Watch it pull structured data from unstructured PDFs in seconds." },
+        { n: "04", action: "Ask the gap question", prompt: "Which of these papers report cost data, utility weights, or cost-effectiveness estimates? What evidence is missing for a full cost-utility analysis of CAD4TB in Indian PHC?", time: "3 min", detail: "This is the most important question in this session. The gaps it identifies are your search targets for Session 3. Write them down." },
+        { n: "05", action: "Record your gaps", prompt: null, time: "2 min", detail: "Write down exactly what's missing: utility weights by TB disease stage, transition probabilities, standard care detection rates in Indian PHC, PHC staff time costs. These four things are what Session 3 is about." },
+      ],
+    },
+    workedExample: {
+      title: "Worked Example: Finding TB Utility Weights for India",
+      context: "Your Markov model needs utility weights for TB disease stages in an Indian population. The literature gives you numbers — but are they the right numbers for your setting? Here is the complete three-tool workflow.",
+      steps: [
+        { tool: "Dimensions.ai", query: "tuberculosis utility weights quality of life India LMIC", result: "Returns 14 papers. Top result: Marra et al. 2004 (classic TB utility weights, widely cited in LMICs). Also surfaces 2 India-specific studies from 2018 and 2021 not in your existing reference list. The 2021 paper is from a Maharashtra community setting — close to your PHC context.", verdict: "GREEN" },
+        { tool: "Claude.ai", query: "Extract utility weights by TB disease stage from this abstract. Flag any transferability concerns for a rural Indian PHC population.", result: "Extracts: active TB (untreated) 0.58 (95% CI 0.51–0.65), on treatment 0.72 (0.66–0.78), successfully treated 0.89 (0.84–0.93). Flags: 'Maharashtra urban clinic sample. Rural PHC populations may have lower baseline utility due to comorbidity burden. State this assumption explicitly and test in sensitivity analysis with ±0.10 range.'", verdict: "AMBER" },
+        { tool: "NotebookLM", query: "Do any of the uploaded CAD4TB papers report patient-reported outcomes, quality of life, or utility data?", result: "No utility weight data found in uploaded papers. CAD4TB publications focus on diagnostic accuracy outcomes. Utility weight evidence must come from external TB literature — confirming your external search is necessary and justified.", verdict: "GAP CONFIRMED" },
+      ],
+      takeaway: "Three tools, 20 minutes: you know what utility weights to use (0.72 on-treatment), their confidence intervals, their limitations for your population, and why your external search is justified. That is a complete evidence note for one model input.",
+    },
+  },
+  {
+    id: "s3", number: "03", label: "Session 03", title: "The Workflow",
+    subtitle: "From evidence gap to model input — end-to-end, live",
+    color: ACCENT.s3, duration: "30 min", icon: "⬡",
+    scopeNote: "PECO-F framing applied live. Session 3 in the curriculum site now embeds this app for in-context access.",
+    externalLink: "https://ukubona-llc.github.io/who-reviews/ukhona/html/level1/session3.html",
+    externalLabel: "Open Session 3 with embedded app →",
+    context: `Session 02 mapped your tools and identified what CAD4TB's own evidence base covers. This session completes the loop: you have gaps, you have tools, now we build the workflow that fills those gaps and turns papers into model inputs. By the end, you have a reusable extraction template your whole team can use tomorrow.`,
+    tools: [
+      { name: "HTAIn", tag: "ICMR · FREE", url: "https://htain.dhr.gov.in/", best: "Indian HTA assessments — your cost anchor", howto: "Search: 'tuberculosis', 'NCD screening', 'primary health centre'. Download full PDF assessments. Upload to NotebookLM. Ask: 'What unit costs are reported for PHC-based TB screening? What staff time assumptions are used?'", warning: "Limited coverage outside major disease areas. TB is well-covered.", stars: 4, verdict: "Essential for India-specific cost benchmarks.", arm: "Cost-utility · BIA" },
+      { name: "NHSRC / NHA", tag: "GOVT OF INDIA · FREE", url: "https://nhsrcindia.org", best: "National Health Accounts and PHC operational costs", howto: "Download the National Health Accounts reports. Search for NCD screening, diagnostic services, PHC costs. This is your standard care cost comparator — what does a sputum smear test cost the system vs a CAD4TB read?", warning: "Data lags 2–3 years. State-level variation is very high.", stars: 4, verdict: "Non-negotiable for budget impact analysis.", arm: "BIA" },
+      { name: "Tufts CEVR CEA Registry", tag: "TUFTS · FREE", url: "https://cevr.tuftsmedicalcenter.org/databases/cea-registry", best: "Published cost-effectiveness ratios for benchmarking", howto: "Search 'tuberculosis screening' or 'chest X-ray AI'. Filter by LMIC. Returns published ICERs and the utility weight sources used in those studies — a shortcut to finding what values others have used.", warning: "Dominated by high-income country studies. Use for benchmarking and utility weight cross-check only.", stars: 3, verdict: "Good for ICER comparators. Not your primary cost source.", arm: "Cost-utility" },
+      { name: "WHO Global TB Programme", tag: "WHO · FREE", url: "https://www.who.int/teams/global-tuberculosis-programme/data", best: "Epidemiological data and India-specific TB burden estimates", howto: "Download India country profiles. Get prevalence, incidence, treatment success rates, and case detection rates. These are your model's epidemiological inputs — non-negotiable for the Markov model structure.", warning: "Estimates not primary data. Uncertainty ranges are wide for India states.", stars: 4, verdict: "Your source for TB natural history inputs.", arm: "Cost-utility" },
+    ],
+    demo: {
+      title: "Live Demo: End-to-End Evidence Extraction",
+      steps: [
+        { n: "01", action: "Name your four gaps", prompt: null, time: "2 min", detail: "From Session 02: (1) utility weights by TB disease stage — India, (2) TB progression transition probabilities — India or LMIC, (3) standard care TB detection rates in Indian PHC, (4) PHC staff time costs for screening workflow. These four gaps = four search runs." },
+        { n: "02", action: "Search Gap 3 on Dimensions.ai", prompt: "tuberculosis case detection rate primary health care India standard care sputum smear", time: "5 min", detail: "Add filter: Publication Year 2015–2026. Add filter: Country = India. Download top 5 papers as PDFs." },
+        { n: "03", action: "Upload to NotebookLM and extract", prompt: "What TB case detection rates under standard care are reported in Indian primary health care settings? List: the rate, the population, the study site, the year, and the method used to measure detection.", time: "4 min", detail: "NotebookLM returns a structured answer with citations. You now have your standard care comparator arm baseline evidence." },
+        { n: "04", action: "Verify and contextualise with Claude", prompt: "The grant assumes 35% TB case detection under standard care in Indian PHC. I found three studies reporting 28%, 38%, and 41% from Rajasthan, MP, and UP respectively. How should I present this assumption? What sensitivity analysis range is defensible?", time: "4 min", detail: "Claude returns: base case 35%, sensitivity range 25–45%. Drafts the assumption statement. Copy that sentence. It goes directly into your methods section." },
+        { n: "05", action: "Fill the extraction template", prompt: null, time: "3 min", detail: "Open the Template tab. Enter the value, the source, the quality flag, and the model input target. One paper, one row, five minutes. Repeat for each remaining gap." },
+      ],
+    },
+    template: {
+      columns: ["Paper (Author, Year)", "Evidence Type", "Value Extracted", "Population", "Setting", "India-specific?", "Quality Flag", "Model Input", "Verified by"],
+      rows: [
+        ["Marra et al. 2004", "Utility weight — active TB", "0.58 (0.51–0.65)", "Canada/multi-site", "Hospital", "✗ No", "AMBER", "Markov: untreated state", ""],
+        ["[India 2021 study]", "Utility weight — on treatment", "0.72 (0.66–0.78)", "Maharashtra urban", "PHC-adjacent", "✓ Yes", "AMBER — urban not rural", "Markov: treatment state", ""],
+        ["[Your paper]", "[Type]", "[Value ± CI]", "[Population]", "[Setting]", "[Y/N]", "[GREEN/AMBER/RED]", "[Which input]", ""],
+      ],
+      guide: [
+        { flag: "GREEN", color: "#4ade80", meaning: "India PHC setting, published 2018+, peer-reviewed" },
+        { flag: "AMBER", color: "#fb923c", meaning: "India but tertiary / LMIC but not India / older but nothing better available" },
+        { flag: "RED", color: "#f87171", meaning: "High-income country only — use only if no LMIC alternative, state explicitly in limitations" },
+      ],
+    },
+    workedExample: {
+      title: "Worked Example: Standard Care Detection Rates in Indian PHC",
+      context: "Your SW-CRT compares CAD4TB vs standard care. The model assumes standard care detects 35% of true TB cases in Indian PHC. You need to justify this with evidence — not guess.",
+      steps: [
+        { tool: "Dimensions.ai", query: "tuberculosis case detection rate primary care India rural community", result: "Returns 9 papers. Three report TB case detection rates from Indian PHC settings: 28% (Rajasthan, 2019), 38% (MP, 2021), 41% (UP, 2022). None from Chhattisgarh or Delhi specifically. Variation is driven by ASHA worker density and sputum transport infrastructure.", verdict: "AMBER — no state match but strong India evidence" },
+        { tool: "Claude.ai", query: "The model assumes 35% TB case detection under standard care in Indian PHC. Three studies report 28%, 38%, and 41% from other Indian states. How should I present this assumption and what sensitivity range is appropriate?", result: "Base case: 35%. Sensitivity range: 25–45%. Assumption statement: 'We assumed 35% based on published evidence from three Indian states with comparable PHC infrastructure; state-level variation was explored across the full reported range in one-way sensitivity analysis.'", verdict: "GREEN — defensible base case with documented range" },
+        { tool: "NotebookLM", query: "Do any of the uploaded CAD4TB papers report what proportion of screen-positive cases completed the full diagnostic pathway at referral centres?", result: "Two papers report referral completion data. One study from sub-Saharan Africa reports 71% referral completion among CAD4TB-flagged patients vs 34% under standard care — directionally supporting your intervention effect assumption, though not India-specific.", verdict: "AMBER — not India but directionally consistent" },
+      ],
+      takeaway: "You started with one number (35%) and ended with a justified base case, a documented sensitivity range, a copy-paste methods sentence, and supporting evidence from published literature. That is 30 minutes of work that makes your model defensible to a reviewer.",
+    },
+  },
+]
+
+// ── HEADER ────────────────────────────────────────────────────────────────────
+function Header({ theme, onToggle, view, onBack, onLive, onLogout }) {
+  const logoSrc = theme === "dark" ? LOGO_DARK : LOGO_LIGHT
+  const showBack = view === "session" || view === "live"
+  return (
+    <header className="ukb-header">
+      <a
+        href="https://ukubona-llc.github.io/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ukb-header-left"
+        onClick={showBack ? (e) => { e.preventDefault(); onBack() } : undefined}
+        style={showBack ? { cursor: "pointer" } : {}}
+      >
+        <img src={logoSrc} alt="Ukubona LLC" className="ukb-logo" />
+        <span className="ukb-wordmark">Ukubona × WHO India</span>
+      </a>
+      <div className="ukb-header-right">
+        {showBack && (
+          <button onClick={onBack} className="ukb-back-btn">← SESSIONS</button>
+        )}
+        {view === "home" && (
+          <button onClick={onLive} className="ukb-live-btn">▶ LIVE DEMO</button>
+        )}
+        <button className="ukb-theme-btn" onClick={onLogout} title="Log out" aria-label="Log out">⏻</button>
+        <button className="ukb-theme-btn" onClick={onToggle} title={theme === "dark" ? "Switch to light" : "Switch to dark"} aria-label="Toggle theme">
+          {theme === "dark" ? "☀" : "◑"}
+        </button>
+      </div>
+    </header>
+  )
+}
+
+// ── SHARED SMALL COMPONENTS ───────────────────────────────────────────────────
+const Stars = ({ n, color }) => (
+  <span style={{ color, letterSpacing: 1, fontSize: "0.85rem" }}>
+    {"★".repeat(n)}{"☆".repeat(5 - n)}
+  </span>
+)
+
+const VerdictBadge = ({ v }) => {
+  const col = v === "GREEN" ? "#4ade80" : v === "AMBER" ? "#fb923c" : v === "GAP CONFIRMED" ? "#94a3b8" : "#f87171"
+  return (
+    <span style={{ fontFamily: t.mono, fontSize: "0.62rem", letterSpacing: "0.12em", color: col, border: `1px solid ${col}33`, padding: "0.18rem 0.55rem", borderRadius: 2, display: "inline-block" }}>{v}</span>
+  )
+}
+
+function CopyBtn({ text, label = "Copy", size = "sm" }) {
+  const [copied, setCopied] = useState(false)
+  const handle = async () => {
+    await navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+  const fs = size === "xs" ? "0.52rem" : "0.62rem"
+  const pad = size === "xs" ? "0.15rem 0.5rem" : "0.25rem 0.7rem"
+  return (
+    <button onClick={handle} style={{ background: copied ? "rgba(74,222,128,0.15)" : "var(--surface)", border: `1px solid ${copied ? "#4ade8055" : "var(--border)"}`, borderRadius: 3, padding: pad, fontFamily: t.mono, fontSize: fs, letterSpacing: "0.1em", color: copied ? "#4ade80" : "var(--muted)", cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }}>
+      {copied ? "✓ Copied" : label}
+    </button>
+  )
+}
+
+// ── PENTAD STRIP ──────────────────────────────────────────────────────────────
+function PentadStrip() {
+  const [open, setOpen] = useState(null)
+  return (
+    <div style={{ marginBottom: "2.5rem" }}>
+      {/* Bridge sentence: explains pentad vs pipeline */}
+      <div style={{ fontFamily: t.sans, fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.65, marginBottom: "1rem", maxWidth: 640, opacity: 0.85 }}>
+        The compression chain below is the architecture underlying the five research pipeline steps from Session 01 — not a replacement for them. Each node corresponds to a session: Tensor → the problem in full complexity, Matrix → the 20-tool landscape, Vector → the PECO-F workflow, Eigenmode → the reusable template, Scalar → the defensible decision.
+      </div>
+      <div style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.22em", color: "var(--muted)", marginBottom: "0.75rem", opacity: 0.6 }}>
+        THE COMPRESSION CHAIN · CLICK ANY NODE
+      </div>
+      <div style={{ display: "flex", alignItems: "stretch", borderRadius: 8, overflow: "hidden", border: "1px solid var(--border)" }}>
+        {PENTAD.map((p, i) => (
+          <div key={p.node} onClick={() => setOpen(open === i ? null : i)} style={{ flex: 1, padding: "1rem 0.6rem", cursor: "pointer", borderRight: i < PENTAD.length - 1 ? "1px solid var(--border)" : "none", background: open === i ? `${p.color}12` : "var(--card)", transition: "background 0.2s", textAlign: "center" }}>
+            <div style={{ fontFamily: t.mono, fontSize: "1.3rem", color: p.color, opacity: open === i ? 1 : 0.45, transition: "opacity 0.2s", lineHeight: 1 }}>{p.node}</div>
+            <div style={{ fontFamily: t.mono, fontSize: "0.5rem", letterSpacing: "0.14em", color: p.color, margin: "0.3rem 0 0.2rem", opacity: open === i ? 1 : 0.7 }}>{p.label}</div>
+            <div style={{ fontFamily: t.sans, fontSize: "0.62rem", color: "var(--muted)", lineHeight: 1.3 }}>{p.role}</div>
+          </div>
+        ))}
+      </div>
+      {open !== null && (
+        <div style={{ background: `${PENTAD[open].color}0d`, border: `1px solid ${PENTAD[open].color}33`, borderTop: "none", borderRadius: "0 0 8px 8px", padding: "1rem 1.4rem", fontFamily: t.sans, fontSize: "0.85rem", color: "var(--muted)", lineHeight: 1.7 }}>
+          <span style={{ color: PENTAD[open].color, fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.14em", marginRight: 10 }}>{PENTAD[open].label.toUpperCase()} —</span>
+          {PENTAD[open].detail}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── TOOL CARD ─────────────────────────────────────────────────────────────────
+function ToolCard({ tool, color }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div onClick={() => setOpen(o => !o)} style={{ background: "var(--card)", border: `1px solid ${open ? color + "44" : "var(--border)"}`, borderLeft: `3px solid ${color}`, borderRadius: 6, padding: "1.1rem 1.3rem", cursor: "pointer", transition: "all 0.2s", marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <span style={{ fontFamily: t.serif, fontSize: "1.15rem", color: "var(--text)" }}>{tool.name}</span>
+            <span style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.18em", color, border: `1px solid ${color}55`, padding: "0.15rem 0.45rem", borderRadius: 2 }}>{tool.tag}</span>
+          </div>
+          <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.1em", color: "var(--muted)" }}>
+            {tool.arm} · <Stars n={tool.stars} color={color} />
+          </div>
+        </div>
+        <span style={{ color: "var(--muted)", fontSize: "0.75rem", transform: open ? "rotate(45deg)" : "none", transition: "0.2s" }}>+</span>
+      </div>
+      {open && (
+        <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+          <div style={{ marginBottom: "0.8rem" }}><div style={{ fontFamily: t.mono, fontSize: "0.58rem", color, letterSpacing: "0.14em", marginBottom: 4 }}>BEST FOR</div><div style={{ fontFamily: t.sans, fontSize: "0.85rem", color: "var(--text)", lineHeight: 1.5 }}>{tool.best}</div></div>
+          <div style={{ marginBottom: "0.8rem" }}><div style={{ fontFamily: t.mono, fontSize: "0.58rem", color, letterSpacing: "0.14em", marginBottom: 4 }}>HOW TO USE IT</div><div style={{ fontFamily: t.sans, fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.6 }}>{tool.howto}</div></div>
+          <div style={{ marginBottom: "0.8rem" }}><div style={{ fontFamily: t.mono, fontSize: "0.58rem", color: "#f87171", letterSpacing: "0.14em", marginBottom: 4 }}>⚠ LIMITATION</div><div style={{ fontFamily: t.sans, fontSize: "0.82rem", color: "rgba(248,113,113,0.75)", lineHeight: 1.5 }}>{tool.warning}</div></div>
+          <div style={{ background: `${color}0d`, border: `1px solid ${color}22`, borderRadius: 4, padding: "0.6rem 0.9rem", fontFamily: t.sans, fontSize: "0.83rem", color, lineHeight: 1.5, marginBottom: "0.8rem" }}>{tool.verdict}</div>
+          <a href={tool.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.12em", color, textDecoration: "none", borderBottom: `1px solid ${color}55`, paddingBottom: 1 }}>OPEN TOOL ↗</a>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DemoStep({ step, color, active, onClick }) {
+  return (
+    <div onClick={onClick} style={{ display: "flex", gap: "1.2rem", cursor: "pointer", background: active ? `${color}0a` : "transparent", border: `1px solid ${active ? color + "33" : "transparent"}`, borderRadius: 6, padding: "1rem 1.1rem", marginBottom: 6, transition: "all 0.2s" }}>
+      <div style={{ fontFamily: t.mono, fontSize: "1.4rem", color: active ? color : "var(--muted)", fontWeight: 300, minWidth: 36, transition: "color 0.2s" }}>{step.n}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: active ? 10 : 0 }}>
+          <div style={{ fontFamily: t.sans, fontSize: "0.92rem", fontWeight: 600, color: active ? "var(--text)" : "var(--muted)", transition: "color 0.2s" }}>{step.action}</div>
+          <span style={{ fontFamily: t.mono, fontSize: "0.55rem", color: "var(--muted)", letterSpacing: "0.1em" }}>{step.time}</span>
+        </div>
+        {active && (
+          <div>
+            {step.prompt && (
+              <div style={{ background: "var(--surface)", border: `1px solid ${color}33`, borderLeft: `3px solid ${color}`, borderRadius: 4, padding: "0.75rem 1rem", marginBottom: "0.75rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <div style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.16em", color }}>PASTE THIS PROMPT</div>
+                  <CopyBtn text={step.prompt} size="xs" />
+                </div>
+                <div style={{ fontFamily: t.mono, fontSize: "0.78rem", color: "var(--text)", lineHeight: 1.65, fontStyle: "italic" }}>"{step.prompt}"</div>
+              </div>
+            )}
+            <div style={{ fontFamily: t.sans, fontSize: "0.83rem", color: "var(--muted)", lineHeight: 1.65 }}>{step.detail}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function WorkedStep({ step, color }) {
+  return (
+    <div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 6, padding: "1.2rem 1.4rem", marginBottom: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <span style={{ fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.18em", color, border: `1px solid ${color}44`, padding: "0.2rem 0.6rem", borderRadius: 2 }}>{step.tool.toUpperCase()}</span>
+        <VerdictBadge v={step.verdict} />
+      </div>
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+          <div style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.14em", color: "var(--muted)" }}>QUERY</div>
+          <CopyBtn text={step.query} size="xs" label="Copy query" />
+        </div>
+        <div style={{ fontFamily: t.mono, fontSize: "0.78rem", color: "var(--text)", fontStyle: "italic", lineHeight: 1.6 }}>"{step.query}"</div>
+      </div>
+      <div>
+        <div style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.14em", color: "var(--muted)", marginBottom: 5 }}>RESULT</div>
+        <div style={{ fontFamily: t.sans, fontSize: "0.83rem", color: "var(--muted)", lineHeight: 1.65 }}>{step.result}</div>
+      </div>
+    </div>
+  )
+}
+
+function TemplateSection({ session }) {
+  const tpl = session.template
+  const color = session.color
+  return (
+    <div>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <div style={{ fontFamily: t.serif, fontSize: "1.5rem", color: "var(--text)", marginBottom: 6 }}>Evidence Extraction Template</div>
+        <div style={{ fontFamily: t.sans, fontSize: "0.85rem", color: "var(--muted)" }}>Copy this into a shared Google Sheet. One row per paper. One row = one model input.</div>
+      </div>
+      <div style={{ overflowX: "auto", marginBottom: "1.5rem" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: t.sans, fontSize: "0.78rem" }}>
+          <thead>
+            <tr>
+              {tpl.columns.map(col => (
+                <th key={col} style={{ background: `${color}15`, color, fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.12em", textTransform: "uppercase", padding: "0.65rem 0.8rem", border: `1px solid ${color}22`, textAlign: "left", whiteSpace: "nowrap" }}>{col}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {tpl.rows.map((row, i) => (
+              <tr key={i}>
+                {row.map((cell, j) => (
+                  <td key={j} style={{ padding: "0.65rem 0.8rem", border: "1px solid var(--border)", color: cell.includes("AMBER") ? "#fb923c" : cell.includes("GREEN") ? "#4ade80" : cell.includes("RED") ? "#f87171" : "var(--muted)", background: i % 2 === 0 ? "var(--card)" : "var(--surface)", whiteSpace: cell.startsWith("[") ? "nowrap" : "normal" }}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginBottom: "0.8rem", fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.18em", color: "var(--muted)" }}>QUALITY FLAG GUIDE</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {tpl.guide.map(g => (
+          <div key={g.flag} style={{ display: "flex", alignItems: "flex-start", gap: 14, background: "var(--card)", border: `1px solid ${g.color}22`, borderLeft: `3px solid ${g.color}`, borderRadius: 4, padding: "0.7rem 1rem" }}>
+            <span style={{ fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.12em", color: g.color, minWidth: 40 }}>{g.flag}</span>
+            <span style={{ fontFamily: t.sans, fontSize: "0.83rem", color: "var(--muted)", lineHeight: 1.5 }}>{g.meaning}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── SESSION VIEW ──────────────────────────────────────────────────────────────
+function SessionView({ session, onBack }) {
+  const [tab, setTab] = useState("tools")
+  const [activeStep, setActiveStep] = useState(0)
+  const color = session.color
+  const tabs = ["tools", "demo", "example", ...(session.template ? ["template"] : [])]
+  const tabLabels = { tools: "🔧 Tools", demo: "🎬 Live Demo", example: "📋 Worked Example", template: "📊 Template" }
+
+  return (
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "2rem 1.2rem 6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2.5rem" }}>
+        <button onClick={onBack} className="ukb-nav-back" style={{ "--accent": color }}>← ALL SESSIONS</button>
+        <div style={{ fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.2em", color }}>
+          {session.icon} {session.label} · {session.duration}
+        </div>
+      </div>
+
+      <div style={{ borderLeft: `4px solid ${color}`, paddingLeft: "1.8rem", marginBottom: "2.5rem" }}>
+        <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.22em", color, marginBottom: 10, opacity: 0.8 }}>AI TOOLS FOR HTA LITERATURE REVIEW</div>
+        <h1 style={{ fontFamily: t.serif, fontSize: "clamp(2rem,5vw,3.2rem)", color: "var(--text)", margin: "0 0 0.4rem", fontWeight: 400, lineHeight: 1.1 }}>{session.title}</h1>
+        <p style={{ fontFamily: t.sans, fontSize: "1rem", color: "var(--muted)", margin: "0 0 1.2rem", lineHeight: 1.5 }}>{session.subtitle}</p>
+        <p style={{ fontFamily: t.sans, fontSize: "0.87rem", color: "var(--muted)", lineHeight: 1.7, maxWidth: 680, opacity: 0.85 }}>{session.context}</p>
+
+        {/* Scope note + external link */}
+        {session.scopeNote && (
+          <div style={{ marginTop: "1rem", display: "flex", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ fontFamily: t.mono, fontSize: "0.56rem", letterSpacing: "0.1em", color: "var(--muted)", opacity: 0.65, lineHeight: 1.6, flex: 1, minWidth: 200 }}>
+              ℹ {session.scopeNote}
+            </div>
+            {session.externalLink && (
+              <a href={session.externalLink} target="_blank" rel="noopener noreferrer" style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.12em", color, border: `1px solid ${color}44`, padding: "0.3rem 0.8rem", borderRadius: 3, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0, transition: "all 0.2s" }}>
+                {session.externalLabel}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: "flex", gap: 4, marginBottom: "2rem", borderBottom: "1px solid var(--border)", paddingBottom: 0 }}>
+        {tabs.map(tb => (
+          <button key={tb} onClick={() => setTab(tb)} style={{ background: "none", border: "none", borderBottom: `2px solid ${tab === tb ? color : "transparent"}`, color: tab === tb ? color : "var(--muted)", fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.1em", padding: "0.65rem 1rem 0.75rem", cursor: "pointer", transition: "all 0.2s", marginBottom: -1 }}>{tabLabels[tb]}</button>
+        ))}
+      </div>
+
+      {tab === "tools" && (
+        <div>
+          <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.18em", color: "var(--muted)", marginBottom: "1rem", opacity: 0.7 }}>
+            {session.id === "s2" ? `5 deep-dive tools · ${TOOLS_20.length} total in catalogue · see full comparison table at link above` : `${session.tools.length} tools · click to expand`}
+          </div>
+          {session.tools.map(tool => <ToolCard key={tool.name} tool={tool} color={color} />)}
+        </div>
+      )}
+      {tab === "demo" && (
+        <div>
+          <div style={{ fontFamily: t.serif, fontSize: "1.5rem", color: "var(--text)", marginBottom: "0.4rem" }}>{session.demo.title}</div>
+          <div style={{ fontFamily: t.sans, fontSize: "0.82rem", color: "var(--muted)", marginBottom: "1.8rem", lineHeight: 1.5 }}>Click each step to expand the prompt and detail. Run these live during the session.</div>
+          {session.demo.steps.map((step, i) => (
+            <DemoStep key={step.n} step={step} color={color} active={activeStep === i} onClick={() => setActiveStep(i)} />
+          ))}
+          <div style={{ background: `${color}08`, border: `1px solid ${color}22`, borderRadius: 6, padding: "1rem 1.3rem", marginTop: "1.5rem", fontFamily: t.sans, fontSize: "0.83rem", color: "var(--muted)", lineHeight: 1.65 }}>
+            <span style={{ color, fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.12em" }}>FACILITATION NOTE — </span>
+            If any step stalls, move on. The goal is the workflow, not every output. They can replay this app independently after the session.
+          </div>
+        </div>
+      )}
+      {tab === "example" && (
+        <div>
+          <div style={{ fontFamily: t.serif, fontSize: "1.5rem", color: "var(--text)", marginBottom: "0.4rem" }}>{session.workedExample.title}</div>
+          <div style={{ fontFamily: t.sans, fontSize: "0.87rem", color: "var(--muted)", marginBottom: "1.8rem", lineHeight: 1.65, maxWidth: 680 }}>{session.workedExample.context}</div>
+          {session.workedExample.steps.map((step, i) => <WorkedStep key={i} step={step} color={color} />)}
+          <div style={{ background: `${color}08`, border: `1px solid ${color}22`, borderLeft: `4px solid ${color}`, borderRadius: 6, padding: "1.1rem 1.4rem", marginTop: "1.5rem" }}>
+            <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.14em", color, marginBottom: 8 }}>TAKEAWAY</div>
+            <div style={{ fontFamily: t.sans, fontSize: "0.87rem", color: "var(--text)", lineHeight: 1.7 }}>{session.workedExample.takeaway}</div>
+          </div>
+        </div>
+      )}
+      {tab === "template" && session.template && <TemplateSection session={session} />}
+    </div>
+  )
+}
+
+// ── LIVE DEMO VIEW ────────────────────────────────────────────────────────────
+function LiveDemoView({ onExit }) {
+  const [current, setCurrent] = useState(0)
+  const stepRefs = useRef([])
+  const step = LIVE_STEPS[current]
+  const isFirst = current === 0
+  const isLast = current === LIVE_STEPS.length - 1
+  const s02Steps = LIVE_STEPS.filter(s => s.session === "02")
+  const s03Steps = LIVE_STEPS.filter(s => s.session === "03")
+
+  const go = (dir) => {
+    const next = current + dir
+    if (next < 0 || next >= LIVE_STEPS.length) return
+    setCurrent(next)
+  }
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") go(1)
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") go(-1)
+      if (e.key === "Escape") onExit()
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [current]) // eslint-disable-line
+
+  useEffect(() => {
+    if (stepRefs.current[current]) {
+      stepRefs.current[current].scrollIntoView({ behavior: "smooth", block: "nearest" })
+    }
+  }, [current])
+
+  const color = step.sessionColor
+  const allPrompts = LIVE_STEPS.filter(s => s.prompt).map(s =>
+    `STEP ${s.session}.${s.n} — ${s.title.toUpperCase()} (${s.tool})\n\n${s.prompt}`
+  ).join("\n\n" + "─".repeat(50) + "\n\n")
+
+  return (
+    <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1rem 4rem", display: "grid", gridTemplateColumns: "260px 1fr", gap: "2rem", alignItems: "start" }}>
+      <div style={{ position: "sticky", top: "72px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, overflow: "hidden" }}>
+        <div style={{ padding: "0.8rem 1rem 0.4rem", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.18em", color: ACCENT.s2, marginBottom: 6 }}>SESSION 02 · THE LANDSCAPE</div>
+          {s02Steps.map((s) => {
+            const globalIdx = LIVE_STEPS.indexOf(s)
+            const isActive = globalIdx === current
+            return (
+              <div key={globalIdx} ref={el => stepRefs.current[globalIdx] = el} onClick={() => setCurrent(globalIdx)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0.45rem 0.6rem", borderRadius: 4, marginBottom: 2, cursor: "pointer", transition: "all 0.15s", background: isActive ? `${ACCENT.s2}15` : "transparent", border: `1px solid ${isActive ? ACCENT.s2 + "33" : "transparent"}` }}>
+                <span style={{ fontFamily: t.mono, fontSize: "0.7rem", color: isActive ? ACCENT.s2 : "var(--muted)", minWidth: 20, transition: "color 0.15s" }}>{s.n}</span>
+                <span style={{ fontFamily: t.sans, fontSize: "0.75rem", lineHeight: 1.3, color: isActive ? "var(--text)" : "var(--muted)", transition: "color 0.15s" }}>{s.title}</span>
+              </div>
+            )
+          })}
+        </div>
+        <div style={{ padding: "0.8rem 1rem 0.8rem", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.18em", color: ACCENT.s3, marginBottom: 6 }}>SESSION 03 · THE WORKFLOW</div>
+          {s03Steps.map((s) => {
+            const globalIdx = LIVE_STEPS.indexOf(s)
+            const isActive = globalIdx === current
+            return (
+              <div key={globalIdx} ref={el => stepRefs.current[globalIdx] = el} onClick={() => setCurrent(globalIdx)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0.45rem 0.6rem", borderRadius: 4, marginBottom: 2, cursor: "pointer", transition: "all 0.15s", background: isActive ? `${ACCENT.s3}15` : "transparent", border: `1px solid ${isActive ? ACCENT.s3 + "33" : "transparent"}` }}>
+                <span style={{ fontFamily: t.mono, fontSize: "0.7rem", color: isActive ? ACCENT.s3 : "var(--muted)", minWidth: 20, transition: "color 0.15s" }}>{s.n}</span>
+                <span style={{ fontFamily: t.sans, fontSize: "0.75rem", lineHeight: 1.3, color: isActive ? "var(--text)" : "var(--muted)", transition: "color 0.15s" }}>{s.title}</span>
+              </div>
+            )
+          })}
+        </div>
+        <div style={{ padding: "0.8rem 1rem" }}>
+          <CopyBtn text={allPrompts} label="Copy all prompts" />
+          <div style={{ fontFamily: t.mono, fontSize: "0.5rem", letterSpacing: "0.1em", color: "var(--muted)", marginTop: 6, lineHeight: 1.5 }}>Only steps with prompts included</div>
+        </div>
+      </div>
+
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1.5rem" }}>
+          <span style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.2em", color, border: `1px solid ${color}44`, padding: "0.2rem 0.65rem", borderRadius: 2 }}>SESSION {step.session} · {step.sessionTitle.toUpperCase()}</span>
+          <span style={{ fontFamily: t.mono, fontSize: "0.55rem", color: "var(--muted)", letterSpacing: "0.1em" }}>STEP {current + 1} / {LIVE_STEPS.length}</span>
+        </div>
+        <div style={{ background: "var(--card)", border: `1px solid ${color}33`, borderLeft: `4px solid ${color}`, borderRadius: 8, padding: "2rem 2rem 1.8rem", marginBottom: "1.5rem", minHeight: 320 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem", gap: 16 }}>
+            <div>
+              <div style={{ fontFamily: t.mono, fontSize: "3rem", color, lineHeight: 1, opacity: 0.25, marginBottom: 6 }}>{step.n}</div>
+              <h2 style={{ fontFamily: t.serif, fontSize: "1.8rem", color: "var(--text)", margin: 0, fontWeight: 400, lineHeight: 1.15 }}>{step.title}</h2>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              {step.toolUrl ? (
+                <a href={step.toolUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.14em", color, border: `1px solid ${color}44`, padding: "0.25rem 0.65rem", borderRadius: 3, textDecoration: "none", marginBottom: 6 }}>{step.tool} ↗</a>
+              ) : (
+                <span style={{ display: "inline-block", fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.14em", color: "var(--muted)", border: "1px solid var(--border)", padding: "0.25rem 0.65rem", borderRadius: 3, marginBottom: 6 }}>{step.tool}</span>
+              )}
+              <div style={{ fontFamily: t.mono, fontSize: "0.55rem", color: "var(--muted)", letterSpacing: "0.1em" }}>{step.time}</div>
+            </div>
+          </div>
+          {step.prompt && (
+            <div style={{ background: "var(--surface)", border: `1px solid ${color}33`, borderLeft: `3px solid ${color}`, borderRadius: 4, padding: "1rem 1.2rem", marginBottom: "1.2rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <div style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.18em", color }}>PASTE THIS PROMPT</div>
+                <CopyBtn text={step.prompt} label="Copy prompt" />
+              </div>
+              <div style={{ fontFamily: t.mono, fontSize: "0.85rem", color: "var(--text)", lineHeight: 1.7, fontStyle: "italic" }}>"{step.prompt}"</div>
+            </div>
+          )}
+          <div style={{ fontFamily: t.sans, fontSize: "0.9rem", color: "var(--muted)", lineHeight: 1.75 }}>{step.detail}</div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button onClick={() => go(-1)} disabled={isFirst} style={{ background: "none", border: "1px solid var(--border)", borderRadius: 4, padding: "0.55rem 1.2rem", fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.12em", color: isFirst ? "var(--muted)" : "var(--text)", cursor: isFirst ? "not-allowed" : "pointer", opacity: isFirst ? 0.35 : 1, transition: "all 0.2s" }}>← BACK</button>
+          <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+            {LIVE_STEPS.map((s, i) => {
+              const dotColor = s.session === "02" ? ACCENT.s2 : ACCENT.s3
+              return <div key={i} onClick={() => setCurrent(i)} style={{ width: i === current ? 20 : 6, height: 6, borderRadius: 3, background: i === current ? dotColor : i < current ? dotColor + "55" : "var(--border)", cursor: "pointer", transition: "all 0.2s" }} />
+            })}
+          </div>
+          {isLast ? (
+            <button onClick={onExit} style={{ background: color, border: "none", borderRadius: 4, padding: "0.55rem 1.2rem", fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.12em", color: "#0b0f14", cursor: "pointer", fontWeight: 600 }}>DONE ✓</button>
+          ) : (
+            <button onClick={() => go(1)} style={{ background: color, border: "none", borderRadius: 4, padding: "0.55rem 1.2rem", fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.12em", color: "#0b0f14", cursor: "pointer", fontWeight: 600 }}>NEXT →</button>
+          )}
+        </div>
+        <div style={{ textAlign: "center", marginTop: "1.2rem", fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.1em", color: "var(--muted)", opacity: 0.5 }}>
+          ← → arrow keys to navigate · ESC to exit
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── PASSWORD GATE ─────────────────────────────────────────────────────────────
+function PasswordGate({ onUnlock }) {
+  const [val, setVal] = useState("")
+  const [err, setErr] = useState("")
+  const [shake, setShake] = useState(false)
+  const [loading, setLoad] = useState(false)
+  const { login } = useAuth()
+  const inputRef = useRef()
+  useEffect(() => { inputRef.current?.focus() }, [])
+
+  async function attempt() {
+    if (!val.trim() || loading) return
+    setLoad(true)
+    const result = await login(val)
+    setLoad(false)
+    if (result.ok) return
+    setErr(result.error || "incorrect password")
+    setShake(true)
+    setVal("")
+    setTimeout(() => setShake(false), 500)
+    setTimeout(() => setErr(""), 2500)
+  }
+
+  return (
+    <div style={{ minHeight: "calc(100vh - 56px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+      <div style={{ width: "min(420px, 100%)", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "2.5rem 2rem", textAlign: "center", animation: shake ? "shk 0.4s ease" : "none" }}>
+        <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.24em", color: "var(--muted)", marginBottom: "1.2rem" }}>UKUBONA × WHO INDIA</div>
+        <h1 style={{ fontFamily: t.serif, fontSize: "1.9rem", color: "var(--text)", margin: "0 0 0.4rem", fontWeight: 400, lineHeight: 1.2 }}>AI Tools for<br />Literature Review</h1>
+        <p style={{ fontFamily: t.sans, fontSize: "0.82rem", color: "var(--muted)", margin: "0 0 2rem", lineHeight: 1.5 }}>Sessions 02 & 03 · HTA Evidence Workflow</p>
+        <div style={{ display: "flex", gap: 8, marginBottom: err ? 8 : 16 }}>
+          <input ref={inputRef} type="password" value={val} onChange={e => setVal(e.target.value)} onKeyDown={e => e.key === "Enter" && attempt()} placeholder="access password" disabled={loading} style={{ flex: 1, background: "var(--card)", border: `1px solid ${err ? "#f87171" : "var(--border)"}`, borderRadius: 4, padding: "0.7rem 0.9rem", color: "var(--text)", fontFamily: t.mono, fontSize: "0.8rem", outline: "none", transition: "border-color 0.2s", opacity: loading ? 0.6 : 1 }} />
+          <button onClick={attempt} disabled={loading} className="ukb-enter-btn" style={{ opacity: loading ? 0.6 : 1 }}>{loading ? "…" : "ENTER"}</button>
+        </div>
+        {err && <div style={{ fontFamily: t.mono, fontSize: "0.62rem", color: "#f87171", letterSpacing: "0.1em", marginBottom: 12 }}>{err}</div>}
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: "1.5rem" }}>
+          {[ACCENT.s2, ACCENT.s3].map(c => (
+            <span key={c} style={{ width: 28, height: 3, borderRadius: 2, background: c, opacity: 0.6 }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── HOME ──────────────────────────────────────────────────────────────────────
+function Home({ onSelect, onLive }) {
+  return (
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "3rem 1.2rem 6rem" }}>
+      <div style={{ marginBottom: "4rem" }}>
+        <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.26em", color: "var(--muted)", marginBottom: "2rem", opacity: 0.7 }}>UKUBONA × WHO INDIA · 2026</div>
+        <h1 style={{ fontFamily: t.serif, fontSize: "clamp(2.8rem,7vw,5rem)", color: "var(--text)", margin: "0 0 0.5rem", fontWeight: 400, lineHeight: 1.05, letterSpacing: "-0.01em" }}>
+          AI Tools for<br /><em style={{ color: ACCENT.s2 }}>Literature</em> Review
+        </h1>
+
+        {/* Scope note: app covers Sessions 02 and 03 only */}
+        <div style={{ fontFamily: t.mono, fontSize: "0.56rem", letterSpacing: "0.14em", color: "var(--muted)", margin: "0.6rem 0 0", opacity: 0.6, lineHeight: 1.7 }}>
+          This app covers the practical demonstration for <span style={{ color: ACCENT.s2 }}>Session 02</span> (the tool landscape) and <span style={{ color: ACCENT.s3 }}>Session 03</span> (the PECO-F workflow). The full 5-session curriculum lives at{" "}
+          <a href="https://ukubona-llc.github.io/who-reviews/" target="_blank" rel="noopener noreferrer" style={{ color: "var(--muted)", textDecoration: "underline" }}>who-reviews ↗</a>
+        </div>
+
+        <div style={{ width: 60, height: 2, background: `linear-gradient(to right, ${ACCENT.s2}, ${ACCENT.s3})`, margin: "1.5rem 0" }} />
+        <p style={{ fontFamily: t.sans, fontSize: "1rem", color: "var(--muted)", maxWidth: 520, lineHeight: 1.7, margin: "0 0 2rem" }}>
+          Two sessions. Thirty minutes each. Every tool is free.<br />Built around a real HTA workflow — TB screening in Indian PHC.
+        </p>
+        <button onClick={onLive} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: `linear-gradient(135deg, ${ACCENT.s2}22, ${ACCENT.s3}22)`, border: `1px solid ${ACCENT.s2}55`, borderRadius: 6, padding: "0.75rem 1.4rem", fontFamily: t.mono, fontSize: "0.7rem", letterSpacing: "0.14em", color: ACCENT.s2, cursor: "pointer", transition: "all 0.2s" }}>
+          <span style={{ fontSize: "0.9rem" }}>▶</span>
+          RUN LIVE DEMO — 10 STEPS ACROSS BOTH SESSIONS
+        </button>
+      </div>
+
+      <PentadStrip />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(380px,100%),1fr))", gap: 16 }}>
+        {SESSIONS.map((s, i) => (
+          <div key={s.id} onClick={() => onSelect(i)} className="ukb-session-card" style={{ "--card-accent": s.color }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.2rem" }}>
+              <span style={{ fontFamily: t.mono, fontSize: "3rem", color: s.color, lineHeight: 1, opacity: 0.5 }}>{s.icon}</span>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.2em", color: s.color, marginBottom: 3 }}>{s.label}</div>
+                <div style={{ fontFamily: t.mono, fontSize: "0.52rem", color: "var(--muted)", letterSpacing: "0.1em" }}>{s.duration}</div>
+              </div>
+            </div>
+            <h2 style={{ fontFamily: t.serif, fontSize: "1.7rem", color: "var(--text)", margin: "0 0 0.4rem", fontWeight: 400, lineHeight: 1.15 }}>{s.title}</h2>
+            <p style={{ fontFamily: t.sans, fontSize: "0.85rem", color: "var(--muted)", margin: "0 0 0.6rem", lineHeight: 1.55 }}>{s.subtitle}</p>
+            {/* Scope note on card */}
+            {s.scopeNote && (
+              <p style={{ fontFamily: t.mono, fontSize: "0.52rem", color: "var(--muted)", opacity: 0.55, letterSpacing: "0.07em", lineHeight: 1.55, margin: "0 0 1rem" }}>{s.scopeNote}</p>
+            )}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.3rem" }}>
+              {[
+                s.id === "s2" ? `${TOOLS_20.length} tools in catalogue` : `${s.tools.length} tools`,
+                "live demo", "worked example",
+                ...(s.template ? ["template"] : [])
+              ].map(tag => (
+                <span key={tag} style={{ fontFamily: t.mono, fontSize: "0.52rem", letterSpacing: "0.1em", color: "var(--muted)", border: "1px solid var(--border)", padding: "0.2rem 0.55rem", borderRadius: 2 }}>{tag}</span>
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", fontFamily: t.mono, fontSize: "0.65rem", letterSpacing: "0.12em", color: s.color }}>ENTER →</div>
+          </div>
+        ))}
+      </div>
+
+      {/* What's next footer — links back to full curriculum */}
+      <div style={{ marginTop: "4rem", padding: "1.5rem 1.8rem", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 10 }}>
+        <div style={{ fontFamily: t.mono, fontSize: "0.55rem", letterSpacing: "0.22em", color: "var(--muted)", marginBottom: "0.9rem", opacity: 0.6 }}>WHAT'S NEXT</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          {[
+            { label: "Session 01 — The Pipeline", href: "https://ukubona-llc.github.io/who-reviews/ukhona/html/level1/session1.html", note: "Audit where your review time goes" },
+            { label: "Session 04 — The Protocol", href: "https://ukubona-llc.github.io/who-reviews/ukhona/html/level1/session4.html", note: "Encode PECO-F into a reusable search template" },
+            { label: "Session 05 — The Brief", href: "https://ukubona-llc.github.io/who-reviews/ukhona/html/level1/session5.html", note: "Turn extraction into a policy-ready evidence brief" },
+            { label: "Full curriculum", href: "https://ukubona-llc.github.io/who-reviews/", note: "5 levels · 25 sessions · all freely accessible" },
+          ].map(link => (
+            <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" style={{ display: "block", padding: "0.8rem 1rem", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, textDecoration: "none", transition: "border-color 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = ACCENT.s2}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}
+            >
+              <div style={{ fontFamily: t.mono, fontSize: "0.6rem", letterSpacing: "0.1em", color: ACCENT.s2, marginBottom: 4 }}>{link.label} ↗</div>
+              <div style={{ fontFamily: t.sans, fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.5 }}>{link.note}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border)" }}>
+        <div style={{ fontFamily: t.mono, fontSize: "0.58rem", letterSpacing: "0.12em", color: "var(--muted)", lineHeight: 2, opacity: 0.7 }}>
+          All tools listed are free to use. No API keys required. NotebookLM requires a Google account. Claude.ai requires a free Anthropic account.
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── ROOT APP ──────────────────────────────────────────────────────────────────
+export default function App() {
+  const { status, logout } = useAuth()
+  const [view, setView] = useState("home")
+  const [activeSession, setActiveSession] = useState(null)
+  const [theme, toggleTheme] = useTheme()
+
+  useEffect(() => { document.body.style.margin = "0" }, [])
+
+  const goHome    = () => { setView("home"); setActiveSession(null) }
+  const goSession = (i) => { setActiveSession(i); setView("session") }
+  const goLive    = () => setView("live")
+
+  if (status === null) return null
+
+  return (
+    <>
+      <Header theme={theme} onToggle={toggleTheme} view={status ? view : "gate"} onBack={goHome} onLive={goLive} onLogout={logout} />
+      <div className="ukb-page">
+        {!status
+          ? <PasswordGate onUnlock={() => {}} />
+          : view === "live"
+            ? <LiveDemoView onExit={goHome} />
+            : view === "session" && activeSession !== null
+              ? <SessionView session={SESSIONS[activeSession]} onBack={goHome} />
+              : <Home onSelect={goSession} onLive={goLive} />
+        }
+      </div>
+    </>
+  )
+}
+```
