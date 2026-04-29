@@ -13,184 +13,282 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
-  <link href="../../css/variables.css?v=1.1" rel="stylesheet">
-  <link href="../../css/head.css?v=1.1" rel="stylesheet">
-  <link href="../../css/card.css?v=1.1" rel="stylesheet">
-  <link href="../../css/footer.css" rel="stylesheet">
+
   <style>
+    /* ── RESET & TOKENS ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
       --session-accent: #4fc3f7;
+      --ink:    #0f0e0d;
+      --ink2:   #3a3630;
+      --ink3:   #7a7268;
+      --ink4:   #b0a898;
+      --paper:  #faf8f4;
+      --paper2: #f0ece4;
+      --border-light: #d8d0c0;
+      --gold:   #b8860b;
+      --gold2:  #d4a017;
+      --bar-h: 48px;
       --ff-display: 'Playfair Display', Georgia, serif;
       --ff-body:    'Source Serif 4', Georgia, serif;
+      --ff-mono:    'DM Mono', 'Fira Mono', monospace;
+      --ff-sans:    'Inter', system-ui, sans-serif;
     }
-    body { font-family: var(--ff-body); font-weight: 300; }
-    .spine { position: fixed; left: 0; top: 0; width: 3px; height: 0%; background: var(--session-accent); z-index: 200; transition: height .1s linear; }
-    .s-page { padding-top: calc(var(--header-h) + 3rem); padding-bottom: 6rem; max-width: 860px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; }
-    .s-crumb { font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--text-secondary); opacity: .5; margin-bottom: 2.5rem; display: flex; gap: .75rem; align-items: center; }
+
+    [data-theme="dark"] {
+      --bg:       #0b0f14;
+      --surface:  #111620;
+      --card:     #161d28;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #f0ede6;
+      --muted:    rgba(240,237,230,0.55);
+      --glass:    rgba(255,255,255,0.03);
+    }
+    [data-theme="light"] {
+      --bg:       var(--paper);
+      --surface:  var(--paper2);
+      --card:     #fff;
+      --border:   var(--border-light);
+      --text:     var(--ink);
+      --muted:    var(--ink3);
+      --glass:    rgba(0,0,0,0.02);
+    }
+
+    html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--ff-body); font-weight: 300; transition: background 0.3s, color 0.3s; }
+
+    /* ── FAKE HEADER (matches shared.js header) ── */
+    .ukb-header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--bar-h);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; z-index: 100;
+    }
+    .ukb-header-left { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .ukb-logo { height: 22px; width: auto; }
+    .ukb-wordmark { font-family: var(--ff-mono); font-size: 0.62rem; letter-spacing: 0.14em; color: var(--muted); }
+    .ukb-header-right { display: flex; gap: 0.6rem; }
+    .ukb-theme-btn {
+      background: none; border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.3rem 0.65rem; font-size: 0.75rem; cursor: pointer;
+      color: var(--muted); transition: all 0.2s;
+    }
+    .ukb-theme-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
+
+    /* ── SPINE ── */
+    .spine {
+      position: fixed; left: 0; top: 0; width: 3px; height: 0%;
+      background: var(--session-accent); z-index: 200; transition: height .1s linear;
+    }
+
+    /* ── PAGE ── */
+    .s-page {
+      padding-top: calc(var(--bar-h) + 3rem);
+      padding-bottom: 6rem; max-width: 960px;
+      margin: 0 auto; padding-left: 2rem; padding-right: 2rem;
+    }
+    .s-crumb {
+      font-family: var(--ff-sans); font-size: .6rem; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--muted); opacity: .5;
+      margin-bottom: 2.5rem; display: flex; gap: .75rem; align-items: center;
+    }
     .s-crumb span { color: var(--session-accent); opacity: 1; }
     .s-hero { margin-bottom: 3.5rem; }
-    .s-label { font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin-bottom: .75rem; font-weight: 600; }
+    .s-label { font-family: var(--ff-sans); font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin-bottom: .75rem; font-weight: 600; }
     .s-title { font-family: var(--ff-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--text); margin-bottom: .5rem; }
-    .s-subtitle { font-family: var(--ff-display); font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; font-weight: 400; color: var(--text-secondary); margin-bottom: 1.5rem; }
-    .s-oneliner { font-size: .9rem; line-height: 1.7; color: var(--text-secondary); border-left: 3px solid var(--session-accent); padding-left: 1rem; max-width: 540px; }
-    .s-badge { display: inline-flex; align-items: center; gap: .5rem; font-family: 'Inter', sans-serif; font-size: .55rem; letter-spacing: .2em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px; border: 1px solid var(--session-accent); color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 8%, transparent); margin-bottom: 1.5rem; }
-    .s-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); gap: 1rem; }
-    .s-nav-btn { font-family: 'Inter', sans-serif; font-size: .7rem; letter-spacing: .1em; font-weight: 500; padding: .6rem 1.4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--glass); color: var(--text-secondary); text-decoration: none; transition: var(--transition); }
-    .s-nav-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
-    .s-nav-next { margin-left: auto; }
-    @media (max-width: 600px) { .s-page { padding-left: 1.25rem; padding-right: 1.25rem; } }
+    .s-subtitle { font-family: var(--ff-display); font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; font-weight: 400; color: var(--muted); margin-bottom: 1.5rem; }
+    .s-oneliner { font-size: .9rem; line-height: 1.7; color: var(--muted); border-left: 3px solid var(--session-accent); padding-left: 1rem; max-width: 580px; }
+    .s-badge { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--ff-sans); font-size: .55rem; letter-spacing: .2em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px; border: 1px solid var(--session-accent); color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 8%, transparent); margin-bottom: 1.5rem; }
 
-    /* ── Session content ── */
-    .session-content { margin-top: 2rem; line-height: 1.8; color: var(--text-secondary); }
+    /* ── CONTENT ── */
+    .session-content { margin-top: 2rem; line-height: 1.8; color: var(--muted); }
     .session-content p { margin-bottom: 1.25rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
-    .session-content h2 {
-      font-family: var(--ff-display); font-size: clamp(1.4rem, 3.5vw, 2rem);
-      font-weight: 800; color: var(--text); margin: 3rem 0 1rem; letter-spacing: -.02em;
-    }
-    .session-content h3 {
-      font-family: 'Inter', sans-serif; font-size: .65rem; letter-spacing: .3em;
-      text-transform: uppercase; color: var(--session-accent); margin: 2rem 0 .75rem; font-weight: 700;
-    }
+    .session-content h2 { font-family: var(--ff-display); font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 800; color: var(--text); margin: 3rem 0 1rem; letter-spacing: -.02em; }
+    .session-content h3 { font-family: var(--ff-sans); font-size: .65rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin: 2rem 0 .75rem; font-weight: 700; }
     .session-content strong { color: var(--text); font-weight: 600; }
     .session-content ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
     .session-content ul li { margin-bottom: .5rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
 
-    /* ── Two-by-two matrix ── */
-    .matrix-wrap { margin: 2rem 0; }
-    .matrix-label-row {
-      display: grid; grid-template-columns: 80px 1fr 1fr;
-      gap: 1px; margin-bottom: 1px;
+    /* ── COLLAPSIBLE CONTAINER ── */
+    .collapsible-wrap {
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; margin: 2rem 0;
     }
-    .matrix-col-label {
-      font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 700;
-      letter-spacing: .15em; text-transform: uppercase; color: var(--session-accent);
-      text-align: center; padding: .5rem;
+    .collapsible-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.5rem; cursor: pointer;
+      background: color-mix(in srgb, var(--session-accent) 6%, var(--surface));
+      border-bottom: 1px solid transparent;
+      transition: background 0.2s;
+      user-select: none;
     }
-    .matrix-grid {
-      display: grid; grid-template-columns: 80px 1fr 1fr;
-      grid-template-rows: auto auto; gap: 1px;
-      background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    .collapsible-header:hover { background: color-mix(in srgb, var(--session-accent) 10%, var(--surface)); }
+    .collapsible-header.open { border-bottom-color: var(--border); }
+    .collapsible-title {
+      font-family: var(--ff-sans); font-size: .72rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--session-accent);
     }
-    .matrix-row-label {
-      background: var(--glass); display: flex; align-items: center; justify-content: center;
-      font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--session-accent); writing-mode: vertical-rl;
-      text-orientation: mixed; transform: rotate(180deg);
-      padding: 1rem .5rem; text-align: center;
+    .collapsible-meta {
+      font-family: var(--ff-mono); font-size: .55rem; letter-spacing: .1em;
+      color: var(--muted); margin-top: .2rem;
     }
-    .matrix-cell {
-      background: var(--glass); padding: 1.1rem 1.2rem;
-      display: flex; flex-direction: column; gap: .4rem;
+    .collapsible-chevron {
+      font-size: 1rem; color: var(--session-accent);
+      transition: transform 0.3s;
     }
-    .matrix-cell.highlight {
-      background: color-mix(in srgb, var(--session-accent) 7%, var(--glass));
+    .collapsible-chevron.open { transform: rotate(180deg); }
+    .collapsible-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
     }
-    .cell-label {
-      font-family: 'Inter', sans-serif; font-size: .6rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase; color: var(--session-accent);
-      margin-bottom: .2rem;
-    }
-    .cell-tools {
-      font-family: 'Inter', sans-serif; font-size: .78rem; font-weight: 500;
-      color: var(--text); line-height: 1.5;
-    }
-    .cell-note {
-      font-family: 'Inter', sans-serif; font-size: .7rem; font-weight: 300;
-      color: var(--text-secondary); line-height: 1.5;
-    }
+    .collapsible-body.open { max-height: 4000px; }
+    .collapsible-inner { padding: 1.5rem; }
 
-    /* ── Tool comparison table ── */
-    .tool-table { width: 100%; border-collapse: collapse; margin: 1.75rem 0; font-size: .82rem; }
-    .tool-table th {
+    /* ── COMPARISON TABLE ── */
+    .cmp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .cmp-table {
+      width: 100%; border-collapse: collapse;
+      font-family: var(--ff-sans); font-size: 0.78rem; min-width: 820px;
+    }
+    .cmp-table thead tr th {
       background: color-mix(in srgb, var(--session-accent) 12%, transparent);
-      color: var(--text); font-family: 'Inter', sans-serif; font-size: .58rem;
-      letter-spacing: .15em; text-transform: uppercase; font-weight: 700;
-      padding: .7rem 1rem; text-align: left;
-      border-bottom: 1px solid var(--session-accent);
+      color: var(--session-accent); font-family: var(--ff-mono);
+      font-size: .52rem; letter-spacing: .18em; text-transform: uppercase;
+      font-weight: 700; padding: .7rem .85rem; text-align: left;
+      border-bottom: 2px solid var(--session-accent);
+      border-right: 1px solid var(--border); white-space: nowrap;
     }
-    .tool-table td {
-      padding: .85rem 1rem; border-bottom: 1px solid var(--border);
-      color: var(--text-secondary); vertical-align: top; line-height: 1.5;
+    .cmp-table thead tr th:last-child { border-right: none; }
+    .cmp-table tbody tr td {
+      padding: .7rem .85rem; border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border); vertical-align: top;
+      line-height: 1.45; color: var(--muted);
     }
-    .tool-table tr:last-child td { border-bottom: none; }
-    .tool-table td:first-child { color: var(--text); font-weight: 500; white-space: nowrap; }
-    .tool-table tr:hover td { background: color-mix(in srgb, var(--session-accent) 4%, transparent); }
-    .tag {
-      display: inline-block; font-family: 'Inter', sans-serif;
-      font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
-      padding: .15rem .5rem; border-radius: 3px; margin-right: .3rem; margin-bottom: .2rem;
+    .cmp-table tbody tr td:last-child { border-right: none; }
+    .cmp-table tbody tr:last-child td { border-bottom: none; }
+    .cmp-table tbody tr td:first-child {
+      color: var(--text); font-weight: 500; white-space: nowrap;
+      font-size: 0.82rem;
     }
-    .tag-yes { background: color-mix(in srgb, #66bb6a 15%, transparent); color: #a5d6a7; }
-    .tag-partial { background: color-mix(in srgb, #ffa726 15%, transparent); color: #ffcc80; }
-    .tag-no { background: color-mix(in srgb, #ef5350 12%, transparent); color: #ef9a9a; }
+    .cmp-table tbody tr:hover td { background: color-mix(in srgb, var(--session-accent) 3%, transparent); }
 
-    /* ── Blind spots ── */
-    .blindspot-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
-      margin: 1.75rem 0;
+    /* step indicators */
+    .step-dot {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 4px; vertical-align: middle; flex-shrink: 0;
     }
+    .dot-yes  { background: #4ade80; }
+    .dot-part { background: #fb923c; }
+    .dot-no   { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
+
+    .tic {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--ff-mono); font-size: .62rem; letter-spacing: .04em;
+      padding: .15rem .45rem; border-radius: 3px; white-space: nowrap;
+    }
+    .tic-y { color: #4ade80; background: rgba(74,222,128,.1); }
+    .tic-p { color: #fb923c; background: rgba(251,146,60,.1); }
+    .tic-n { color: rgba(255,255,255,.3); background: rgba(255,255,255,.04); }
+
+    [data-theme="light"] .tic-n { color: var(--muted); background: rgba(0,0,0,.04); }
+    [data-theme="light"] .dot-no { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.15); }
+
+    .prop-badge {
+      display: inline-block; font-family: var(--ff-mono); font-size: .5rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .12rem .42rem; border-radius: 2px; white-space: nowrap;
+    }
+    .prop-free { color: #4ade80; border: 1px solid rgba(74,222,128,.3); }
+    .prop-freemium { color: #fb923c; border: 1px solid rgba(251,146,60,.3); }
+    .prop-paid { color: #f87171; border: 1px solid rgba(248,113,113,.3); }
+
+    /* ── TWO-BY-TWO MATRIX ── */
+    .matrix-wrap { margin: 2rem 0; }
+    .matrix-label-row { display: grid; grid-template-columns: 80px 1fr 1fr; gap: 1px; margin-bottom: 1px; }
+    .matrix-col-label { font-family: var(--ff-sans); font-size: .58rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--session-accent); text-align: center; padding: .5rem; }
+    .matrix-grid { display: grid; grid-template-columns: 80px 1fr 1fr; grid-template-rows: auto auto; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .matrix-row-label { background: var(--glass); display: flex; align-items: center; justify-content: center; font-family: var(--ff-sans); font-size: .55rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--session-accent); writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); padding: 1rem .5rem; text-align: center; }
+    .matrix-cell { background: var(--glass); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: .4rem; }
+    .matrix-cell.highlight { background: color-mix(in srgb, var(--session-accent) 7%, var(--glass)); }
+    .cell-label { font-family: var(--ff-sans); font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--session-accent); margin-bottom: .2rem; }
+    .cell-tools { font-family: var(--ff-sans); font-size: .78rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .cell-note { font-family: var(--ff-sans); font-size: .7rem; font-weight: 300; color: var(--muted); line-height: 1.5; }
+
+    /* ── TOOL DEPTH CARDS ── */
+    .tool-depth-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 3px solid var(--session-accent);
+      border-radius: 6px; padding: 1.1rem 1.3rem;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 8px;
+    }
+    .tool-depth-card:hover { border-color: color-mix(in srgb, var(--session-accent) 44%, transparent); }
+    .tool-depth-card.open { border-color: color-mix(in srgb, var(--session-accent) 44%, transparent); }
+    .tdc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .tdc-name { font-family: var(--ff-display); font-size: 1.15rem; color: var(--text); }
+    .tdc-tag { font-family: var(--ff-mono); font-size: .52rem; letter-spacing: .18em; color: var(--session-accent); border: 1px solid color-mix(in srgb,var(--session-accent) 55%,transparent); padding: .15rem .45rem; border-radius: 2px; }
+    .tdc-arm { font-family: var(--ff-mono); font-size: .58rem; letter-spacing: .1em; color: var(--muted); margin-top: .3rem; }
+    .tdc-chevron { color: var(--muted); font-size: .75rem; transition: transform 0.2s; flex-shrink: 0; }
+    .tdc-chevron.open { transform: rotate(45deg); }
+    .tdc-body { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: none; }
+    .tdc-body.visible { display: block; }
+    .tdc-row { margin-bottom: .8rem; }
+    .tdc-label { font-family: var(--ff-mono); font-size: .58rem; color: var(--session-accent); letter-spacing: .14em; margin-bottom: 4px; }
+    .tdc-content { font-family: var(--ff-sans); font-size: .82rem; color: var(--muted); line-height: 1.6; }
+    .tdc-warning { color: rgba(248,113,113,0.75); }
+    .tdc-verdict { background: color-mix(in srgb,var(--session-accent) 0d,transparent); border: 1px solid color-mix(in srgb,var(--session-accent) 22%,transparent); border-radius: 4px; padding: .6rem .9rem; font-family: var(--ff-sans); font-size: .83rem; color: var(--session-accent); line-height: 1.5; margin-bottom: .8rem; }
+    .tdc-open-link { font-family: var(--ff-mono); font-size: .6rem; letter-spacing: .12em; color: var(--session-accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb,var(--session-accent) 55%,transparent); padding-bottom: 1px; }
+
+    /* ── BLIND SPOTS ── */
+    .blindspot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 1.75rem 0; }
     .bs-card { background: var(--glass); padding: 1.2rem 1.4rem; display: flex; flex-direction: column; gap: .45rem; }
     .bs-icon { font-size: 1.1rem; margin-bottom: .1rem; }
     .bs-title { font-family: var(--ff-display); font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.2; }
-    .bs-desc { font-family: 'Inter', sans-serif; font-size: .73rem; font-weight: 300; line-height: 1.55; color: var(--text-secondary); }
-    .bs-fix { font-family: 'Inter', sans-serif; font-size: .68rem; font-weight: 500;
-      color: var(--session-accent); margin-top: .3rem; }
+    .bs-desc { font-family: var(--ff-sans); font-size: .73rem; font-weight: 300; line-height: 1.55; color: var(--muted); }
+    .bs-fix { font-family: var(--ff-sans); font-size: .68rem; font-weight: 500; color: var(--session-accent); margin-top: .3rem; }
 
-    /* ── Scenario chooser ── */
-    .exercise-box {
-      background: color-mix(in srgb, var(--session-accent) 6%, var(--glass));
-      border: 1px dashed color-mix(in srgb, var(--session-accent) 50%, transparent);
-      padding: 2rem 2rem 1.75rem; border-radius: 14px; margin: 2.5rem 0;
-    }
+    /* ── SCENARIO CHOOSER ── */
+    .exercise-box { background: color-mix(in srgb, var(--session-accent) 6%, var(--glass)); border: 1px dashed color-mix(in srgb, var(--session-accent) 50%, transparent); padding: 2rem 2rem 1.75rem; border-radius: 14px; margin: 2.5rem 0; }
     .exercise-box h3 { margin-top: 0; }
-    .scenario-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-      gap: .6rem; margin: 1rem 0 1.25rem;
-    }
-    .scenario-btn {
-      font-family: 'Inter', sans-serif; font-size: .72rem; font-weight: 400;
-      line-height: 1.45; padding: .8rem 1rem; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--glass);
-      color: var(--text-secondary); cursor: pointer; text-align: left;
-      transition: all .15s;
-    }
-    .scenario-btn:hover, .scenario-btn.active {
-      border-color: var(--session-accent); color: var(--text);
-      background: color-mix(in srgb, var(--session-accent) 8%, transparent);
-    }
-    .scenario-result {
-      padding: 1.1rem 1.4rem; border-radius: 10px;
-      background: var(--glass); border: 1px solid var(--border);
-      font-size: .88rem; line-height: 1.7; color: var(--text-secondary);
-      display: none;
-    }
+    .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: .6rem; margin: 1rem 0 1.25rem; }
+    .scenario-btn { font-family: var(--ff-sans); font-size: .72rem; font-weight: 400; line-height: 1.45; padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--glass); color: var(--muted); cursor: pointer; text-align: left; transition: all .15s; }
+    .scenario-btn:hover, .scenario-btn.active { border-color: var(--session-accent); color: var(--text); background: color-mix(in srgb, var(--session-accent) 8%, transparent); }
+    .scenario-result { padding: 1.1rem 1.4rem; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); font-size: .88rem; line-height: 1.7; color: var(--muted); display: none; }
     .scenario-result.visible { display: block; }
-    .scenario-result .rec-label {
-      font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700;
-      letter-spacing: .2em; text-transform: uppercase; color: var(--session-accent);
-      display: block; margin-bottom: .6rem;
-    }
-    .scenario-result strong { color: var(--text); }
+    .rec-label { font-family: var(--ff-sans); font-size: .55rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--session-accent); display: block; margin-bottom: .6rem; }
 
-    /* ── Takeaway ── */
-    .takeaway {
-      margin-top: 3rem; padding: 1.5rem 2rem; border-radius: 12px;
-      border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent);
-      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
-    }
-    .takeaway h3 { margin-top: 0; }
+    /* ── TAKEAWAY ── */
+    .takeaway { margin-top: 3rem; padding: 1.5rem 2rem; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent); background: color-mix(in srgb, var(--session-accent) 5%, transparent); }
+    .takeaway h3 { font-family: var(--ff-sans); font-size: .65rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin: 0 0 .75rem; font-weight: 700; }
     .takeaway p { margin-bottom: 0; font-size: .95rem; }
+
+    /* ── NAV ── */
+    .s-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); gap: 1rem; }
+    .s-nav-btn { font-family: var(--ff-sans); font-size: .7rem; letter-spacing: .1em; font-weight: 500; padding: .6rem 1.4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--glass); color: var(--muted); text-decoration: none; transition: all .2s; cursor: pointer; }
+    .s-nav-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
+    .s-nav-next { margin-left: auto; }
+
+    /* legend strip */
+    .legend-strip { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0 1.5rem; padding: .75rem 1rem; background: var(--glass); border: 1px solid var(--border); border-radius: 6px; }
+    .leg-item { display: flex; align-items: center; gap: .45rem; font-family: var(--ff-mono); font-size: .55rem; letter-spacing: .07em; color: var(--muted); }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    @keyframes shk { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+    @media (max-width: 600px) { .s-page { padding-left: 1.25rem; padding-right: 1.25rem; } }
   </style>
 </head>
 <body>
 <div class="spine" id="spine"></div>
-<div class="scroll-indicator" aria-hidden="true"><div class="scroll-progress"></div></div>
-<div class="bg-pattern" aria-hidden="true"></div>
-<header class="header" id="header"></header>
+
+<!-- MINIMAL HEADER -->
+<header class="ukb-header">
+  <a href="../../" class="ukb-header-left">
+    <img src="https://abikesa.github.io/logos/assets/ukubona-dark.png" alt="Ukubona" class="ukb-logo" id="logo-img">
+    <span class="ukb-wordmark">Ukubona × WHO India</span>
+  </a>
+  <div class="ukb-header-right">
+    <button class="ukb-theme-btn" id="theme-toggle" title="Toggle theme">☀</button>
+  </div>
+</header>
 
 <div class="s-page">
   <div class="s-crumb">
@@ -198,18 +296,63 @@
   </div>
 
   <div class="s-hero">
-    <div class="s-badge">🔬 Level 1 of 3 · Session 2 of 5</div>
+    <div class="s-badge">🔬 Level 1 of 5 · Session 2 of 5</div>
     <p class="s-label">Level 1 · Foundations</p>
     <h1 class="s-title">The Tools Available</h1>
     <p class="s-subtitle">What AI Can and Cannot See</p>
-    <p class="s-oneliner">The landing page lists 20 tools. This session tells you which ones to reach for on a health financing brief — and what every AI tool in this space is blind to.</p>
+    <p class="s-oneliner">The landscape lists 20 tools. This session maps all of them across the research pipeline steps that matter — database search, screening, extraction — and tells you which ones to reach for on a health financing brief.</p>
   </div>
 
   <div class="session-content">
 
     <h2>The right question is not "which tool?" but "which job?"</h2>
-    <p>The 20 tools catalogued on the home page are not interchangeable. They differ on two dimensions that matter most for health economics and financing work: what corpus they search, and what they do with what they find. Choosing the wrong tool for a job does not just slow you down — it silently shapes what evidence you see and what you miss.</p>
+    <p>The 20 tools in the catalogue are not interchangeable. They differ on two dimensions that matter most for health economics and financing work: what corpus they search, and what they do with what they find. Choosing the wrong tool for a job does not just slow you down — it silently shapes what evidence you see and what you miss.</p>
     <p>Think of the tools in two categories: <strong>retrievers</strong> find and surface papers; <strong>synthesisers</strong> read and summarise them. Some tools do both. Most do one well. The distinction matters because your bottleneck — as you identified in Session 1 — determines which category you need first.</p>
+
+    <!-- ══ COLLAPSIBLE 20-TOOL COMPARISON TABLE ══ -->
+    <div class="collapsible-wrap" id="compare-wrap">
+      <div class="collapsible-header" id="compare-toggle" onclick="toggleCollapsible('compare')">
+        <div>
+          <div class="collapsible-title">20-Tool Comparison Matrix</div>
+          <div class="collapsible-meta">Database Search · Title/Abstract Screening · Data Extraction · Pros &amp; Cons · Geographic Reach · Proprietary Status</div>
+        </div>
+        <span class="collapsible-chevron" id="compare-chevron">▼</span>
+      </div>
+      <div class="collapsible-body" id="compare-body">
+        <div class="collapsible-inner">
+
+          <div class="legend-strip">
+            <div class="leg-item"><span class="leg-dot" style="background:#4ade80"></span> Strong / Yes</div>
+            <div class="leg-item"><span class="leg-dot" style="background:#fb923c"></span> Partial / Limited</div>
+            <div class="leg-item"><span class="leg-dot" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2)"></span> Not available</div>
+            <div class="leg-item" style="margin-left:auto">
+              <span class="prop-badge prop-free" style="margin-right:6px">Free</span>
+              <span class="prop-badge prop-freemium" style="margin-right:6px">Freemium</span>
+              <span class="prop-badge prop-paid">Paid/Proprietary</span>
+            </div>
+          </div>
+
+          <div class="cmp-table-wrap">
+            <table class="cmp-table" id="cmp-table">
+              <thead>
+                <tr>
+                  <th style="min-width:130px">AI Tool</th>
+                  <th>Database Search</th>
+                  <th>Title / Abstract Screening</th>
+                  <th>Data Extraction</th>
+                  <th style="min-width:220px">Pros &amp; Cons</th>
+                  <th>Geographic Reach<br><small style="opacity:.7;font-size:.45rem">LMIC coverage</small></th>
+                  <th>Proprietary Status</th>
+                </tr>
+              </thead>
+              <tbody id="cmp-tbody">
+                <!-- rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <h2>A map of the tool landscape</h2>
     <p>For health economics and financing work, the most useful way to organise the tools is by two questions: does it search grey literature, and does it handle dense PDFs (government reports, HTA assessments, budget documents) rather than just journal abstracts?</p>
@@ -221,7 +364,6 @@
         <div class="matrix-col-label">Handles grey literature / PDFs</div>
       </div>
       <div class="matrix-grid">
-
         <div class="matrix-row-label">Retriever</div>
         <div class="matrix-cell">
           <div class="cell-label">Wide but shallow</div>
@@ -233,7 +375,6 @@
           <div class="cell-tools">Elicit · Research Rabbit + manual grey search · Claude / GPT with uploaded PDFs</div>
           <div class="cell-note">Elicit excels at structured data extraction from papers. For grey literature, there is no substitute for targeted manual search — but Claude or GPT can then process what you retrieve.</div>
         </div>
-
         <div class="matrix-row-label">Synthesiser</div>
         <div class="matrix-cell">
           <div class="cell-label">Fast summaries, limited scope</div>
@@ -245,61 +386,13 @@
           <div class="cell-tools">Humata · Claude (with PDF upload) · NotebookLM</div>
           <div class="cell-note">Upload a 200-page NSSO survey, a PM-JAY evaluation, or a stack of state health accounts and interrogate them directly. This is where the grey literature gap from Session 1 gets closed.</div>
         </div>
-
       </div>
     </div>
 
-    <h2>The five tools worth knowing in detail</h2>
-    <p>For a WHO India health financing context, five tools do most of the work. Here is an honest assessment of each — including what it cannot do.</p>
+    <h2>The five tools worth knowing in depth</h2>
+    <p>For a WHO India health financing context, five tools do most of the work. Click each card for an honest assessment — including what it cannot do.</p>
 
-    <table class="tool-table">
-      <thead>
-        <tr>
-          <th>Tool</th>
-          <th>Best use case</th>
-          <th>Grey lit?</th>
-          <th>LMIC evidence?</th>
-          <th>Critical limitation</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Elicit</td>
-          <td>Structured extraction across many papers — pulling cost-effectiveness ratios, sample sizes, outcome measures into a table</td>
-          <td><span class="tag tag-no">No</span></td>
-          <td><span class="tag tag-partial">Partial</span></td>
-          <td>Only searches Semantic Scholar corpus. Misses grey literature and most government reports. Strongest for CEA and systematic review identification.</td>
-        </tr>
-        <tr>
-          <td>Consensus</td>
-          <td>Quick answer to a focused yes/no question — "does X intervention reduce catastrophic health expenditure?" — with citations</td>
-          <td><span class="tag tag-no">No</span></td>
-          <td><span class="tag tag-partial">Partial</span></td>
-          <td>Optimised for biomedical questions. Health financing and insurance queries return mixed results — watch for clinical outcomes being surfaced instead of economic ones.</td>
-        </tr>
-        <tr>
-          <td>Humata</td>
-          <td>Interrogating a specific large document — an HTAIn assessment, NSSO survey, state PFM report — with targeted questions</td>
-          <td><span class="tag tag-yes">Yes</span></td>
-          <td><span class="tag tag-yes">Yes</span></td>
-          <td>One document at a time in the free tier. Cannot synthesise across multiple uploaded files. Does not search; you must supply the document.</td>
-        </tr>
-        <tr>
-          <td>Semantic Scholar</td>
-          <td>Mapping a field quickly, finding citation networks, identifying the most influential papers in a financing sub-topic</td>
-          <td><span class="tag tag-no">No</span></td>
-          <td><span class="tag tag-partial">Partial</span></td>
-          <td>LMIC health financing literature is under-represented in its index. Strong on volume; weak on the specific literature most relevant to India UHC work.</td>
-        </tr>
-        <tr>
-          <td>Claude / GPT<br><small>(with PDF upload)</small></td>
-          <td>Processing any document you supply — summarising, extracting, comparing, drafting. Also the best tool for PECO-F prompt iteration (Session 3)</td>
-          <td><span class="tag tag-yes">Yes</span></td>
-          <td><span class="tag tag-yes">Yes</span></td>
-          <td>Does not retrieve documents independently. Cannot search databases. Everything depends on what you upload or paste. Hallucination risk for specific citations — always verify.</td>
-        </tr>
-      </tbody>
-    </table>
+    <div id="depth-cards"></div>
 
     <h2>What every AI tool in this space cannot see</h2>
     <p>There are four blind spots shared by virtually all AI literature tools. Knowing them is not pessimism — it is workflow design. Each has a practical workaround.</p>
@@ -334,9 +427,8 @@
     <h2>Choose your tool for the task</h2>
 
     <div class="exercise-box">
-      <h3>🧪 Scenario matching — pick your situation</h3>
+      <h3 style="font-family:var(--ff-sans);font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--session-accent);font-weight:700;">🧪 Scenario matching — pick your situation</h3>
       <p style="font-size:.85rem;margin-bottom:1rem;">Select the scenario that most closely matches your current task. You will get a specific tool recommendation and a one-line rationale.</p>
-
       <div class="scenario-grid">
         <button class="scenario-btn" data-scenario="0">I need to quickly map what's been published on health insurance and catastrophic expenditure in South Asia</button>
         <button class="scenario-btn" data-scenario="1">I have a 180-page HTAIn assessment I need to extract specific cost-effectiveness findings from</button>
@@ -345,7 +437,6 @@
         <button class="scenario-btn" data-scenario="4">I need to know if there's any recent evidence that a specific intervention works in an LMIC context</button>
         <button class="scenario-btn" data-scenario="5">I need to build a structured extraction table of cost-per-DALY across 20+ papers</button>
       </div>
-
       <div class="scenario-result" id="scenario-result">
         <span class="rec-label">Recommended approach</span>
         <span id="scenario-text"></span>
@@ -359,56 +450,468 @@
 
   </div><!-- /session-content -->
 
-  <nav class="s-nav" aria-label="Session navigation">
+  <nav class="s-nav">
     <a class="s-nav-btn" href="session1.html">← Previous</a>
     <a class="s-nav-btn s-nav-next" href="session3.html">Next →</a>
   </nav>
 </div>
 
-<div id="footer-placeholder"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
-<script src="../../js/shared.js"></script>
 <script>
-  /* ── scroll spine ── */
-  const spine = document.getElementById('spine');
-  window.addEventListener('scroll', () => {
-    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-    spine.style.height = Math.min(pct, 100) + '%';
-  }, { passive: true });
+/* ══════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════ */
+const TOOLS_20 = [
+  {
+    name: "Elicit",
+    url: "https://elicit.org",
+    tag: "Ought · Freemium",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "y",
+    geoLMIC: "p",
+    pros: "Purpose-built PICO extraction; structured tables across multiple papers; strong on RCTs and systematic reviews",
+    cons: "Only searches Semantic Scholar corpus; misses grey literature entirely; free tier limited to ~12 papers/query",
+    arm: "Discovery · Extraction"
+  },
+  {
+    name: "Consensus",
+    url: "https://consensus.app",
+    tag: "Consensus · Freemium",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Fast yes/no synthesis with citations; useful for policy briefs; auto-clusters by finding type",
+    cons: "Optimised for biomedical questions; health financing queries return mixed results; no data extraction",
+    arm: "Discovery · Synthesis"
+  },
+  {
+    name: "Scite",
+    url: "https://scite.ai",
+    tag: "Scite · Freemium",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "p",
+    geoLMIC: "p",
+    pros: "Shows whether papers are supported, contradicted or merely mentioned; strong citation context; useful for quality appraisal",
+    cons: "Primarily citation analysis, not discovery; limited free tier; does not extract data fields",
+    arm: "Citation · Quality appraisal"
+  },
+  {
+    name: "Research Rabbit",
+    url: "https://researchrabbit.ai",
+    tag: "Free",
+    prop: "free",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Visual citation network mapping; evolving recommendations; very good for serendipitous discovery",
+    cons: "No data extraction; journal-indexed only; search string less precise than PubMed",
+    arm: "Discovery · Mapping"
+  },
+  {
+    name: "Connected Papers",
+    url: "https://connectedpapers.com",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "p",
+    screening: "p",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Visually identifies clusters and seminal works; good entry point for new topics",
+    cons: "Requires a seed paper; limited to one graph at a time on free tier; no extraction capability",
+    arm: "Discovery · Mapping"
+  },
+  {
+    name: "Iris.ai",
+    url: "https://iris.ai",
+    tag: "Paid",
+    prop: "paid",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "p",
+    geoLMIC: "p",
+    pros: "AI concept extraction and knowledge graphs; strong for STEM research landscape mapping",
+    cons: "Primarily paid; LMIC health financing coverage thin; steep learning curve",
+    arm: "Discovery · STEM focus"
+  },
+  {
+    name: "Litmaps",
+    url: "https://litmaps.com",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Timeline-based literature maps; tracks new publications automatically; good for ongoing reviews",
+    cons: "No data extraction; limited LMIC-specific filtering; free tier restricts map size",
+    arm: "Discovery · Mapping"
+  },
+  {
+    name: "Scholarcy",
+    url: "https://scholarcy.com",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "n",
+    screening: "y",
+    extraction: "y",
+    geoLMIC: "y",
+    pros: "Rapid article summarisation and flashcards; extracts key claims and figures; processes any PDF you upload",
+    cons: "Does not search databases; depends entirely on documents you supply; occasional hallucination on dense tables",
+    arm: "Screening · Extraction"
+  },
+  {
+    name: "SciSpace",
+    url: "https://scispace.com",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "p",
+    geoLMIC: "p",
+    pros: "Plain-language explanations of complex papers; AI copilot for reading and writing; broad index",
+    cons: "Health economics depth limited; extraction less structured than Elicit; LMIC evidence sparse",
+    arm: "Screening · Synthesis"
+  },
+  {
+    name: "Paper Digest",
+    url: "https://paperdigest.org",
+    tag: "Free",
+    prop: "free",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Free; concise structured summaries; daily digest feature for field monitoring",
+    cons: "No data extraction; limited customisation; not optimised for health economics queries",
+    arm: "Screening · Monitoring"
+  },
+  {
+    name: "Rayyan",
+    url: "https://rayyan.ai",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "n",
+    screening: "y",
+    extraction: "p",
+    geoLMIC: "y",
+    pros: "Purpose-built for systematic review screening; strong collaboration features; used in Cochrane reviews; health sciences focus",
+    cons: "Does not search databases — you import results; extraction template limited; best for clinical rather than economic outcomes",
+    arm: "Screening · Systematic review"
+  },
+  {
+    name: "Humata",
+    url: "https://humata.ai",
+    tag: "Freemium",
+    prop: "freemium",
+    dbSearch: "n",
+    screening: "y",
+    extraction: "y",
+    geoLMIC: "y",
+    pros: "Excellent for interrogating a single large PDF (government reports, HTAIn assessments); targeted Q&A with page citations",
+    cons: "One document at a time on free tier; cannot cross-reference multiple uploads; does not search",
+    arm: "Extraction · Grey literature"
+  },
+  {
+    name: "Semantic Scholar",
+    url: "https://semanticscholar.org",
+    tag: "Free",
+    prop: "free",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Free; TL;DR summaries; citation graphs; broad index (200M+ papers); open API",
+    cons: "LMIC health financing under-represented; no extraction; grey literature absent",
+    arm: "Discovery · Screening"
+  },
+  {
+    name: "Dimensions.ai",
+    url: "https://app.dimensions.ai",
+    tag: "Free (research)",
+    prop: "freemium",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "p",
+    geoLMIC: "y",
+    pros: "Best LMIC filtering of any tool; includes grants, datasets and grey literature; country-level filtering; CSV export",
+    cons: "Interface less intuitive than PubMed; extraction requires export to CSV then manual work; learning curve",
+    arm: "Discovery · LMIC focus"
+  },
+  {
+    name: "Inciteful",
+    url: "https://inciteful.xyz",
+    tag: "Free",
+    prop: "free",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Rapid citation network analysis; identifies most-connected papers; free; good for finding seminal work quickly",
+    cons: "No data extraction; primarily bibliometric; not suited for systematic search strings",
+    arm: "Citation · Discovery"
+  },
+  {
+    name: "OpenEvidence",
+    url: "https://openevidence.com",
+    tag: "Free (beta)",
+    prop: "free",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "AI answers with clinical literature citations; fast; increasingly covers health economics literature",
+    cons: "Primarily clinical focus; health financing queries return mixed results; no extraction",
+    arm: "Discovery · Medical"
+  },
+  {
+    name: "Evidence Hunt",
+    url: "https://evidencehunt.ai",
+    tag: "Free",
+    prop: "free",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "n",
+    geoLMIC: "p",
+    pros: "Rapid synthesis from clinical guidelines and primary studies; clean interface; good for clinical questions embedded in HTA",
+    cons: "Narrow scope — clinical guidelines only; minimal LMIC health financing coverage; no extraction",
+    arm: "Discovery · Clinical"
+  },
+  {
+    name: "Nested Knowledge",
+    url: "https://nested-knowledge.com",
+    tag: "Paid",
+    prop: "paid",
+    dbSearch: "y",
+    screening: "y",
+    extraction: "y",
+    geoLMIC: "p",
+    pros: "Purpose-built for systematic reviews and meta-analyses; strong extraction templates; collaborative; life sciences strength",
+    cons: "Paid; primarily life sciences / pharma use case; LMIC health economics coverage limited",
+    arm: "Systematic review · Extraction"
+  },
+  {
+    name: "DistillerSR",
+    url: "https://distillersr.com",
+    tag: "Paid",
+    prop: "paid",
+    dbSearch: "n",
+    screening: "y",
+    extraction: "y",
+    geoLMIC: "y",
+    pros: "Enterprise systematic review software; widely used in HTA and regulatory contexts; audit trail; team features",
+    cons: "Expensive; does not search databases — you import results; overkill for rapid reviews",
+    arm: "Systematic review · Enterprise"
+  },
+  {
+    name: "Bohrium",
+    url: "https://bohrium.com",
+    tag: "Paid",
+    prop: "paid",
+    dbSearch: "y",
+    screening: "p",
+    extraction: "p",
+    geoLMIC: "n",
+    pros: "AI-driven scientific discovery; hypothesis generation; strong in materials science and chemistry",
+    cons: "Not suited for health financing or epidemiology; primarily STEM research; minimal LMIC coverage",
+    arm: "Discovery · STEM"
+  }
+]
 
-  /* ── scenario chooser ── */
-  const scenarios = [
-    {
-      text: `<strong>Start with Semantic Scholar or Dimensions.ai</strong> for a citation-network map, then run the same query through <strong>Elicit</strong> to get structured paper summaries. Set geographic filters to South Asia / LMIC explicitly — neither tool does this by default. Expect to supplement with a manual Google Scholar search filtered to India, Bangladesh, Sri Lanka to catch recent grey literature.`
-    },
-    {
-      text: `<strong>Upload directly to Claude or Humata.</strong> Paste the PDF and ask targeted questions: "What cost-effectiveness ratios are reported for inpatient versus outpatient coverage?" or "Which population subgroups show the lowest financial risk protection scores?" This is faster and more accurate than reading linearly, and you stay in control of which questions get asked.`
-    },
-    {
-      text: `<strong>Semantic Scholar's citation count + Scite</strong> is the right combination here. Use Semantic Scholar to find highly-cited papers in the sub-topic, then run the top 10 through Scite to see which are being challenged, supported, or extended in recent literature. That gives you a defensible "most influential" shortlist rather than just "most cited."`
-    },
-    {
-      text: `<strong>Claude (with all three PDFs uploaded)</strong> is the only tool that can do this directly. Upload each report and ask it to extract comparable variables: coverage rates, utilisation by income quintile, claims settlement ratios, and equity metrics. Then ask it to produce a comparison table. Humata handles one document at a time; Claude handles multiple in the same session.`
-    },
-    {
-      text: `<strong>Consensus</strong> for a fast yes/no orientation, then <strong>Elicit</strong> if you need the underlying papers. For anything published in the last six months, add a direct PubMed search — both tools have indexing lags. If the LMIC signal is weak, try Dimensions.ai with an explicit filter for low- and middle-income countries before concluding the evidence is thin.`
-    },
-    {
-      text: `<strong>Elicit</strong> is the purpose-built tool for this. Set up a structured extraction with your specific columns — intervention, population, comparator, cost per DALY, equity adjustment, study quality — and run your paper set through it. For papers not in Elicit's index, upload PDFs to Claude and ask for extraction in the same column format, then merge the tables manually.`
-    }
-  ];
+const DEPTH_TOOLS = [
+  {
+    name: "Elicit", tag: "OUGHT · FREEMIUM", url: "https://elicit.org",
+    best: "Structured extraction across many papers — pulling cost-effectiveness ratios, sample sizes, outcome measures into a table",
+    howto: "Type your research question in plain English. Click 'Add columns' to specify what to extract: population, intervention, outcome, ICER, sample size. Elicit reads across 100+ papers and returns a structured table. Export to CSV for further analysis.",
+    warning: "Only searches Semantic Scholar corpus. Misses grey literature and most government reports. Strongest for CEA and systematic review identification. Free tier: ~12 papers per query.",
+    verdict: "Start here for any structured extraction task. It does in minutes what takes researchers days.",
+    arm: "Database Search · Screening · Extraction"
+  },
+  {
+    name: "Dimensions.ai", tag: "DIGITAL SCIENCE · FREE (RESEARCH)", url: "https://app.dimensions.ai",
+    best: "LMIC-filtered search including grey literature — the best tool for finding India-specific evidence",
+    howto: "Search: 'tuberculosis screening India cost-effectiveness'. Filter: Field of Research → Health Economics; Country → India; Publication Year → 2015–2026. Export results to CSV. This surfaces papers PubMed misses, including policy reports and working papers.",
+    warning: "Interface takes 10 minutes to learn. Worth every minute for the LMIC coverage alone.",
+    verdict: "Non-negotiable for WHO India work. Surfaces LMIC evidence that indexed search misses.",
+    arm: "Database Search · Discovery · LMIC"
+  },
+  {
+    name: "Humata", tag: "HUMATA · FREEMIUM", url: "https://humata.ai",
+    best: "Interrogating a specific large document — an HTAIn assessment, NSSO survey, state PFM report",
+    howto: "Upload your PDF (up to 60 pages free, 1000+ on paid). Ask targeted questions: 'What cost-effectiveness ratios are reported for inpatient versus outpatient coverage?' or 'Which population subgroups show the lowest financial risk protection scores?'",
+    warning: "One document at a time on the free tier. Cannot synthesise across multiple uploaded files. Does not search — you must supply the document.",
+    verdict: "Best for closing the grey literature gap. What Claude does with PDF uploads, Humata does as a dedicated interface.",
+    arm: "Extraction · Grey Literature"
+  },
+  {
+    name: "Semantic Scholar", tag: "ALLEN INSTITUTE · FREE", url: "https://semanticscholar.org",
+    best: "Mapping a field quickly, finding citation networks, identifying the most influential papers",
+    howto: "Search for your topic. Use the 'Fields of Study' filter to narrow to Health Policy or Economics. Open 'Paper Detail' view for AI-generated TL;DR summaries and citation counts. Use the 'Citations' and 'References' tabs to build your reading list.",
+    warning: "LMIC health financing literature is under-represented. Strong on volume; weak on the specific literature most relevant to India UHC work.",
+    verdict: "Good entry point for an unfamiliar sub-topic. Switch to Dimensions.ai once you need LMIC evidence.",
+    arm: "Discovery · Screening"
+  },
+  {
+    name: "Claude / GPT (PDF upload)", tag: "ANTHROPIC / OPENAI · FREEMIUM", url: "https://claude.ai",
+    best: "Processing any document you supply — summarising, extracting, comparing, drafting assumption statements",
+    howto: "Upload PDFs directly. Ask structured questions: 'Extract utility weights by TB disease stage from this paper. Flag any transferability concerns for a rural Indian PHC population.' Then: 'Synthesise the findings across all three papers I have uploaded and draft a methods assumption with a sensitivity range.'",
+    warning: "Does not retrieve documents independently. Cannot search databases. Everything depends on what you upload or paste. Hallucination risk for specific citations — always verify numbers against the source.",
+    verdict: "The most versatile tool in the stack. Use it to process what you find everywhere else.",
+    arm: "Extraction · Synthesis · Drafting"
+  }
+]
 
-  document.querySelectorAll('.scenario-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const idx = parseInt(btn.dataset.scenario);
-      document.getElementById('scenario-text').innerHTML = scenarios[idx].text;
-      const result = document.getElementById('scenario-result');
-      result.classList.add('visible');
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-  });
+/* ══════════════════════════════════════════════════════
+   COLLAPSIBLE
+══════════════════════════════════════════════════════ */
+function toggleCollapsible(id) {
+  const body = document.getElementById(id + '-body')
+  const chevron = document.getElementById(id + '-chevron')
+  const header = document.getElementById(id + '-toggle')
+  const isOpen = body.classList.contains('open')
+  body.classList.toggle('open', !isOpen)
+  chevron.classList.toggle('open', !isOpen)
+  header.classList.toggle('open', !isOpen)
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER 20-TOOL TABLE
+══════════════════════════════════════════════════════ */
+function tic(val) {
+  if (val === 'y') return '<span class="tic tic-y"><span class="step-dot dot-yes"></span> Strong</span>'
+  if (val === 'p') return '<span class="tic tic-p"><span class="step-dot dot-part"></span> Partial</span>'
+  return '<span class="tic tic-n"><span class="step-dot dot-no"></span> No</span>'
+}
+
+function propBadge(p) {
+  if (p === 'free') return '<span class="prop-badge prop-free">Free</span>'
+  if (p === 'freemium') return '<span class="prop-badge prop-freemium">Freemium</span>'
+  return '<span class="prop-badge prop-paid">Paid</span>'
+}
+
+function renderTable() {
+  const tbody = document.getElementById('cmp-tbody')
+  tbody.innerHTML = TOOLS_20.map(t => `
+    <tr>
+      <td><a href="${t.url}" target="_blank" rel="noopener" style="color:var(--session-accent);text-decoration:none;font-weight:500;">${t.name}</a><br><small style="font-family:var(--ff-mono);font-size:.5rem;color:var(--muted);letter-spacing:.07em;opacity:.7">${t.arm}</small></td>
+      <td>${tic(t.dbSearch)}</td>
+      <td>${tic(t.screening)}</td>
+      <td>${tic(t.extraction)}</td>
+      <td>
+        <div style="margin-bottom:.4rem;font-size:.75rem;color:var(--text)">✚ ${t.pros}</div>
+        <div style="font-size:.73rem;color:rgba(248,113,113,.8)">✗ ${t.cons}</div>
+      </td>
+      <td>${tic(t.geoLMIC)}</td>
+      <td>${propBadge(t.prop)}</td>
+    </tr>
+  `).join('')
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER DEPTH CARDS
+══════════════════════════════════════════════════════ */
+function renderDepthCards() {
+  const wrap = document.getElementById('depth-cards')
+  wrap.innerHTML = DEPTH_TOOLS.map((tool, i) => `
+    <div class="tool-depth-card" id="tdc-${i}" onclick="toggleTDC(${i})">
+      <div class="tdc-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+            <span class="tdc-name">${tool.name}</span>
+            <span class="tdc-tag">${tool.tag}</span>
+          </div>
+          <div class="tdc-arm">${tool.arm}</div>
+        </div>
+        <span class="tdc-chevron" id="tdc-chev-${i}">+</span>
+      </div>
+      <div class="tdc-body" id="tdc-body-${i}">
+        <div class="tdc-row">
+          <div class="tdc-label">BEST FOR</div>
+          <div class="tdc-content">${tool.best}</div>
+        </div>
+        <div class="tdc-row">
+          <div class="tdc-label">HOW TO USE IT</div>
+          <div class="tdc-content">${tool.howto}</div>
+        </div>
+        <div class="tdc-row">
+          <div class="tdc-label" style="color:#f87171">⚠ LIMITATION</div>
+          <div class="tdc-content tdc-warning">${tool.warning}</div>
+        </div>
+        <div class="tdc-verdict">${tool.verdict}</div>
+        <a href="${tool.url}" target="_blank" rel="noopener" class="tdc-open-link" onclick="event.stopPropagation()">OPEN TOOL ↗</a>
+      </div>
+    </div>
+  `).join('')
+}
+
+function toggleTDC(i) {
+  const body = document.getElementById('tdc-body-' + i)
+  const chev = document.getElementById('tdc-chev-' + i)
+  const card = document.getElementById('tdc-' + i)
+  const isOpen = body.classList.contains('visible')
+  body.classList.toggle('visible', !isOpen)
+  chev.classList.toggle('open', !isOpen)
+  card.classList.toggle('open', !isOpen)
+}
+
+/* ══════════════════════════════════════════════════════
+   SCENARIO CHOOSER
+══════════════════════════════════════════════════════ */
+const SCENARIOS = [
+  { text: `<strong>Start with Semantic Scholar or Dimensions.ai</strong> for a citation-network map, then run the same query through <strong>Elicit</strong> to get structured paper summaries. Set geographic filters to South Asia / LMIC explicitly — neither tool does this by default. Supplement with a manual Google Scholar search filtered to India, Bangladesh, Sri Lanka to catch recent grey literature.` },
+  { text: `<strong>Upload directly to Claude or Humata.</strong> Paste the PDF and ask targeted questions: "What cost-effectiveness ratios are reported for inpatient versus outpatient coverage?" This is faster and more accurate than reading linearly, and you stay in control of which questions get asked.` },
+  { text: `<strong>Semantic Scholar's citation count + Scite</strong> is the right combination. Use Semantic Scholar to find highly-cited papers in the sub-topic, then run the top 10 through Scite to see which are being challenged, supported, or extended. That gives you a defensible "most influential" shortlist.` },
+  { text: `<strong>Claude (with all three PDFs uploaded)</strong> is the only tool that can do this directly. Upload each report and ask it to extract comparable variables: coverage rates, utilisation by income quintile, claims settlement ratios. Then ask it to produce a comparison table. Humata handles one document at a time; Claude handles multiple in the same session.` },
+  { text: `<strong>Consensus</strong> for a fast yes/no orientation, then <strong>Elicit</strong> if you need the underlying papers. For anything published in the last six months, add a direct PubMed search. If the LMIC signal is weak, try <strong>Dimensions.ai</strong> with an explicit filter for low- and middle-income countries before concluding the evidence is thin.` },
+  { text: `<strong>Elicit</strong> is the purpose-built tool for this. Set up a structured extraction with your specific columns — intervention, population, comparator, cost per DALY, equity adjustment — and run your paper set through it. For papers not in Elicit's index, upload PDFs to Claude and ask for extraction in the same column format, then merge the tables manually.` }
+]
+
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    const idx = parseInt(btn.dataset.scenario)
+    document.getElementById('scenario-text').innerHTML = SCENARIOS[idx].text
+    const r = document.getElementById('scenario-result')
+    r.classList.add('visible')
+    r.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  })
+})
+
+/* ══════════════════════════════════════════════════════
+   SCROLL SPINE
+══════════════════════════════════════════════════════ */
+const spine = document.getElementById('spine')
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100
+  spine.style.height = Math.min(pct, 100) + '%'
+}, { passive: true })
+
+/* ══════════════════════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════════════════════ */
+const themeBtn = document.getElementById('theme-toggle')
+const logoImg = document.getElementById('logo-img')
+let currentTheme = 'dark'
+themeBtn.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark'
+  document.documentElement.setAttribute('data-theme', currentTheme)
+  themeBtn.textContent = currentTheme === 'dark' ? '☀' : '◑'
+  logoImg.src = currentTheme === 'dark'
+    ? 'https://abikesa.github.io/logos/assets/ukubona-dark.png'
+    : 'https://abikesa.github.io/logos/assets/ukubona-light.png'
+})
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+renderTable()
+renderDepthCards()
 </script>
-</body>
-</html>
+</body>            
+</html>         
