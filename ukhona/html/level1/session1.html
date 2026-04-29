@@ -56,10 +56,14 @@
     .session-content ul li { margin-bottom: .5rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
 
     /* Pipeline diagram */
+    .pipeline-wrap {
+      margin: 2rem 0;
+    }
     .pipeline {
       display: flex; flex-wrap: wrap; align-items: center;
-      gap: .5rem; margin: 2rem 0; padding: 1.75rem 2rem;
-      background: var(--glass); border: 1px solid var(--border); border-radius: 14px;
+      gap: .5rem; padding: 1.75rem 2rem;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 14px 14px 0 0;
     }
     .p-step {
       font-family: 'Inter', sans-serif; font-size: .7rem; font-weight: 600;
@@ -77,10 +81,31 @@
       border-color: color-mix(in srgb, #ef5350 35%, transparent);
       color: #ef9a9a;
     }
-    .pipeline-caption {
-      font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .1em;
-      color: var(--text-secondary); opacity: .5; margin-top: .75rem;
-      width: 100%; text-align: right;
+    /* NEW: annotation bar linking pipeline steps to Session 2 table */
+    .pipeline-annotation {
+      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
+      border: 1px solid color-mix(in srgb, var(--session-accent) 20%, transparent);
+      border-top: none; border-radius: 0 0 14px 14px;
+      padding: .75rem 2rem;
+      display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+    }
+    .pipeline-annotation-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #ef5350; flex-shrink: 0;
+    }
+    .pipeline-annotation-text {
+      font-family: 'Inter', sans-serif; font-size: .62rem; letter-spacing: .07em;
+      color: var(--session-accent); line-height: 1.5; flex: 1;
+    }
+    .pipeline-annotation-link {
+      font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--session-accent);
+      text-decoration: none; border: 1px solid color-mix(in srgb, var(--session-accent) 40%, transparent);
+      padding: .25rem .7rem; border-radius: 3px; white-space: nowrap;
+      transition: all .2s;
+    }
+    .pipeline-annotation-link:hover {
+      background: color-mix(in srgb, var(--session-accent) 12%, transparent);
     }
 
     /* Bottleneck cards */
@@ -184,7 +209,7 @@
   </div>
 
   <div class="s-hero">
-    <div class="s-badge">🌱 Level 1 of 3 · Session 1 of 5</div>
+    <div class="s-badge">🌱 Level 1 of 5 · Session 1 of 5</div>
     <p class="s-label">Level 1 · Foundations</p>
     <h1 class="s-title">The Existing Process</h1>
     <p class="s-subtitle">How Evidence Becomes Policy — and Where It Doesn't</p>
@@ -198,26 +223,35 @@
 
     <p>Here is the pipeline as it typically runs for a health financing or UHC evidence brief:</p>
 
-    <div class="pipeline">
-      <div class="p-step">Policy question defined</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step bottleneck">Database search</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step bottleneck">Title / abstract screening</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step">Full-text retrieval</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step bottleneck">Data extraction</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step">Synthesis</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step">Brief drafted</div>
-      <div class="p-arrow">→</div>
-      <div class="p-step">Policy decision</div>
-      <div class="pipeline-caption">Red steps = highest AI leverage · Blue steps = human judgment remains essential</div>
+    <!-- UPDATED: pipeline now wrapped with annotation bar linking to Session 2 -->
+    <div class="pipeline-wrap">
+      <div class="pipeline">
+        <div class="p-step">Policy question defined</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Database search</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Title / Abstract screening</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Full-text retrieval</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Data extraction</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Synthesis</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Brief drafted</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Policy decision</div>
+      </div>
+      <div class="pipeline-annotation">
+        <div class="pipeline-annotation-dot"></div>
+        <div class="pipeline-annotation-text">
+          The three red steps — <strong>Database Search, Title/Abstract Screening, and Data Extraction</strong> — account for 60–70% of total review time. Session 2 maps 20 AI tools directly against these three steps so you can see exactly which tool covers which bottleneck.
+        </div>
+        <a class="pipeline-annotation-link" href="session2.html">Session 2 tool map →</a>
+      </div>
     </div>
 
-    <p>The red steps — database search, abstract screening, and data extraction — account for roughly 60–70% of total review time in a standard health economics evidence review. They are also the steps most likely to be done inconsistently under time pressure, which means the quality of the final brief is often determined not by the synthesis but by what got dropped during screening.</p>
+    <p>The red steps account for roughly 60–70% of total review time in a standard health economics evidence review. They are also the steps most likely to be done inconsistently under time pressure, which means the quality of the final brief is often determined not by the synthesis but by what got dropped during screening.</p>
 
     <h2>The four bottlenecks specific to WHO India</h2>
     <p>Generic reviews of "how literature review works" are not what this session is for. The friction that WHO India financing and economics staff experience is specific. Here are the four most consequential pressure points:</p>
@@ -276,9 +310,10 @@
         </div>
       </div>
 
+      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
-          Database search and grey literature hunt
+          Database search &amp; grey literature hunt
           <span class="audit-sub">Building search strings, running searches, tracking down reports and government documents</span>
         </div>
         <div class="audit-options">
@@ -288,10 +323,11 @@
         </div>
       </div>
 
+      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
-          Title, abstract, and full-text screening
-          <span class="audit-sub">Reading through results to find what is actually relevant</span>
+          Title / Abstract screening
+          <span class="audit-sub">Reading through results to determine relevance — typically the single largest time sink</span>
         </div>
         <div class="audit-options">
           <button class="audit-btn" data-row="2" data-val="low">≤ 1 day</button>
@@ -300,10 +336,11 @@
         </div>
       </div>
 
+      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
-          Data extraction and quality appraisal
-          <span class="audit-sub">Pulling numbers, methods, and findings from included papers</span>
+          Data extraction
+          <span class="audit-sub">Pulling numbers, methods, and findings from included papers into a usable format</span>
         </div>
         <div class="audit-options">
           <button class="audit-btn" data-row="3" data-val="low">≤ 1 day</button>
@@ -329,13 +366,13 @@
 
     <div class="takeaway">
       <h3>🎯 Key takeaway</h3>
-      <p>The existing process is not the enemy — it is the baseline. The goal of this curriculum is not to replace your judgment but to compress the mechanical steps so that more of your working week is spent on the parts that require it: defining the right question, applying the equity lens, and translating findings into something a decision-maker can act on. The next session maps the tools available and what each one is actually good for.</p>
+      <p>The existing process is not the enemy — it is the baseline. The three steps that consume the most time — <strong>database search, title/abstract screening, and data extraction</strong> — are precisely the steps Session 2 maps to 20 AI tools. The goal of this curriculum is not to replace your judgment but to compress the mechanical steps so that more of your working week is spent on the parts that require it: defining the right question, applying the equity lens, and translating findings into something a decision-maker can act on.</p>
     </div>
 
   </div><!-- /session-content -->
 
   <nav class="s-nav" aria-label="Session navigation">
-    <a class="s-nav-btn s-nav-next" href="session2.html">Next →</a>
+    <a class="s-nav-btn s-nav-next" href="session2.html">Next: The Tools Available →</a>
   </nav>
 </div>
 
@@ -359,13 +396,12 @@
     'data extraction',
     'synthesis & brief writing'
   ];
-  const highAI = [1, 2, 3]; // indices where AI has most leverage
+  const highAI = [1, 2, 3];
 
   document.querySelectorAll('.audit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const row = parseInt(btn.dataset.row);
       const val = btn.dataset.val;
-      // deselect siblings
       document.querySelectorAll(`.audit-btn[data-row="${row}"]`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       answers[row] = val;
@@ -389,7 +425,7 @@
     } else {
       html = `Your biggest time costs are in: <strong>${highRows.join(', ')}</strong>. `;
       if (aiRows.length > 0) {
-        html += `Of these, <strong>${aiRows.join(' and ')}</strong> ${aiRows.length > 1 ? 'are' : 'is'} exactly where the tools in Session 2 — and the search protocol in Session 4 — will have the most immediate impact. `;
+        html += `Of these, <strong>${aiRows.join(' and ')}</strong> ${aiRows.length > 1 ? 'are' : 'is'} exactly where the 20-tool comparison in Session 2 will have the most immediate impact. `;
       }
       if (answers[4] === 'high') {
         html += 'You are also spending significant time on synthesis and brief writing — Session 5 addresses this directly with an AI-assisted brief template calibrated for WHO India policy audiences.';
