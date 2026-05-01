@@ -59,6 +59,30 @@
     .pipeline-wrap {
       margin: 2rem 0;
     }
+    /* ── FIX 1: "primary spine" label above the pipeline ──
+       Addresses GPT's point that two ontologies (pipeline + tensor/scalar) are co-equal.
+       One quiet label makes the pipeline the clear backbone; tensor-scalar stays as
+       the interpretation layer inside the chain visualiser. No content removed. */
+    .pipeline-spine-label {
+      font-family: 'Inter', sans-serif;
+      font-size: .52rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--session-accent);
+      opacity: .55;
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .pipeline-spine-label::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--session-accent);
+      opacity: .5;
+    }
     .pipeline {
       display: flex; flex-wrap: wrap; align-items: center;
       gap: .5rem; padding: 1.75rem 2rem;
@@ -81,7 +105,6 @@
       border-color: color-mix(in srgb, #ef5350 35%, transparent);
       color: #ef9a9a;
     }
-    /* NEW: annotation bar linking pipeline steps to Session 2 table */
     .pipeline-annotation {
       background: color-mix(in srgb, var(--session-accent) 5%, transparent);
       border: 1px solid color-mix(in srgb, var(--session-accent) 20%, transparent);
@@ -232,11 +255,6 @@
 
   <div class="session-content">
 
-
-<!-- ══════════════════════════════════════════════════════════
-     SESSION 0 RECALL · Insert immediately after
-     <div class="session-content"> in session1.html
-     ══════════════════════════════════════════════════════════ -->
 
 <style>
   /* ── Recall intro ── */
@@ -604,7 +622,6 @@
     const row = document.getElementById('chain-row');
     row.innerHTML = '';
     NODES.forEach((n, i) => {
-      // arrow before node (except first)
       if (i > 0) {
         const arr = document.createElement('div');
         arr.className = 'chain-arrow';
@@ -640,23 +657,19 @@
   }
 
   window.selectDest = function (card, idx) {
-    // deselect all
     document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selected = idx;
 
     const color = card.dataset.color;
 
-    // build chain
     buildChain(idx, color);
 
-    // insight
     const insight = document.getElementById('chain-insight');
     insight.style.setProperty('--insight-color', color);
     insight.innerHTML = INSIGHTS[idx];
     insight.classList.add('visible');
 
-    // boss reveal — show for nodes 0-3 (not the scalar itself)
     const boss = document.getElementById('boss-reveal');
     if (idx < 4) {
       boss.classList.add('visible');
@@ -664,13 +677,9 @@
       boss.classList.remove('visible');
     }
 
-    // segue line — always show after selection
     document.getElementById('segue-line').classList.add('visible');
-
-    // reveal the vis block
     document.getElementById('chain-vis').classList.add('visible');
 
-    // smooth scroll to chain
     setTimeout(() => {
       document.getElementById('chain-vis').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 80);
@@ -683,8 +692,11 @@
 
     <p>Here is the pipeline as it typically runs for a health financing or UHC evidence brief:</p>
 
-    <!-- UPDATED: pipeline now wrapped with annotation bar linking to Session 2 -->
+    <!-- ── FIX 1: spine label sits above the pipeline to declare it as the primary visible backbone.
+         The tensor-scalar model remains what it is: the interpretation layer revealed on interaction.
+         No content removed — one quiet label added. ── -->
     <div class="pipeline-wrap">
+      <div class="pipeline-spine-label">Primary pipeline · the operational backbone</div>
       <div class="pipeline">
         <div class="p-step">Policy question defined</div>
         <div class="p-arrow">→</div>
@@ -714,7 +726,11 @@
   <!-- ── AI LAYER TAXONOMY ── -->
 <div class="session-content" style="margin-top:2.5rem;">
   <h2>Five layers of AI in evidence work</h2>
-  <p>Before mapping tools to tasks, it helps to know what kind of AI you're dealing with. The taxonomy below — drawn from how AI actually enters health systems — maps each layer to its role in a literature review pipeline.</p>
+  <!-- ── FIX 2: one sentence binding each AI layer to a pipeline stage.
+       Addresses GPT's observation that the taxonomy "floats" without explicit pipeline attachment.
+       The sentence is short, factual, and lives naturally in the intro paragraph.
+       No table structure altered. ── -->
+  <p>Before mapping tools to tasks, it helps to know what kind of AI you're dealing with. The taxonomy below — drawn from how AI actually enters health systems — maps each layer to its role in a literature review pipeline. Read it against the pipeline above: World AI and Perception AI operate at the search end; Agentic AI handles extraction; Generative AI produces the synthesis and brief; Embodied AI audits the whole chain for bias and compliance.</p>
 </div>
 
 <div class="collapsible-wrap" style="margin:1.5rem 0 2.5rem;">
@@ -737,23 +753,23 @@
         <tbody>
           <tr>
             <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://en.wikipedia.org/wiki/Optimus_(robot)" target="_blank" style="color:var(--session-accent);text-decoration:none;">Embodied AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Audits the entire workflow — bias detection, equity checks, PRISMA compliance</td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Audits the entire workflow — bias detection, equity checks, PRISMA compliance (Human in loop for now, but AGI coming soon...)</td>
           </tr>
           <tr>
             <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/alpha/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Generative AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Synthesizes findings into reports, policy briefs, and insights</td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Synthesizes findings into reports, policy briefs, and insights - think: ChatGPT</td>
           </tr>
           <tr>
             <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://www.oracle.com/news/announcement/oracle-ushers-in-new-era-of-ai-driven-electronic-health-records-2025-08-13/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Agentic AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Automates screening, extraction, and repetitive tasks</td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Automates screening, extraction, and repetitive tasks — on identified literature</td>
           </tr>
           <tr>
             <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/who-03-rank/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Perception AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Ingests literature across journals, languages, and grey sources</td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Ingests specific literature across journals, languages, and grey sources — via PDF upload, web scraping and API integrations</td>
           </tr>
           <tr>
             <td style="padding:.75rem 1rem;border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://gemini.google.com/app" target="_blank" style="color:var(--session-accent);text-decoration:none;">World AI</a></td>
-            <td style="padding:.75rem 1rem;color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Understands global health patterns, NCDs, TB, etc — the raw environment</td>
+            <td style="padding:.75rem 1rem;color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Understands general science: basic, clinical, public health, health economics, etc — the raw environment</td>
           </tr>
         </tbody>
       </table>
@@ -820,7 +836,6 @@
         </div>
       </div>
 
-      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
           Database search &amp; grey literature hunt
@@ -833,7 +848,6 @@
         </div>
       </div>
 
-      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
           Title / Abstract screening
@@ -846,7 +860,6 @@
         </div>
       </div>
 
-      <!-- UPDATED: label matches Session 2 column header exactly -->
       <div class="audit-row">
         <div class="audit-label">
           Data extraction
