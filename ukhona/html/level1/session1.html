@@ -232,6 +232,452 @@
 
   <div class="session-content">
 
+
+<!-- ══════════════════════════════════════════════════════════
+     SESSION 0 RECALL · Insert immediately after
+     <div class="session-content"> in session1.html
+     ══════════════════════════════════════════════════════════ -->
+
+<style>
+  /* ── Recall intro ── */
+  .recall-intro {
+    margin-bottom: 3rem;
+  }
+  .recall-intro p {
+    font-size: clamp(.95rem, 2vw, 1.05rem);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Destination widget ── */
+  .dest-widget {
+    background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
+    border: 1px solid color-mix(in srgb, var(--session-accent) 22%, transparent);
+    border-radius: 14px;
+    padding: 2rem 2rem 1.75rem;
+    margin: 2rem 0 2.5rem;
+  }
+  .dest-prompt {
+    font-family: 'Inter', sans-serif;
+    font-size: .6rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--session-accent);
+    font-weight: 700;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .dest-prompt::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--session-accent);
+    flex-shrink: 0;
+  }
+  .dest-question {
+    font-family: var(--ff-display);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1.35;
+  }
+
+  /* Answer cards — the clickable destinations */
+  .dest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+    gap: .5rem;
+    margin-bottom: 1.5rem;
+  }
+  .dest-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .85rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all .18s;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .dest-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--dest-color, var(--session-accent));
+    opacity: 0;
+    transition: opacity .18s;
+  }
+  .dest-card:hover { border-color: var(--dest-color, var(--session-accent)); }
+  .dest-card:hover::before { opacity: 1; }
+  .dest-card.selected {
+    border-color: var(--dest-color, var(--session-accent));
+    background: color-mix(in srgb, var(--dest-color, var(--session-accent)) 10%, transparent);
+  }
+  .dest-card.selected::before { opacity: 1; }
+  .dest-card-label {
+    font-size: .7rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: .25rem;
+  }
+  .dest-card-sub {
+    font-size: .62rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+  .dest-card-step {
+    font-family: 'Inter', sans-serif;
+    font-size: .48rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--dest-color, var(--session-accent));
+    margin-top: .4rem;
+    opacity: .7;
+  }
+
+  /* Chain visualiser */
+  .chain-vis {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .chain-vis.visible { display: block; }
+  .chain-vis-label {
+    font-family: 'Inter', sans-serif;
+    font-size: .55rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    opacity: .6;
+  }
+  .chain-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+  }
+  .chain-node {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+  }
+  .chain-bubble {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: .65rem;
+    font-weight: 700;
+    border: 1.5px solid transparent;
+    transition: all .3s;
+    position: relative;
+  }
+  .chain-bubble.dim {
+    background: var(--glass);
+    border-color: var(--border);
+    color: var(--text-secondary);
+    opacity: .35;
+  }
+  .chain-bubble.lit {
+    background: color-mix(in srgb, var(--node-color) 16%, transparent);
+    border-color: var(--node-color);
+    color: var(--node-color);
+    opacity: 1;
+  }
+  .chain-bubble.target {
+    background: color-mix(in srgb, var(--node-color) 22%, transparent);
+    border-color: var(--node-color);
+    color: var(--node-color);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-color) 18%, transparent);
+    opacity: 1;
+  }
+  .chain-bubble.target::after {
+    content: '←';
+    position: absolute;
+    top: -18px;
+    font-size: .65rem;
+    color: var(--node-color);
+    animation: bounce .8s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  .chain-name {
+    font-family: 'Inter', sans-serif;
+    font-size: .48rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-align: center;
+    opacity: .5;
+    max-width: 56px;
+    line-height: 1.3;
+  }
+  .chain-arrow {
+    font-size: .7rem;
+    color: var(--session-accent);
+    opacity: .3;
+    padding: 0 .25rem;
+    padding-bottom: 1.2rem; /* align with bubble centre */
+    flex-shrink: 0;
+  }
+
+  /* insight reveal */
+  .chain-insight {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--insight-color, var(--session-accent));
+    background: color-mix(in srgb, var(--insight-color, var(--session-accent)) 6%, transparent);
+    font-family: 'Inter', sans-serif;
+    font-size: .83rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .chain-insight.visible { display: block; }
+  .chain-insight strong { color: var(--text); }
+
+  /* boss reveal */
+  .boss-reveal {
+    display: none;
+    margin-top: 1rem;
+    padding: .85rem 1.2rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, #69db7c 8%, transparent);
+    border: 1px solid color-mix(in srgb, #69db7c 30%, transparent);
+    font-family: 'Inter', sans-serif;
+    font-size: .8rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .boss-reveal.visible { display: block; }
+  .boss-reveal strong { color: #69db7c; }
+
+  /* segue line */
+  .segue-line {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--session-accent) 7%, var(--glass));
+    border: 1px dashed color-mix(in srgb, var(--session-accent) 40%, transparent);
+    font-family: var(--ff-display);
+    font-size: clamp(.95rem, 2vw, 1.1rem);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .segue-line.visible { display: block; }
+  .segue-line span {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--session-accent);
+    display: block;
+    margin-bottom: .5rem;
+  }
+</style>
+
+<!-- ── The recall section ── -->
+<div class="recall-intro">
+
+  <h2 style="font-family:var(--ff-display);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:var(--text);margin:0 0 1rem;letter-spacing:-.02em;">
+    Where were you headed?
+  </h2>
+
+  <p>In our first session, before we looked at a single tool or pipeline diagram, we asked one question: <em>when you set off on a literature review, what is your destination?</em></p>
+  <p>The answers were spread across the full length of the evidence pipeline — and every single one was correct. They just weren't all the same destination. That gap is what this curriculum is designed to close.</p>
+  <p>Click the answer that most closely matched yours.</p>
+
+  <div class="dest-widget">
+    <div class="dest-prompt">Session 0 · Your answer</div>
+    <div class="dest-question">"When you set off on a literature review — what is your destination?"</div>
+
+    <div class="dest-grid">
+
+      <div class="dest-card" style="--dest-color:#ff6b6b"
+           onclick="selectDest(this, 0)"
+           data-node="0" data-color="#ff6b6b">
+        <div class="dest-card-label">A database search result</div>
+        <div class="dest-card-sub">PubMed hits, Scopus exports, a set of titles to read</div>
+        <div class="dest-card-step">Tensor · raw input</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#ff8c00"
+           onclick="selectDest(this, 1)"
+           data-node="1" data-color="#ff8c00">
+        <div class="dest-card-label">A screened list of papers</div>
+        <div class="dest-card-sub">Titles and abstracts triaged for relevance</div>
+        <div class="dest-card-step">Matrix · attention</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#ffd43b"
+           onclick="selectDest(this, 2)"
+           data-node="2" data-color="#ffd43b">
+        <div class="dest-card-label">An extracted dataset</div>
+        <div class="dest-card-sub">Key findings, numbers, methods pulled from papers</div>
+        <div class="dest-card-step">Vector · the evidence</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#4fc3f7"
+           onclick="selectDest(this, 3)"
+           data-node="3" data-color="#4fc3f7">
+        <div class="dest-card-label">A synthesis or summary</div>
+        <div class="dest-card-sub">What the literature says, in aggregate</div>
+        <div class="dest-card-step">Eigenmode · the signal</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#69db7c"
+           onclick="selectDest(this, 4)"
+           data-node="4" data-color="#69db7c">
+        <div class="dest-card-label">A policy brief or recommendation</div>
+        <div class="dest-card-sub">A decision-ready document for leadership</div>
+        <div class="dest-card-step">Scalar · the decision</div>
+      </div>
+
+    </div><!-- /dest-grid -->
+
+    <!-- Chain visualiser — revealed on selection -->
+    <div class="chain-vis" id="chain-vis">
+      <div class="chain-vis-label">Where your destination sits in the compression chain</div>
+      <div class="chain-row" id="chain-row">
+        <!-- injected by JS -->
+      </div>
+      <div class="chain-insight" id="chain-insight"></div>
+      <div class="boss-reveal" id="boss-reveal">
+        <strong>Your boss pointed here:</strong> the scalar — a policy brief or recommendation. That's the actual end of the pipeline. Everything else is a step on the way, not the destination. This session maps exactly what happens between where most people stop and where decisions get made.
+      </div>
+      <div class="segue-line" id="segue-line">
+        <span>Why this matters</span>
+        Every answer in that first session was honest. But the further left your destination sat, the more work was being left on the table — work that AI can now do. The pipeline below shows where time disappears, and the rest of this curriculum shows you how to get it back.
+      </div>
+    </div>
+
+  </div><!-- /dest-widget -->
+
+</div><!-- /recall-intro -->
+
+<script>
+(function () {
+  const NODES = [
+    { label: '3+', name: 'Tensor', color: '#ff6b6b' },
+    { label: '2',  name: 'Matrix', color: '#ff8c00' },
+    { label: '1',  name: 'Vector', color: '#ffd43b' },
+    { label: 'E',  name: 'Eigenmode', color: '#4fc3f7' },
+    { label: '0',  name: 'Scalar', color: '#69db7c' },
+  ];
+
+  const INSIGHTS = [
+    `<strong>A database search result is the very beginning of the chain — the tensor.</strong> It's the raw, unfiltered input: thousands of titles, many irrelevant, nothing decided yet. Stopping here means the hardest work — screening, extraction, synthesis, briefing — still lies ahead. This is where most of the 60–70% time burden accumulates.`,
+    `<strong>A screened list is one compression step in.</strong> You've applied attention — filtering signal from noise. But the evidence hasn't been extracted yet, and no synthesis exists. The decision is still far away. AI tools like Elicit and Rayyan operate here, and can compress this step from days to hours.`,
+    `<strong>An extracted dataset is evidence made usable.</strong> Numbers, methods, findings in a structured form. This is real progress — but it's still not a recommendation. The synthesis step, which translates data into an argument, remains. AI excels at structured extraction, making this the highest-ROI step for tool adoption.`,
+    `<strong>A synthesis is the eigenmode — the stable signal that survives compression.</strong> What the literature says, in aggregate, on your question. This is where most formal reviews end. But it still isn't a decision. Translating synthesis into policy-ready language — calibrated to budget, context, and decision-maker — is Session 5's subject.`,
+    `<strong>A policy brief is the scalar — the actual destination.</strong> One number, one recommendation, one decision-ready document. This is where your boss was pointing. Everything upstream serves this. The pipeline exists to produce this. And AI can now accelerate every step between the tensor and the scalar.`,
+  ];
+
+  let selected = null;
+
+  function buildChain(targetIdx, color) {
+    const row = document.getElementById('chain-row');
+    row.innerHTML = '';
+    NODES.forEach((n, i) => {
+      // arrow before node (except first)
+      if (i > 0) {
+        const arr = document.createElement('div');
+        arr.className = 'chain-arrow';
+        arr.textContent = '→';
+        row.appendChild(arr);
+      }
+
+      const node = document.createElement('div');
+      node.className = 'chain-node';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'chain-bubble';
+      bubble.textContent = n.label;
+
+      if (i === targetIdx) {
+        bubble.classList.add('target');
+        bubble.style.setProperty('--node-color', color);
+      } else if (i < targetIdx) {
+        bubble.classList.add('lit');
+        bubble.style.setProperty('--node-color', n.color);
+      } else {
+        bubble.classList.add('dim');
+      }
+
+      const name = document.createElement('div');
+      name.className = 'chain-name';
+      name.textContent = n.name;
+
+      node.appendChild(bubble);
+      node.appendChild(name);
+      row.appendChild(node);
+    });
+  }
+
+  window.selectDest = function (card, idx) {
+    // deselect all
+    document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selected = idx;
+
+    const color = card.dataset.color;
+
+    // build chain
+    buildChain(idx, color);
+
+    // insight
+    const insight = document.getElementById('chain-insight');
+    insight.style.setProperty('--insight-color', color);
+    insight.innerHTML = INSIGHTS[idx];
+    insight.classList.add('visible');
+
+    // boss reveal — show for nodes 0-3 (not the scalar itself)
+    const boss = document.getElementById('boss-reveal');
+    if (idx < 4) {
+      boss.classList.add('visible');
+    } else {
+      boss.classList.remove('visible');
+    }
+
+    // segue line — always show after selection
+    document.getElementById('segue-line').classList.add('visible');
+
+    // reveal the vis block
+    document.getElementById('chain-vis').classList.add('visible');
+
+    // smooth scroll to chain
+    setTimeout(() => {
+      document.getElementById('chain-vis').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 80);
+  };
+})();
+</script>
+
     <h2>The pipeline, honestly described</h2>
     <p>Every evidence-to-policy cycle at WHO India moves through a recognisable sequence of steps. The process is not broken — it has produced genuine results, from informing PM-JAY design to shaping national NCD guidelines. But it is slow, and the slowness is not random. It concentrates at specific, identifiable points that are exactly where AI tools offer the most leverage.</p>
 
