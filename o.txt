@@ -1,0 +1,9 @@
+Oh this is the good stuff. Here's the expandable deep-dive insert — designed to drop into the session HTML right after the pipeline annotation block, styled to match the existing session aesthetic, gated behind a "deep dive" affordance so it doesn't scare the non-divers.
+
+But.. "Deep dive: the full compression loss chain from L₀(θᵗ) to L(θᵗ⁺¹) — five sequential transformations mapping each pipeline stage to a statistical operator and an AI class" is obtrusive and too large font and will freak out many...
+
+How about including it in the collapse/expand.. so that no one gets scared? 
+
+Any more ROYGBIV gradient of colors... too much redundancy of green and blue .. among give ooption, no? 
+
+This is WHO -- its I that can't resist these deep dives .. just needs to be hidden enough.. even if it works for only 1 of 12 of the who folks ..

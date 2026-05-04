@@ -1,0 +1,290 @@
+
+<style>
+* { box-sizing: border-box; }
+.dd-wrap { font-family: var(--font-sans); padding: 0; }
+
+.dd-trigger {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; cursor: pointer;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-background-secondary);
+  transition: background 0.18s, border-color 0.18s;
+  user-select: none;
+}
+.dd-trigger:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
+.dd-trigger.open { border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; border-bottom-color: transparent; }
+
+.dd-icon {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--color-background-info);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 14px; color: var(--color-text-info); font-weight: 500;
+}
+.dd-trigger-text { flex: 1; }
+.dd-trigger-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.dd-trigger-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 1px; }
+.dd-chevron { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+.dd-trigger.open .dd-chevron { transform: rotate(180deg); }
+
+.dd-body {
+  display: none;
+  border: 0.5px solid var(--color-border-secondary);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  background: var(--color-background-primary);
+  padding: 0 18px 18px;
+  animation: ddOpen 0.22s ease;
+}
+.dd-body.open { display: block; }
+@keyframes ddOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+.eq-chain {
+  display: flex; align-items: center; gap: 0;
+  padding: 16px 0 4px; overflow-x: auto; flex-wrap: nowrap;
+}
+.eq-node {
+  flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: center; gap: 4px; cursor: pointer; padding: 4px 2px;
+  border-radius: var(--border-radius-md); transition: background 0.15s;
+}
+.eq-node:hover { background: var(--color-background-secondary); }
+.eq-node.active { background: var(--color-background-secondary); }
+.eq-bubble {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; font-family: var(--font-mono);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+.eq-node.active .eq-bubble {
+  border-width: 1.5px;
+  color: var(--nb-color, var(--color-text-primary));
+  border-color: var(--nb-color, var(--color-border-primary));
+  background: var(--color-background-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nb-color, transparent) 12%, transparent);
+}
+.eq-label { font-size: 10px; color: var(--color-text-tertiary); text-align: center; max-width: 52px; line-height: 1.3; }
+.eq-node.active .eq-label { color: var(--color-text-secondary); }
+.eq-arrow { font-size: 12px; color: var(--color-text-tertiary); padding: 0 2px; padding-bottom: 18px; flex-shrink: 0; }
+
+.full-eq {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-text-secondary); padding: 10px 12px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  margin: 8px 0 14px; line-height: 1.7; overflow-x: auto; white-space: nowrap;
+}
+.full-eq .hi { color: var(--color-text-primary); font-weight: 500; }
+
+.node-detail {
+  display: none; padding: 14px 16px;
+  border-radius: var(--border-radius-md);
+  border-left: 2px solid var(--nd-color, var(--color-border-secondary));
+  background: color-mix(in srgb, var(--nd-color, var(--color-border-tertiary)) 5%, var(--color-background-primary));
+  margin-bottom: 14px;
+  animation: ddOpen 0.18s ease;
+}
+.node-detail.open { display: block; }
+
+.nd-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.nd-sym { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--nd-color); }
+.nd-name { font-size: 14px; font-weight: 500; }
+.nd-ai { font-size: 11px; color: var(--color-text-tertiary); }
+
+.nd-eq-row {
+  font-family: var(--font-mono); font-size: 12px;
+  padding: 8px 10px; background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md); margin: 8px 0;
+  color: var(--color-text-secondary); line-height: 1.6;
+}
+.nd-eq-row .hi { color: var(--color-text-primary); font-weight: 500; }
+
+.nd-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin-top: 8px; }
+.nd-body strong { color: var(--color-text-primary); font-weight: 500; }
+
+.nd-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.nd-pill {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 99px; border: 0.5px solid var(--color-border-secondary);
+  color: var(--color-text-tertiary); background: var(--color-background-secondary);
+}
+.nd-pill.key { border-color: var(--nd-color); color: var(--nd-color);
+  background: color-mix(in srgb, var(--nd-color) 8%, transparent); }
+
+.dd-footer {
+  margin-top: 6px; font-size: 12px; color: var(--color-text-tertiary);
+  border-top: 0.5px solid var(--color-border-tertiary); padding-top: 10px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.dd-footer button {
+  font-size: 12px; padding: 5px 12px;
+}
+</style>
+
+<div class="dd-wrap">
+<h2 class="sr-only">Deep dive: the full compression loss chain from L₀(θᵗ) to L(θᵗ⁺¹) — five sequential transformations mapping each pipeline stage to a statistical operator and an AI class</h2>
+
+<div class="dd-trigger" id="dd-trigger" onclick="toggleDD()">
+  <div class="dd-icon">∂</div>
+  <div class="dd-trigger-text">
+    <div class="dd-trigger-title">Deep dive: the compression loss chain</div>
+    <div class="dd-trigger-sub">L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹) &nbsp;·&nbsp; not for the shallow end</div>
+  </div>
+  <span class="dd-chevron">▾</span>
+</div>
+
+<div class="dd-body" id="dd-body">
+
+  <div class="eq-chain" id="eq-chain"></div>
+
+  <div class="full-eq" id="full-eq">
+    <span>L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹)</span>
+  </div>
+
+  <div id="node-detail-panel"></div>
+
+  <div class="dd-footer">
+    <span>Click any node above to expand its algebra</span>
+    <button onclick="sendPrompt('Walk me through the full compression loss chain L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ+1) step by step, with concrete examples from health evidence synthesis at WHO India. ↗')">Take me deeper ↗</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+const NODES = [
+  {
+    sym: 'L₀(θᵗ)',
+    label: 'Prior loss',
+    color: '#7F77DD',
+    aiClass: 'World AI',
+    pentad: 'Tensor · 3+',
+    eqLine: 'L₀(θᵗ) = −log P(θᵗ | world)',
+    hiTerms: ['L₀', 'θᵗ'],
+    bodyHtml: `<strong>L₀(θᵗ) is the cost of the current world-model.</strong> It measures how far the agent's prior belief θᵗ is from the full joint distribution of the world. World AI (Gemini, GPT, Claude) has parametrized this — it has absorbed the training corpus and encoded it as θᵗ.<br><br>This is not yet a task-specific loss. It is the <em>standing epistemic debt</em> the agent carries before any evidence arrives. In health evidence synthesis, this is the implicit model every researcher brings to a literature search: disciplinary assumptions, citation biases, familiarity with certain journals. It shapes what questions get asked before a single paper is read.<br><br>The compression step from here is not reduction — it is <em>activation</em>: selecting which slice of θᵗ is relevant to the policy question.`,
+    pills: ['Prior P(θ)', 'Joint distribution', 'Epistemic standing', 'World model']
+  },
+  {
+    sym: 'Σwᵢ·Lᵢ',
+    label: 'Weighted losses',
+    color: '#1D9E75',
+    aiClass: 'Perception AI',
+    pentad: 'Matrix · 2',
+    eqLine: 'Σwᵢ·Lᵢ  where wᵢ = relevance(doc_i, query)',
+    hiTerms: ['wᵢ', 'Lᵢ'],
+    bodyHtml: `<strong>Σwᵢ·Lᵢ is the attention-weighted sum of document-level losses.</strong> Each document i contributes a loss Lᵢ — how much residual uncertainty it leaves about the query — weighted by its relevance wᵢ to the question. Perception AI (RAG pipelines, Elicit, Consensus) computes these weights.<br><br>This is the off-diagonal step: we are mapping co-variances between documents and the query rather than treating each source independently. A WHO India policy brief on PM-JAY has high wᵢ for a financial protection question; a Norwegian RCT has low wᵢ for the same question even if it's methodologically superior.<br><br><strong>The WEIRD-data bias lives here.</strong> If the wᵢ function is trained only on indexed literature, grey-literature sources get wᵢ ≈ 0 by default — not because they are irrelevant, but because the attention mechanism was never trained to see them. Correcting this is a manual act of sovereignty.`,
+    pills: ['Attention weights wᵢ', 'Relevance scoring', 'Off-diagonal Σ', 'Grey-lit gap']
+  },
+  {
+    sym: 'f(σ²)',
+    label: 'Variance fn',
+    color: '#BA7517',
+    aiClass: 'Agentic AI',
+    pentad: 'Vector · 1',
+    eqLine: 'f(σ²) = Σᵢ [x̄ᵢ − μᵢ]² / nᵢ  per field',
+    hiTerms: ['σ²', 'f'],
+    bodyHtml: `<strong>f(σ²) is the field-level extraction variance function.</strong> For each structured field extracted from a document — an effect size, a cost per DALY, a coverage percentage — the extraction process produces a point estimate x̄ᵢ around a true value μᵢ with variance σ²ᵢ. Agentic AI (AutoExtract pipelines, structured prompting, Elicit extraction columns) is in the business of minimizing this σ².<br><br>This is the diagonal step: we have disentangled the joint distribution into marginal variances per variable. The off-diagonal covariances from the matrix step are temporarily bracketed — we are committing to specific values.<br><br><strong>This is the highest-ROI layer for AI adoption right now.</strong> Humans systematically introduce extraction variance through fatigue, inconsistent coding decisions, and missed fields under time pressure. AI extraction is not perfect, but its variance is lower, more consistent, and auditable. f(σ²) is the exact quantity being minimized when a tool claims "5× faster extraction with 94% agreement."`,
+    pills: ['Field-level σ²', 'Extraction fidelity', 'Diagonal Cov', 'PRISMA compliance']
+  },
+  {
+    sym: 'g(λ)',
+    label: 'Eigenvalue fn',
+    color: '#4fc3f7',
+    aiClass: 'Generative AI',
+    pentad: 'Eigenmode · E',
+    eqLine: 'g(λ) = top eigenvector of evidence matrix E',
+    hiTerms: ['λ', 'g'],
+    bodyHtml: `<strong>g(λ) is the eigenvalue function — synthesis as spectral decomposition.</strong> Given the evidence matrix E (rows = studies, columns = extracted fields), the dominant eigenvalue λ₁ captures the direction of maximum variance across the literature: the single claim that explains the most heterogeneity. Generative AI (Claude, GPT-4, Gemini in synthesis mode) approximates this operation through attention-weighted summarization.<br><br>This is structurally different from summarization. A summary averages across rows. Synthesis extracts the eigenmode — the signal that is <em>invariant</em> under perturbation of the study set. Remove one study, the eigenmode barely shifts. Remove a cluster of studies, it shifts — and that shift is itself information about the robustness of the claim.<br><br><strong>The unknown-unknown sits here.</strong> The eigenmode reveals what no individual study could: the latent dimension along which the literature has been accumulating evidence without naming it. In health economics this is often the equity dimension — not because equity was never studied, but because it was never the primary exposure in any single study.`,
+    pills: ['Dominant λ₁', 'PCA of evidence', 'Synthesis residual', 'Unknown-unknown']
+  },
+  {
+    sym: 'h(ε)+L(θᵗ⁺¹)',
+    label: 'Decision + update',
+    color: '#69db7c',
+    aiClass: 'Embodied AI',
+    pentad: 'Scalar · 0',
+    eqLine: 'h(ε) + L(θᵗ⁺¹) = decision(λ) + γ|ε_FGT|²',
+    hiTerms: ['h', 'ε', 'L', 'θᵗ⁺¹'],
+    bodyHtml: `<strong>h(ε) + L(θᵗ⁺¹) is the decision plus the Bayesian update.</strong> The scalar decision h(ε) is a function of the residual error ε — what the current model got wrong. The loss L(θᵗ⁺¹) is the cost function that will update the prior for the next iteration. Embodied AI (human-in-loop auditors, AGI-approaching systems, equity compliance engines) closes the loop.<br><br>The FGT term γ|ε_FGT|² is the Foster-Greer-Thorbecke poverty gap regularizer — a penalty that grows quadratically with the equity gap in the decision. This is not standard in ML loss functions, but it is exactly what a WHO health financing brief should impose: decisions that increase the poverty headcount ratio are penalized not linearly but quadratically, making equity violations increasingly expensive as they worsen.<br><br><strong>The loop closes here.</strong> The decision produces an outcome. The outcome reveals ε. ε updates L. L reshapes θᵗ⁺¹. The next literature review begins with a better prior. <em>Sovereignty is the ability to specify your own loss function</em> — to decide what γ is, what ε_FGT measures, and who bears the cost of getting it wrong.`,
+    pills: ['Residual ε', 'FGT regularizer γ', 'Prior update L(θ)', 'Bayesian loop']
+  }
+];
+
+let active = null;
+
+function renderChain() {
+  const c = document.getElementById('eq-chain');
+  c.innerHTML = '';
+  NODES.forEach((n, i) => {
+    if (i > 0) {
+      const arr = document.createElement('div');
+      arr.className = 'eq-arrow';
+      arr.textContent = '→';
+      c.appendChild(arr);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'eq-node' + (active === i ? ' active' : '');
+    wrap.style.setProperty('--nb-color', n.color);
+    wrap.innerHTML = `<div class="eq-bubble">${n.sym}</div><div class="eq-label">${n.label}</div>`;
+    wrap.onclick = () => selectNode(i);
+    c.appendChild(wrap);
+  });
+}
+
+function renderFullEq(activeIdx) {
+  const parts = NODES.map((n, i) => {
+    if (i === activeIdx) return `<span class="hi">${n.sym}</span>`;
+    return `<span style="opacity:0.45">${n.sym}</span>`;
+  });
+  document.getElementById('full-eq').innerHTML = parts.join(' <span style="opacity:0.3">→</span> ');
+}
+
+function selectNode(i) {
+  if (active === i) {
+    active = null;
+    renderChain();
+    renderFullEq(-1);
+    document.getElementById('node-detail-panel').innerHTML = '';
+    return;
+  }
+  active = i;
+  renderChain();
+  renderFullEq(i);
+
+  const n = NODES[i];
+  const panel = document.getElementById('node-detail-panel');
+
+  const eqHighlighted = n.eqLine.replace(new RegExp(n.hiTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'), 'g'), m => `<span class="hi">${m}</span>`);
+
+  panel.innerHTML = `
+    <div class="node-detail open" style="--nd-color:${n.color}">
+      <div class="nd-header">
+        <span class="nd-sym">${n.sym}</span>
+        <span class="nd-name">${n.pentad}</span>
+        <span class="nd-ai">${n.aiClass}</span>
+      </div>
+      <div class="nd-eq-row">${eqHighlighted}</div>
+      <div class="nd-body">${n.bodyHtml}</div>
+      <div class="nd-pills">
+        ${n.pills.map((p, pi) => `<span class="nd-pill${pi===0?' key':''}">${p}</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+
+function toggleDD() {
+  const trigger = document.getElementById('dd-trigger');
+  const body = document.getElementById('dd-body');
+  trigger.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+renderChain();
+renderFullEq(-1);
+</script>
