@@ -404,10 +404,36 @@
           <div class="tool-desc">Nuanced LMIC reasoning. Best at disambiguating "health financing" from clinical questions. Output: structured PICO + search keyword set.</div>
         </div>
         <div class="tool-card">
-          <div class="tool-rank" style="color:var(--r)">Secondary · broad orientation</div>
-          <div class="tool-name">Grok-3 + Gemini 2.5 Pro</div>
-          <div class="tool-desc">Wide-net knowledge for unfamiliar domains. Run both; Claude adjudicates conflicts. Gemini excels at recent WHO/World Bank grey sources.</div>
+          <div class="tool-rank" style="color:var(--r)">Sequential stack · Ukubona method</div>
+          <div class="tool-name">xAI Grok → Gemini → GPT-4o → Claude</div>
+          <div class="tool-desc">Each model in sequence, cumulative prompt: previous output is fed forward. Not parallel — sequential and deliberate.</div>
         </div>
+      </div>
+
+      <p class="section-label" style="margin-top:1.1rem">The Ukubona Sequential Stack · why this order</p>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem">
+        <div class="tool-card" style="border-color:var(--r-border);background:var(--r-bg)">
+          <div class="tool-rank" style="color:var(--r)">Step 1 · xAI Grok — Zeitgeist &amp; Real-Time Signal</div>
+          <div class="tool-desc">Grok reads X (Twitter) in real time and is updated on a ~24hr cycle. It captures the living discourse — what practitioners, policymakers, and critics are actually saying <em>now</em>. No other frontier model does this. Start here to ground the question in present reality before any archival pass.</div>
+        </div>
+        <div class="tool-card" style="border-color:var(--o-border);background:var(--o-bg)">
+          <div class="tool-rank" style="color:var(--o)">Step 2 · Google Gemini — Archival Depth &amp; Data Moat</div>
+          <div class="tool-desc">Gemini is grounded in Google's unmatched data infrastructure: Search, Maps, YouTube, Scholar, and advertising signals that index human attention at planetary scale. Feed Grok's output here. Gemini anchors the zeitgeist in documented, retrievable evidence — especially strong on WHO, World Bank, and grey government sources.</div>
+        </div>
+        <div class="tool-card" style="border-color:var(--y-border);background:var(--y-bg)">
+          <div class="tool-rank" style="color:var(--y)">Step 3 · OpenAI GPT — Abstraction &amp; Structured Reasoning</div>
+          <div class="tool-desc">GPT is the most powerful abstractor in the stack — and precisely because of that, the most prone to confident hallucination when ungrounded. Fed sequentially after Grok and Gemini, its tendency to confabulate is constrained by the prior context it must account for. Use it to push the accumulated evidence toward structured frameworks, ICER tables, and policy logic trees.</div>
+        </div>
+        <div class="tool-card" style="border-color:var(--b-border);background:var(--b-bg)">
+          <div class="tool-rank" style="color:var(--b)">Step 4 · Anthropic Claude — Caution, Generation &amp; Code</div>
+          <div class="tool-desc">Claude closes the loop. Generous token window, extreme care with uncertainty, and unmatched at artifact generation: schemas, briefs, code, and structured outputs. The prior three models have grounded and stress-tested the prompt; Claude now builds. This is not the fastest path — it is the most defensible one.</div>
+        </div>
+        <div class="tool-card" style="border-left:3px solid var(--session-accent);background:var(--glass)">
+          <div class="tool-rank" style="color:var(--session-accent)">+ 1 · Expert Human in the Loop — No AGI yet</div>
+          <div class="tool-desc">The prompter is not neutral infrastructure. The Ukubona method treats the human expert as the fifth agent: setting the cumulative prompt strategy, reading what each model reveals about its own blind spots, and deciding when the stack has converged. This is a methodology, not a workflow. The sequence encodes a theory of where each model's epistemic character is strongest.</div>
+        </div>
+      </div>
+      <div class="tool-grid" style="display:none"><!-- grid closed above; reopen below if needed -->
       </div>
 
       <p class="section-label" style="margin-top:.9rem">JSON schema · WorldInput → WorldOutput</p>
