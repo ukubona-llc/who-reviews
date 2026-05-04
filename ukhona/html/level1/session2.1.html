@@ -12,6 +12,10 @@
   <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-light.png" as="image">
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="../../css/variables.css?v=1.1" rel="stylesheet">
+  <link href="../../css/head.css?v=1.1" rel="stylesheet">
+  <link href="../../css/card.css?v=1.1" rel="stylesheet">
+  <link href="../../css/footer.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
@@ -347,15 +351,7 @@
 <div class="spine" id="spine"></div>
 
 <!-- HEADER -->
-<header class="ukb-header">
-  <a href="../../" class="ukb-header-left">
-    <img src="https://abikesa.github.io/logos/assets/ukubona-dark.png" alt="Ukubona" class="ukb-logo" id="logo-img">
-    <span class="ukb-wordmark">Ukubona × WHO India</span>
-  </a>
-  <div class="ukb-header-right">
-    <button class="ukb-theme-btn" id="theme-toggle" title="Toggle theme">☀</button>
-  </div>
-</header>
+<header class="header" id="header"></header>
 
 <div class="s-page">
   <div class="s-crumb">
@@ -765,5 +761,8 @@ themeBtn.addEventListener('click', () => {
     : 'https://abikesa.github.io/logos/assets/ukubona-light.png';
 });
 </script>
+<div id="footer-placeholder"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+<script src="../../js/shared.js"></script>
 </body>
 </html>
