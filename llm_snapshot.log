@@ -1,8 +1,8 @@
 📦 LLM PROJECT SNAPSHOT
 Directory: .
-Generated: Wed Apr 29 12:55:57 EDT 2026
+Generated: Mon May  4 06:10:35 EDT 2026
 
-Files:      109  Folders:       57
+Files:       78  Folders:       31
 
 .
 ├── README.md
@@ -37,7 +37,6 @@ Files:      109  Folders:       57
 │   │   ├── shared.js
 │   ├── md
 │   │   ├── README.md
-│   │   ├── session-planning.md
 │   ├── sh
 │   │   ├── snapshot.sh
 │   │   ├── tree.sh
@@ -1835,7 +1834,7 @@ Lines:      209
 ------------------------------------------
 📄 FILE: ./ukhona/html/level1/session1.html
 ------------------------------------------
-Lines:      442
+Lines:      965
 ⚠️ Truncated
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -1898,6 +1897,30 @@ Lines:      442
     .pipeline-wrap {
       margin: 2rem 0;
     }
+    /* ── FIX 1: "primary spine" label above the pipeline ──
+       Addresses GPT's point that two ontologies (pipeline + tensor/scalar) are co-equal.
+       One quiet label makes the pipeline the clear backbone; tensor-scalar stays as
+       the interpretation layer inside the chain visualiser. No content removed. */
+    .pipeline-spine-label {
+      font-family: 'Inter', sans-serif;
+      font-size: .52rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--session-accent);
+      opacity: .55;
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .pipeline-spine-label::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--session-accent);
+      opacity: .5;
+    }
     .pipeline {
       display: flex; flex-wrap: wrap; align-items: center;
       gap: .5rem; padding: 1.75rem 2rem;
@@ -1920,7 +1943,6 @@ Lines:      442
       border-color: color-mix(in srgb, #ef5350 35%, transparent);
       color: #ef9a9a;
     }
-    /* NEW: annotation bar linking pipeline steps to Session 2 table */
     .pipeline-annotation {
       background: color-mix(in srgb, var(--session-accent) 5%, transparent);
       border: 1px solid color-mix(in srgb, var(--session-accent) 20%, transparent);
@@ -2014,29 +2036,213 @@ Lines:      442
       transition: all .15s; user-select: none;
     }
     .audit-btn:hover, .audit-btn.selected {
-      border-color: var(--session-accent); color: var(--session-accent);
-      background: color-mix(in srgb, var(--session-accent) 10%, transparent);
-    }
-    .audit-result {
-      margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 8px;
-      background: var(--glass); border: 1px solid var(--border);
-      font-family: 'Inter', sans-serif; font-size: .82rem; line-height: 1.6;
-      color: var(--text-secondary); display: none;
-    }
-    .audit-result.visible { display: block; }
-    .audit-result strong { color: var(--session-accent); }
+... [TRUNCATED]
 
-    /* Takeaway */
-    .takeaway {
-      margin-top: 3rem; padding: 1.5rem 2rem; border-radius: 12px;
-      border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent);
-      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
-    }
-    .takeaway h3 { margin-top: 0; }
-    .takeaway p { margin-bottom: 0; font-size: .95rem; }
-  </style>
-</head>
-<body>
+------------------------------------------
+📄 FILE: ./ukhona/html/level1/session2.1.html
+------------------------------------------
+Lines:      440
+⚠️ Truncated
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,300;1,400&family=DM+Mono:wght@300&display=swap');
+
+  :root {
+    --r: #e05555; --o: #d97706; --y: #b5960a; --g: #1d9e75; --b: #3a7dd4;
+    --r-bg: rgba(224,85,85,.09); --o-bg: rgba(217,119,6,.09);
+    --y-bg: rgba(181,150,10,.08); --g-bg: rgba(29,158,117,.09); --b-bg: rgba(58,125,212,.09);
+    --r-border: rgba(224,85,85,.28); --o-border: rgba(217,119,6,.28);
+    --y-border: rgba(181,150,10,.24); --g-border: rgba(29,158,117,.28); --b-border: rgba(58,125,212,.28);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .pen-wrap { font-family: 'DM Mono', monospace; padding: 0 0 2rem; }
+
+  .pen-header { padding: 1.25rem 1.5rem 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .pen-eyebrow { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: var(--color-text-secondary); opacity: .6; margin-bottom: .5rem; }
+  .pen-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 400; font-style: italic; color: var(--color-text-primary); margin-bottom: .2rem; }
+  .pen-sub { font-size: 10px; letter-spacing: .12em; color: var(--color-text-secondary); margin-bottom: 1rem; }
+
+  .tab-row { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; padding-top: .25rem; }
+  .tab-row::-webkit-scrollbar { display: none; }
+
+  .tab-btn { flex-shrink: 0; padding: .45rem .9rem; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; border: none; background: none; cursor: pointer; color: var(--color-text-secondary); border-bottom: 2px solid transparent; transition: all .15s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--color-text-primary); }
+  .tab-btn.active { color: var(--tab-color, var(--color-text-primary)); border-bottom-color: var(--tab-color, var(--color-text-primary)); }
+
+  .tab-panel { display: none; padding: 1.25rem 1.5rem; }
+  .tab-panel.active { display: block; }
+
+  .layer-badge { display: inline-flex; align-items: center; gap: .4rem; font-size: 8px; letter-spacing: .2em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 20px; border: 1px solid; margin-bottom: .9rem; }
+
+  .layer-q { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; font-weight: 400; color: var(--color-text-primary); margin-bottom: 1rem; line-height: 1.35; }
+
+  .section-label { font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: var(--color-text-secondary); opacity: .55; margin-bottom: .5rem; }
+
+  .tool-card { background: var(--color-background-secondary); border-radius: 8px; padding: .8rem 1rem; margin-bottom: .5rem; border: 0.5px solid var(--color-border-tertiary); }
+  .tool-rank { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: .2rem; }
+  .tool-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: .15rem; }
+  .tool-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.55; }
+
+  .pipeline-strip { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin: 1rem 0; padding: .7rem 1rem; background: var(--color-background-secondary); border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); }
+  .p-node { font-size: 9px; letter-spacing: .06em; padding: .25rem .55rem; border-radius: 5px; border: 1px solid; white-space: nowrap; }
+  .p-node.active-node { font-weight: 500; }
+  .p-arr { font-size: 9px; color: var(--color-text-secondary); opacity: .4; }
+
+  .artifact-box { background: var(--color-background-secondary); border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); overflow: hidden; margin-top: 1rem; }
+  .artifact-header { padding: .5rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-text-secondary); display: flex; align-items: center; justify-content: space-between; }
+  .artifact-body { padding: .8rem 1rem; font-family: 'DM Mono', monospace; font-size: 10px; line-height: 1.7; color: var(--color-text-secondary); }
+  .artifact-body .kw { color: var(--color-text-info); }
+  .artifact-body .str { color: var(--color-text-success); }
+  .artifact-body .cmt { color: var(--color-text-secondary); opacity: .5; }
+
+  .copy-btn { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 4px; border: 0.5px solid var(--color-border-secondary); background: none; cursor: pointer; color: var(--color-text-secondary); transition: all .15s; }
+  .copy-btn:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+
+  .feedback-loop { margin-top: 1.25rem; padding: .8rem 1rem; border-radius: 8px; border: 0.5px dashed var(--color-border-secondary); font-size: 10px; line-height: 1.65; color: var(--color-text-secondary); }
+  .feedback-loop strong { color: var(--color-text-primary); font-weight: 500; }
+
+  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+  @media (max-width: 480px) { .tool-grid { grid-template-columns: 1fr; } }
+
+  .schema-row { display: flex; align-items: baseline; gap: .5rem; font-size: 10px; padding: .2rem 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .schema-row:last-child { border-bottom: none; }
+  .schema-field { color: var(--color-text-primary); font-weight: 500; min-width: 80px; flex-shrink: 0; }
+  .schema-type { color: var(--color-text-info); min-width: 60px; flex-shrink: 0; }
+  .schema-note { color: var(--color-text-secondary); font-size: 9px; }
+
+  .prisma-counts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: .6rem; }
+  .prisma-count { background: var(--color-background-primary); border-radius: 6px; border: 0.5px solid var(--color-border-tertiary); padding: .5rem .4rem; text-align: center; }
+  .prisma-n { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .prisma-label { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-secondary); margin-top: 2px; }
+
+  .run-btn { display: block; width: 100%; margin-top: .8rem; padding: .5rem; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); background: none; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-text-secondary); transition: all .18s; }
+  .run-btn:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+
+  .chain-vis { display: flex; align-items: center; gap: 3px; margin: .75rem 0; flex-wrap: nowrap; overflow-x: auto; }
+  .chain-node { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; border: 1.5px solid; }
+  .chain-arr { font-size: 10px; color: var(--color-text-secondary); opacity: .35; flex-shrink: 0; }
+</style>
+
+<div class="pen-wrap">
+  <div class="pen-header">
+    <p class="pen-eyebrow">ukubona × who india · session 2 rewrite · 2026</p>
+    <h1 class="pen-title">The Pentadic Pipeline</h1>
+    <p class="pen-sub">world → perception → agentic → generative → embodied · crème-de-la-crème · generate.sh</p>
+
+    <div class="tab-row" role="tablist">
+      <button class="tab-btn active" style="--tab-color:var(--r)" onclick="switchTab(0)" role="tab">I · World</button>
+      <button class="tab-btn" style="--tab-color:var(--o)" onclick="switchTab(1)" role="tab">II · Perception</button>
+      <button class="tab-btn" style="--tab-color:var(--y)" onclick="switchTab(2)" role="tab">III · Agentic</button>
+      <button class="tab-btn" style="--tab-color:var(--g)" onclick="switchTab(3)" role="tab">IV · Generative</button>
+      <button class="tab-btn" style="--tab-color:var(--b)" onclick="switchTab(4)" role="tab">V · Embodied</button>
+    </div>
+  </div>
+
+  <!-- I. WORLD -->
+  <div class="tab-panel active" id="panel-0">
+    <div class="layer-badge" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg)">Layer I · World · What is true in general?</div>
+    <p class="layer-q">"What is true across the general evidence space — before you touch a single paper?"</p>
+
+    <div class="pipeline-strip">
+      <div class="p-node active-node" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg)">Problem framing</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Search</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Screen</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Extract</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Synthesise</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Brief</div>
+    </div>
+
+    <p class="section-label">Crème-de-la-crème tools · 2026</p>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--r)">Primary · PECO-F framing</div>
+        <div class="tool-name">Claude Opus 4 / Sonnet 4.6</div>
+        <div class="tool-desc">Nuanced LMIC reasoning. Best at disambiguating "health financing" from clinical questions. Output: structured PICO + search keyword set.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--r)">Secondary · broad orientation</div>
+        <div class="tool-name">Grok-3 + Gemini 2.5 Pro</div>
+        <div class="tool-desc">Wide-net knowledge for unfamiliar domains. Run both; Claude adjudicates conflicts. Gemini excels at recent WHO/World Bank grey sources.</div>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:.9rem">JSON schema · WorldInput → WorldOutput</p>
+    <div class="artifact-box">
+      <div class="artifact-header">
+        <span>app/schemas/world.py</span>
+        <button class="copy-btn" onclick="copyCode('world-code')">copy</button>
+      </div>
+      <div class="artifact-body" id="world-code"><span class="kw">class</span> <span class="str">WorldInput</span>(BaseModel):
+  question:      <span class="kw">str</span>   <span class="cmt"># "UHC insurance & OOP spending India"</span>
+  population:    <span class="kw">str</span>   <span class="cmt"># "adults BPL households"</span>
+  intervention:  <span class="kw">str</span>   <span class="cmt"># "PM-JAY"</span>
+  comparator:    <span class="kw">str</span>   <span class="cmt"># "no insurance"</span>
+  outcomes:      List[<span class="kw">str</span>] <span class="cmt"># ["ICER","OOP reduction","equity"]</span>
+  context:       <span class="kw">str</span>   <span class="cmt"># "WHO India financing brief"</span>
+
+<span class="kw">class</span> <span class="str">WorldOutput</span>(BaseModel):
+  search_queries: List[<span class="kw">str</span>]
+  grey_sources:   List[<span class="kw">str</span>]  <span class="cmt"># HTAIn, NSSO, state NHAs</span>
+  inclusion_criteria: dict
+  equity_flags:   List[<span class="kw">str</span>]  <span class="cmt"># bias checks to carry forward</span></div>
+    </div>
+
+    <div class="feedback-loop">
+      <strong>Feedback loop:</strong> if Layer V (Embodied) flags urban bias or transferability failure, the signal returns here — the WorldInput is tightened (e.g. population narrowed to "rural BPL households, Tier-3 districts") and the pipeline re-runs from this layer. This is the adaptive loop neither xAI nor the original session formalized.
+    </div>
+  </div>
+
+  <!-- II. PERCEPTION -->
+  <div class="tab-panel" id="panel-1">
+    <div class="layer-badge" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Layer II · Perception · What is true in these documents?</div>
+    <p class="layer-q">"Which real papers and reports actually contain the evidence your question needs?"</p>
+
+    <div class="pipeline-strip">
+      <div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Problem framing</div>
+      <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Search</div>
+      <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Screen</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Extract</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Synthesise</div>
+      <span class="p-arr">→</span><div class="p-node" style="color:var(--color-text-secondary);border-color:var(--color-border-tertiary)">Brief</div>
+    </div>
+
+    <p class="section-label">Crème-de-la-crème tools · 2026</p>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--o)">Primary · indexed literature</div>
+        <div class="tool-name">Dimensions.ai + Semantic Scholar</div>
+        <div class="tool-desc">LMIC filters, grant/dataset cross-linking. Semantic Scholar TL;DRs pre-screen relevance. Together they surface what PubMed alone misses.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--o)">Primary · grey literature</div>
+        <div class="tool-name">Claude (PDF upload) + Humata</div>
+        <div class="tool-desc">Unmatched on government PDFs: NSSO, HTAIn assessments, state NHAs, PM-JAY evaluation reports. Claude handles 200k-token documents; Humata for rapid single-doc Q&A.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--o)">Secondary · visual network</div>
+        <div class="tool-name">Connected Papers + Litmaps</div>
+        <div class="tool-desc">Catch seminal works a keyword search misses. Essential for health financing: the citation graph reveals the 3 papers every other paper cites.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-rank" style="color:var(--o)">Secondary · citation quality</div>
+        <div class="tool-name">Scite.ai</div>
+        <div class="tool-desc">Distinguishes supporting vs contrasting citations. Surfaces papers that refute PM-JAY findings — critical for equity briefing honesty.</div>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:.9rem">PubMed + grey literature wiring · perception layer</p>
+    <div class="artifact-box">
+      <div class="artifact-header">
+        <span>app/services/pubmed.py + pdf.py</span>
+        <button class="copy-btn" onclick="copyCode('perc-code')">copy</button>
+      </div>
+      <div class="artifact-body" id="perc-code"><span class="kw">from</span> Bio <span class="kw">import</span> Entrez
+<span class="kw">import</span> fitz  <span class="cmt"># PyMuPDF</span>
+
+Entrez.email = <span class="str">"who-india@example.org"</span>
+
 ... [TRUNCATED]
 
 ------------------------------------------
@@ -6938,213 +7144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 ------------------------------------------
 Lines:        0
 Respect the existing Ukubona aesthetic
-------------------------------------------
-📄 FILE: ./ukhona/md/session-planning.md
-------------------------------------------
-Lines:     6036
-⚠️ Truncated
-
-
-- https://ukubona-llc.github.io/who/ (App to be shared)
-- index.html at this site
-
-```html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ukubona LLC · WHO India</title>
-<meta name="description" content="Ukubona LLC — WHO India · AI Tools for Literature Review">
-<meta property="og:title" content="Ukubona LLC · WHO India">
-<meta property="og:description" content="Ukubona LLC — WHO India · AI Tools for Literature Review">
-<meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-light.ico" />
-    <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-dark.ico"
-          media="(prefers-color-scheme: dark)" />
-    <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-light.png" as="image" />
-    <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-dark.png" as="image" />
-
-  <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink:    #0f0e0d;
-    --ink2:   #3a3630;
-    --ink3:   #7a7268;
-    --ink4:   #b0a898;
-    --paper:  #faf8f4;
-    --paper2: #f0ece4;
-    --border: #d8d0c0;
-    --gold:   #b8860b;
-    --gold2:  #d4a017;
-    --blue:   #1a3a6b;
-    --bar-h:  48px;
-  }
-
-  html, body {
-    height: 100%;
-    overflow: hidden;
-    background: var(--paper);
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink);
-  }
-
-  /* ── TOP BAR ── */
-  #topbar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: var(--bar-h);
-    background: var(--ink);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .bar-left {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .bar-brand {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.05rem;
-    font-weight: 400;
-    color: var(--gold2);
-    letter-spacing: 0.01em;
-    text-decoration: none;
-  }
-
-  .bar-sep {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: rgba(255,255,255,0.18);
-    letter-spacing: 0.05em;
-  }
-
-  .bar-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.38);
-    white-space: nowrap;
-  }
-
-  .bar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .bar-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #2ecc71;
-    flex-shrink: 0;
-    animation: pulse 2.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
-  }
-
-  .bar-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .bar-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.35);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 4px;
-    transition: all 0.15s;
-  }
-  .bar-link:hover {
-    color: #fff;
-    border-color: rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.07);
-  }
-
-  /* ── LOADER ── */
-  #loader {
-    position: fixed;
-    top: var(--bar-h); left: 0; right: 0; bottom: 0;
-    background: var(--paper);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    z-index: 50;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-  }
-  #loader.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-
-  /*
-   * FIX: wrap wordmark + subtitle in a flex-column block.
-   * The old code had .loader-sub with margin-top: -1.4rem which
-   * pulled it up into the wordmark text. Now they live in a
-   * shared container with a positive gap — clean separation.
-   */
-  .loader-wordmark-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .loader-wordmark {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 2.8rem;
-    font-weight: 400;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    line-height: 1;
-  }
-  .loader-wordmark em {
-    font-style: italic;
-    color: var(--gold2);
-  }
-
-  .loader-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink4);
-    line-height: 1;
-    /* no negative margin — subtitle sits cleanly below wordmark */
-  }
-
-  /* animated progress track */
-... [TRUNCATED]
-
 ------------------------------------------
 📄 FILE: ./ukhona/sh/snapshot.sh
 ------------------------------------------

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Pentadic Pipeline · Session 2.1 · Ukubona × WHO India</title>
+  <meta name="description" content="World → Perception → Agentic → Generative → Embodied: the five-layer research pipeline for health economics work.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-dark.ico" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-light.ico" media="(prefers-color-scheme: light)">
+  <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-dark.png" as="image">
+  <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-light.png" as="image">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── UKUBONA DESIGN TOKENS (mirrors session2.html) ── */
+    :root {
+      --session-accent: #4fc3f7;
+      --bar-h: 48px;
+      --ff-display: 'Playfair Display', Georgia, serif;
+      --ff-body:    'Source Serif 4', Georgia, serif;
+      --ff-mono:    'DM Mono', 'Fira Mono', monospace;
+      --ff-sans:    'Inter', system-ui, sans-serif;
+
+      /* pentadic layer colours */
+      --r:        #e05555;
+      --o:        #d97706;
+      --y:        #b5960a;
+      --g:        #1d9e75;
+      --b:        #3a7dd4;
+      --r-bg:     rgba(224,85,85,.09);
+      --o-bg:     rgba(217,119,6,.09);
+      --y-bg:     rgba(181,150,10,.08);
+      --g-bg:     rgba(29,158,117,.09);
+      --b-bg:     rgba(58,125,212,.09);
+      --r-border: rgba(224,85,85,.28);
+      --o-border: rgba(217,119,6,.28);
+      --y-border: rgba(181,150,10,.24);
+      --g-border: rgba(29,158,117,.28);
+      --b-border: rgba(58,125,212,.28);
+    }
+
+    [data-theme="dark"] {
+      --bg:      #0b0f14;
+      --surface: #111620;
+      --card:    #161d28;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #f0ede6;
+      --muted:   rgba(240,237,230,0.55);
+      --glass:   rgba(255,255,255,0.03);
+    }
+    [data-theme="light"] {
+      --bg:      #faf8f4;
+      --surface: #f0ece4;
+      --card:    #fff;
+      --border:  #d8d0c0;
+      --text:    #0f0e0d;
+      --muted:   #7a7268;
+      --glass:   rgba(0,0,0,0.02);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── HEADER ── */
+    .ukb-header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--bar-h);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; z-index: 100;
+    }
+    .ukb-header-left { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .ukb-logo { height: 22px; width: auto; }
+    .ukb-wordmark { font-family: var(--ff-mono); font-size: 0.62rem; letter-spacing: 0.14em; color: var(--muted); }
+    .ukb-header-right { display: flex; gap: 0.6rem; align-items: center; }
+    .ukb-theme-btn {
+      background: none; border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.3rem 0.65rem; font-size: 0.75rem; cursor: pointer;
+      color: var(--muted); transition: all 0.2s;
+    }
+    .ukb-theme-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
+
+    /* ── SPINE ── */
+    .spine {
+      position: fixed; left: 0; top: 0; width: 3px; height: 0%;
+      background: var(--session-accent); z-index: 200; transition: height .1s linear;
+    }
+
+    /* ── PAGE ── */
+    .s-page {
+      padding-top: calc(var(--bar-h) + 3rem);
+      padding-bottom: 6rem;
+      max-width: 960px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    /* ── HERO ── */
+    .s-crumb {
+      font-family: var(--ff-sans); font-size: .6rem; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--muted); opacity: .5;
+      margin-bottom: 2.5rem; display: flex; gap: .75rem; align-items: center;
+    }
+    .s-crumb span { color: var(--session-accent); opacity: 1; }
+    .s-crumb a { color: inherit; text-decoration: none; }
+    .s-hero { margin-bottom: 3rem; }
+    .s-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--ff-sans); font-size: .55rem; letter-spacing: .2em; text-transform: uppercase;
+      padding: .3rem .8rem; border-radius: 999px;
+      border: 1px solid var(--session-accent); color: var(--session-accent);
+      background: color-mix(in srgb, var(--session-accent) 8%, transparent);
+      margin-bottom: 1.5rem;
+    }
+    .s-label { font-family: var(--ff-sans); font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin-bottom: .75rem; font-weight: 600; }
+    .s-title { font-family: var(--ff-display); font-size: clamp(2rem,5vw,3.2rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--text); margin-bottom: .5rem; }
+    .s-subtitle { font-family: var(--ff-display); font-size: clamp(1rem,2.5vw,1.3rem); font-style: italic; font-weight: 400; color: var(--muted); margin-bottom: 1.5rem; }
+    .s-oneliner { font-size: .9rem; line-height: 1.7; color: var(--muted); border-left: 3px solid var(--session-accent); padding-left: 1rem; max-width: 580px; }
+
+    /* ── PENTADIC WRAPPER ── */
+    .pen-wrap {
+      font-family: var(--ff-mono);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    /* ── PEN HEADER ── */
+    .pen-header {
+      padding: 1.25rem 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--session-accent) 4%, var(--surface));
+    }
+    .pen-eyebrow {
+      font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+      color: var(--muted); opacity: .6; margin-bottom: .5rem;
+    }
+    .pen-title {
+      font-family: var(--ff-display); font-size: 22px; font-weight: 400;
+      font-style: italic; color: var(--text); margin-bottom: .2rem;
+    }
+    .pen-sub { font-size: 10px; letter-spacing: .12em; color: var(--muted); margin-bottom: 1rem; }
+
+    /* ── TABS ── */
+    .tab-row {
+      display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+      padding-top: .25rem;
+    }
+    .tab-row::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0; padding: .45rem .9rem;
+      font-family: var(--ff-mono); font-size: 9px; letter-spacing: .14em;
+      text-transform: uppercase; border: none; background: none; cursor: pointer;
+      color: var(--muted); border-bottom: 2px solid transparent;
+      transition: all .15s; white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--tab-color, var(--text)); border-bottom-color: var(--tab-color, var(--text)); }
+
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; padding: 1.25rem 1.5rem 1.5rem; }
+    .tab-panel.active { display: block; }
+
+    /* ── LAYER BADGE ── */
+    .layer-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
+      padding: .2rem .6rem; border-radius: 20px; border: 1px solid;
+      margin-bottom: .9rem;
+    }
+
+    /* ── LAYER QUESTION ── */
+    .layer-q {
+      font-family: var(--ff-display); font-size: 17px; font-style: italic;
+      font-weight: 400; color: var(--text); margin-bottom: 1rem; line-height: 1.35;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 8px; letter-spacing: .24em; text-transform: uppercase;
+      color: var(--muted); opacity: .55; margin-bottom: .5rem;
+    }
+
+    /* ── PIPELINE STRIP ── */
+    .pipeline-strip {
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+      margin: 1rem 0; padding: .7rem 1rem;
+      background: var(--glass); border-radius: 8px; border: 1px solid var(--border);
+    }
+    .p-node {
+      font-size: 9px; letter-spacing: .06em; padding: .25rem .55rem;
+      border-radius: 5px; border: 1px solid; white-space: nowrap;
+    }
+    .p-node.active-node { font-weight: 500; }
+    .p-inactive {
+      font-size: 9px; letter-spacing: .06em; padding: .25rem .55rem;
+      border-radius: 5px; border: 1px solid var(--border); white-space: nowrap;
+      color: var(--muted);
+    }
+    .p-arr { font-size: 9px; color: var(--muted); opacity: .4; }
+
+    /* ── TOOL GRID ── */
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+    @media (max-width: 540px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    /* ── TOOL CARD ── */
+    .tool-card {
+      background: var(--glass); border-radius: 8px;
+      padding: .8rem 1rem; margin-bottom: .5rem;
+      border: 1px solid var(--border);
+    }
+    .tool-rank { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: .2rem; }
+    .tool-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: .15rem; }
+    .tool-desc { font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+    /* ── ARTIFACT BOX ── */
+    .artifact-box {
+      background: var(--surface); border-radius: 8px;
+      border: 1px solid var(--border); overflow: hidden; margin-top: 1rem;
+    }
+    .artifact-header {
+      padding: .5rem 1rem; border-bottom: 1px solid var(--border);
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted); display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .artifact-body {
+      padding: .8rem 1rem; font-family: var(--ff-mono);
+      font-size: 10px; line-height: 1.7; color: var(--muted);
+    }
+    .artifact-body .kw  { color: var(--session-accent); }
+    .artifact-body .str { color: #4ade80; }
+    .artifact-body .cmt { color: var(--muted); opacity: .5; }
+
+    /* ── COPY BTN ── */
+    .copy-btn {
+      font-size: 8px; letter-spacing: .15em; text-transform: uppercase;
+      padding: .2rem .6rem; border-radius: 4px;
+      border: 1px solid var(--border); background: none; cursor: pointer;
+      color: var(--muted); transition: all .15s;
+    }
+    .copy-btn:hover { background: var(--card); color: var(--text); }
+
+    /* ── FEEDBACK LOOP ── */
+    .feedback-loop {
+      margin-top: 1.25rem; padding: .8rem 1rem; border-radius: 8px;
+      border: 1px dashed color-mix(in srgb, var(--session-accent) 35%, transparent);
+      font-size: 10px; line-height: 1.65; color: var(--muted);
+    }
+    .feedback-loop strong { color: var(--text); font-weight: 500; }
+
+    /* ── SCHEMA ROWS ── */
+    .schema-row {
+      display: flex; align-items: baseline; gap: .5rem; font-size: 10px;
+      padding: .2rem 0; border-bottom: 1px solid var(--border);
+    }
+    .schema-row:last-child { border-bottom: none; }
+    .schema-field { color: var(--text); font-weight: 500; min-width: 80px; flex-shrink: 0; }
+    .schema-type  { color: var(--session-accent); min-width: 60px; flex-shrink: 0; }
+    .schema-note  { color: var(--muted); font-size: 9px; }
+
+    /* ── PRISMA COUNTS ── */
+    .prisma-counts {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: .6rem;
+    }
+    .prisma-count {
+      background: var(--glass); border-radius: 6px;
+      border: 1px solid var(--border); padding: .5rem .4rem; text-align: center;
+    }
+    .prisma-n { font-size: 18px; font-weight: 500; color: var(--text); }
+    .prisma-label {
+      font-size: 8px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); margin-top: 2px;
+    }
+    .run-btn {
+      display: block; width: 100%; margin-top: .8rem; padding: .5rem;
+      border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer;
+      font-family: var(--ff-mono); font-size: 10px; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted); transition: all .18s;
+    }
+    .run-btn:hover { background: var(--glass); color: var(--text); }
+
+    /* ── CHAIN VIS ── */
+    .chain-vis {
+      display: flex; align-items: center; gap: 3px; margin: .75rem 0;
+      flex-wrap: nowrap; overflow-x: auto;
+    }
+    .chain-node {
+      flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 500; border: 1.5px solid;
+    }
+    .chain-arr { font-size: 10px; color: var(--muted); opacity: .35; flex-shrink: 0; }
+
+    /* ── SEGUE LINK ── */
+    .segue-strip {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      margin: 2.5rem 0 0;
+      padding: 1.1rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid color-mix(in srgb, var(--session-accent) 28%, transparent);
+      background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
+    }
+    .segue-label {
+      font-family: var(--ff-sans); font-size: .58rem; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--session-accent); font-weight: 700;
+      margin-bottom: .3rem;
+    }
+    .segue-text {
+      font-family: var(--ff-sans); font-size: .82rem; color: var(--muted); line-height: 1.5;
+    }
+    .segue-text strong { color: var(--text); }
+
+    /* ── NAV ── */
+    .s-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); gap: 1rem;
+    }
+    .s-nav-btn {
+      font-family: var(--ff-sans); font-size: .7rem; letter-spacing: .1em;
+      font-weight: 500; padding: .6rem 1.4rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--glass); color: var(--muted);
+      text-decoration: none; transition: all .2s; cursor: pointer;
+    }
+    .s-nav-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
+    .s-nav-next { margin-left: auto; }
+
+    @media (max-width: 600px) { .s-page { padding-left: 1.25rem; padding-right: 1.25rem; } }
+  </style>
+</head>
+<body>
+<div class="spine" id="spine"></div>
+
+<!-- HEADER -->
+<header class="ukb-header">
+  <a href="../../" class="ukb-header-left">
+    <img src="https://abikesa.github.io/logos/assets/ukubona-dark.png" alt="Ukubona" class="ukb-logo" id="logo-img">
+    <span class="ukb-wordmark">Ukubona × WHO India</span>
+  </a>
+  <div class="ukb-header-right">
+    <button class="ukb-theme-btn" id="theme-toggle" title="Toggle theme">☀</button>
+  </div>
+</header>
+
+<div class="s-page">
+  <div class="s-crumb">
+    <a href="../../">Home</a> · Level 1 · <a href="session2.html">Session 2</a> · <span>Session 2.1</span>
+  </div>
+
+  <div class="s-hero">
+    <div class="s-badge">🔬 Level 1 of 5 · Session 2.1 · Deep Dive</div>
+    <p class="s-label">Level 1 · Foundations</p>
+    <h1 class="s-title">The Pentadic Pipeline</h1>
+    <p class="s-subtitle">Five layers from raw evidence to embodied judgment</p>
+    <p class="s-oneliner">World → Perception → Agentic → Generative → Embodied. Each layer answers a distinct question. Each has a crème-de-la-crème tool stack. And a feedback loop ties them all together.</p>
+  </div>
+
+  <!-- ══ PENTADIC WIDGET ══ -->
+  <div class="pen-wrap">
+    <div class="pen-header">
+      <p class="pen-eyebrow">ukubona × who india · session 2 rewrite · 2026</p>
+      <h2 class="pen-title">The Pentadic Pipeline</h2>
+      <p class="pen-sub">world → perception → agentic → generative → embodied · crème-de-la-crème · generate.sh</p>
+
+      <div class="tab-row" role="tablist">
+        <button class="tab-btn active" style="--tab-color:var(--r)" onclick="switchTab(0)" role="tab">I · World</button>
+        <button class="tab-btn" style="--tab-color:var(--o)" onclick="switchTab(1)" role="tab">II · Perception</button>
+        <button class="tab-btn" style="--tab-color:var(--y)" onclick="switchTab(2)" role="tab">III · Agentic</button>
+        <button class="tab-btn" style="--tab-color:var(--g)" onclick="switchTab(3)" role="tab">IV · Generative</button>
+        <button class="tab-btn" style="--tab-color:var(--b)" onclick="switchTab(4)" role="tab">V · Embodied</button>
+      </div>
+    </div>
+
+    <!-- I. WORLD -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="layer-badge" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg)">Layer I · World · What is true in general?</div>
+      <p class="layer-q">"What is true across the general evidence space — before you touch a single paper?"</p>
+
+      <div class="pipeline-strip">
+        <div class="p-node active-node" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg)">Problem framing</div>
+        <span class="p-arr">→</span><div class="p-inactive">Search</div>
+        <span class="p-arr">→</span><div class="p-inactive">Screen</div>
+        <span class="p-arr">→</span><div class="p-inactive">Extract</div>
+        <span class="p-arr">→</span><div class="p-inactive">Synthesise</div>
+        <span class="p-arr">→</span><div class="p-inactive">Brief</div>
+      </div>
+
+      <p class="section-label">Crème-de-la-crème tools · 2026</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--r)">Primary · PECO-F framing</div>
+          <div class="tool-name">Claude Opus 4 / Sonnet 4.6</div>
+          <div class="tool-desc">Nuanced LMIC reasoning. Best at disambiguating "health financing" from clinical questions. Output: structured PICO + search keyword set.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--r)">Secondary · broad orientation</div>
+          <div class="tool-name">Grok-3 + Gemini 2.5 Pro</div>
+          <div class="tool-desc">Wide-net knowledge for unfamiliar domains. Run both; Claude adjudicates conflicts. Gemini excels at recent WHO/World Bank grey sources.</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">JSON schema · WorldInput → WorldOutput</p>
+      <div class="artifact-box">
+        <div class="artifact-header">
+          <span>app/schemas/world.py</span>
+          <button class="copy-btn" onclick="copyCode('world-code')">copy</button>
+        </div>
+        <div class="artifact-body" id="world-code"><span class="kw">class</span> <span class="str">WorldInput</span>(BaseModel):
+  question:      <span class="kw">str</span>   <span class="cmt"># "UHC insurance &amp; OOP spending India"</span>
+  population:    <span class="kw">str</span>   <span class="cmt"># "adults BPL households"</span>
+  intervention:  <span class="kw">str</span>   <span class="cmt"># "PM-JAY"</span>
+  comparator:    <span class="kw">str</span>   <span class="cmt"># "no insurance"</span>
+  outcomes:      List[<span class="kw">str</span>] <span class="cmt"># ["ICER","OOP reduction","equity"]</span>
+  context:       <span class="kw">str</span>   <span class="cmt"># "WHO India financing brief"</span>
+
+<span class="kw">class</span> <span class="str">WorldOutput</span>(BaseModel):
+  search_queries: List[<span class="kw">str</span>]
+  grey_sources:   List[<span class="kw">str</span>]  <span class="cmt"># HTAIn, NSSO, state NHAs</span>
+  inclusion_criteria: dict
+  equity_flags:   List[<span class="kw">str</span>]  <span class="cmt"># bias checks to carry forward</span></div>
+      </div>
+
+      <div class="feedback-loop">
+        <strong>Feedback loop:</strong> if Layer V (Embodied) flags urban bias or transferability failure, the signal returns here — the WorldInput is tightened (e.g. population narrowed to "rural BPL households, Tier-3 districts") and the pipeline re-runs from this layer. This is the adaptive loop neither xAI nor the original session formalized.
+      </div>
+    </div>
+
+    <!-- II. PERCEPTION -->
+    <div class="tab-panel" id="panel-1">
+      <div class="layer-badge" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Layer II · Perception · What is true in these documents?</div>
+      <p class="layer-q">"Which real papers and reports actually contain the evidence your question needs?"</p>
+
+      <div class="pipeline-strip">
+        <div class="p-inactive">Problem framing</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Search</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">Screen</div>
+        <span class="p-arr">→</span><div class="p-inactive">Extract</div>
+        <span class="p-arr">→</span><div class="p-inactive">Synthesise</div>
+        <span class="p-arr">→</span><div class="p-inactive">Brief</div>
+      </div>
+
+      <p class="section-label">Crème-de-la-crème tools · 2026</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--o)">Primary · indexed literature</div>
+          <div class="tool-name">Dimensions.ai + Semantic Scholar</div>
+          <div class="tool-desc">LMIC filters, grant/dataset cross-linking. Semantic Scholar TL;DRs pre-screen relevance. Together they surface what PubMed alone misses.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--o)">Primary · grey literature</div>
+          <div class="tool-name">Claude (PDF upload) + Humata</div>
+          <div class="tool-desc">Unmatched on government PDFs: NSSO, HTAIn assessments, state NHAs, PM-JAY evaluation reports. Claude handles 200k-token documents; Humata for rapid single-doc Q&A.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--o)">Secondary · visual network</div>
+          <div class="tool-name">Connected Papers + Litmaps</div>
+          <div class="tool-desc">Catch seminal works a keyword search misses. Essential for health financing: the citation graph reveals the 3 papers every other paper cites.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--o)">Secondary · citation quality</div>
+          <div class="tool-name">Scite.ai</div>
+          <div class="tool-desc">Distinguishes supporting vs contrasting citations. Surfaces papers that refute PM-JAY findings — critical for equity briefing honesty.</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">PubMed + grey literature wiring · perception layer</p>
+      <div class="artifact-box">
+        <div class="artifact-header">
+          <span>app/services/pubmed.py + pdf.py</span>
+          <button class="copy-btn" onclick="copyCode('perc-code')">copy</button>
+        </div>
+        <div class="artifact-body" id="perc-code"><span class="kw">from</span> Bio <span class="kw">import</span> Entrez
+<span class="kw">import</span> fitz  <span class="cmt"># PyMuPDF</span>
+
+Entrez.email = <span class="str">"who-india@example.org"</span>
+
+<span class="kw">def</span> <span class="str">search_pubmed</span>(query, n=<span class="kw">10</span>):
+    h = Entrez.esearch(db=<span class="str">"pubmed"</span>, term=query, retmax=n)
+    <span class="kw">return</span> Entrez.read(h)[<span class="str">"IdList"</span>]
+
+<span class="kw">def</span> <span class="str">extract_pdf</span>(path):
+    doc = fitz.open(path)
+    <span class="kw">return</span> <span class="str">"\n"</span>.join(p.get_text() <span class="kw">for</span> p <span class="kw">in</span> doc)
+
+<span class="cmt"># Grey sources: HTAIn, NSSO, state NHAs</span>
+GREY_URLS = [
+  <span class="str">"https://htain.icmr.org.in/..."</span>,
+  <span class="str">"https://mospi.gov.in/nsso..."</span>,
+]</div>
+      </div>
+
+      <div class="feedback-loop">
+        <strong>The grey literature gap is Layer II's defining problem.</strong> A PubMed-only Perception layer is a WEIRD-data bias machine. This layer must explicitly route to NSSO, HTAIn, state NHA portals, and MoHFW evaluation repositories — not as a supplement, but as co-equal sources. Claude PDF upload is the fastest path for dense government reports.
+      </div>
+    </div>
+
+    <!-- III. AGENTIC -->
+    <div class="tab-panel" id="panel-2">
+      <div class="layer-badge" style="color:var(--y);border-color:var(--y-border);background:var(--y-bg)">Layer III · Agentic · What can be extracted and structured?</div>
+      <p class="layer-q">"Which findings, numbers, and metrics survive a rigorous extraction pass?"</p>
+
+      <div class="pipeline-strip">
+        <div class="p-inactive">Problem framing</div>
+        <span class="p-arr">→</span><div class="p-inactive">Search</div>
+        <span class="p-arr">→</span><div class="p-inactive">Screen</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--y);border-color:var(--y-border);background:var(--y-bg)">Extract</div>
+        <span class="p-arr">→</span><div class="p-inactive">Synthesise</div>
+        <span class="p-arr">→</span><div class="p-inactive">Brief</div>
+      </div>
+
+      <p class="section-label">Crème-de-la-crème tools · 2026</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--y)">Primary · structured extraction</div>
+          <div class="tool-name">Elicit</div>
+          <div class="tool-desc">Still the strongest single agent for health economics extraction. Pulls ICERs, equity metrics, population subgroups, cost-per-DALY tables across dozens of papers simultaneously. Outperforms GPT-4o on column consistency.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--y)">Secondary · complex documents</div>
+          <div class="tool-name">Claude Projects + Humata</div>
+          <div class="tool-desc">For multi-PDF corpus extraction where Elicit doesn't ingest the document type. Claude Projects maintains extraction schema across the entire corpus context window.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--y)">PRISMA automation</div>
+          <div class="tool-name">Rayyan + Nested Knowledge</div>
+          <div class="tool-desc">Rayyan for collaborative title/abstract screening with AI pre-label; Nested Knowledge for life-sciences PRISMA audit trails and meta-analysis setups.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--y)">Systematic review infra</div>
+          <div class="tool-name">DistillerSR</div>
+          <div class="tool-desc">Enterprise-grade PRISMA compliance, HTA context. Use when the output must be defensible to a regulatory or HTA board (HTAIn submissions).</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">Extraction schema + PRISMA tracker</p>
+      <div class="artifact-box">
+        <div class="artifact-header">
+          <span>app/schemas/agentic.py</span>
+          <button class="copy-btn" onclick="copyCode('ag-code')">copy</button>
+        </div>
+        <div class="artifact-body" id="ag-code"><span class="kw">class</span> <span class="str">Extraction</span>(BaseModel):
+  paper_id:     <span class="kw">str</span>
+  icer:         Optional[<span class="kw">float</span>]   <span class="cmt"># USD per DALY</span>
+  daly:         Optional[<span class="kw">float</span>]
+  oop_change:   Optional[<span class="kw">float</span>]   <span class="cmt"># % change in OOP</span>
+  population:   <span class="kw">str</span>              <span class="cmt"># "rural BPL adults"</span>
+  equity_note:  Optional[<span class="kw">str</span>]    <span class="cmt"># "urban bias detected"</span>
+  prisma_stage: PrismaStage       <span class="cmt"># identified|screened|included</span>
+  exclusion_reason: Optional[<span class="kw">str</span>]</div>
+      </div>
+
+      <p class="section-label" style="margin-top:.8rem">Live PRISMA counts</p>
+      <div class="prisma-counts">
+        <div class="prisma-count"><div class="prisma-n" id="n-id">—</div><div class="prisma-label">Identified</div></div>
+        <div class="prisma-count"><div class="prisma-n" id="n-sc">—</div><div class="prisma-label">Screened</div></div>
+        <div class="prisma-count"><div class="prisma-n" id="n-el">—</div><div class="prisma-label">Eligible</div></div>
+        <div class="prisma-count"><div class="prisma-n" id="n-in">—</div><div class="prisma-label">Included</div></div>
+        <div class="prisma-count"><div class="prisma-n" id="n-ex">—</div><div class="prisma-label">Excluded</div></div>
+      </div>
+      <button class="run-btn" onclick="simulatePrisma()">↳ simulate prisma run</button>
+    </div>
+
+    <!-- IV. GENERATIVE -->
+    <div class="tab-panel" id="panel-3">
+      <div class="layer-badge" style="color:var(--g);border-color:var(--g-border);background:var(--g-bg)">Layer IV · Generative · What does it mean?</div>
+      <p class="layer-q">"How do structured findings become a decision-ready narrative?"</p>
+
+      <div class="pipeline-strip">
+        <div class="p-inactive">Problem framing</div>
+        <span class="p-arr">→</span><div class="p-inactive">Search</div>
+        <span class="p-arr">→</span><div class="p-inactive">Screen</div>
+        <span class="p-arr">→</span><div class="p-inactive">Extract</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--g);border-color:var(--g-border);background:var(--g-bg)">Synthesise</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--g);border-color:var(--g-border);background:var(--g-bg)">Brief</div>
+      </div>
+
+      <p class="section-label">Crème-de-la-crème tools · 2026</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--g)">Primary · synthesis + brief</div>
+          <div class="tool-name">Claude Opus 4 / Sonnet 4.6</div>
+          <div class="tool-desc">Unmatched long-context synthesis. Maintains argument coherence across 50+ extracted rows. Calibrates tone for MoHFW Joint Secretary audience. Produces assumption statements, sensitivity narratives, and executive summaries in one pass.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--g)">Secondary · multi-doc corpus</div>
+          <div class="tool-name">NotebookLM (Google)</div>
+          <div class="tool-desc">Excels when source PDFs must remain cited and attributable in the brief. Audio overview feature useful for rapid team orientation on a new corpus.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--g)">Summary layer · plain language</div>
+          <div class="tool-name">SciSpace + Scholarcy</div>
+          <div class="tool-desc">For explaining complex clinical methods to non-specialist policy audiences. SciSpace annotates PDFs in real time; Scholarcy generates flashcard-style triage.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--g)">Medical synthesis</div>
+          <div class="tool-name">OpenEvidence + Evidence Hunt</div>
+          <div class="tool-desc">For clinical evidence threads embedded in health financing questions. OpenEvidence is fastest for evidence-based Q&A from clinical literature.</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">Synthesis schema</p>
+      <div class="artifact-box">
+        <div class="artifact-header">
+          <span>app/schemas/generative.py</span>
+          <button class="copy-btn" onclick="copyCode('gen-code')">copy</button>
+        </div>
+        <div class="artifact-body" id="gen-code"><span class="kw">class</span> <span class="str">Synthesis</span>(BaseModel):
+  summary:       <span class="kw">str</span>        <span class="cmt"># 2–3 sentence executive lead</span>
+  key_findings:  List[<span class="kw">str</span>]   <span class="cmt"># ordered by policy weight</span>
+  uncertainties: List[<span class="kw">str</span>]   <span class="cmt"># "robust if X, fails if Y"</span>
+  equity_summary:<span class="kw">str</span>        <span class="cmt"># who benefits, who is excluded</span>
+  budget_note:   Optional[<span class="kw">str</span>]<span class="cmt"># fiscal space context</span>
+  brief_draft:   <span class="kw">str</span>        <span class="cmt"># the policy brief itself</span></div>
+      </div>
+
+      <div class="feedback-loop">
+        <strong>The brief-to-decision gap lives here.</strong> A 45-page systematic review does not serve a Joint Secretary under a 48-hour deadline. The Generative layer's sole test: can the brief_draft field be handed to a decision-maker right now? If not, the synthesis has not compressed far enough.
+      </div>
+    </div>
+
+    <!-- V. EMBODIED -->
+    <div class="tab-panel" id="panel-4">
+      <div class="layer-badge" style="color:var(--b);border-color:var(--b-border);background:var(--b-bg)">Layer V · Embodied · Should we act on it?</div>
+      <p class="layer-q">"Does this evidence actually warrant the decision the brief recommends — given this specific context?"</p>
+
+      <div class="pipeline-strip">
+        <div class="p-inactive">Problem framing</div>
+        <span class="p-arr">→</span><div class="p-inactive">Search</div>
+        <span class="p-arr">→</span><div class="p-inactive">Screen</div>
+        <span class="p-arr">→</span><div class="p-inactive">Extract</div>
+        <span class="p-arr">→</span><div class="p-inactive">Synthesise</div>
+        <span class="p-arr">→</span><div class="p-node active-node" style="color:var(--b);border-color:var(--b-border);background:var(--b-bg)">Judgment</div>
+      </div>
+
+      <p class="section-label">This is the Human layer · no AI substitute (yet)</p>
+      <div class="tool-card" style="border-color:var(--b-border);background:var(--b-bg)">
+        <div class="tool-rank" style="color:var(--b)">Primary audit stack · 2026</div>
+        <div class="tool-name">Human + Claude Projects / Grok-3 / GPT-4o</div>
+        <div class="tool-desc">The "Embodied" layer is not a tool — it is the WHO India health economist applying four checks that no current LLM passes reliably: equity auditing (who is excluded), transferability (does Tamil Nadu ≠ Bihar?), budget reality (fiscal space), and political feasibility (what will MoHFW actually act on).</div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">Four embodied checks</p>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--b)">Check 1 · Equity</div>
+          <div class="tool-desc">Who is excluded from the evidence base? Are the included populations representative of the BPL households PM-JAY targets, or do they proxy urban, insured, or literate populations?</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--b)">Check 2 · Transferability</div>
+          <div class="tool-desc">A finding from Kerala does not transfer to Bihar without a transferability statement. What infrastructure, literacy, and provider density assumptions does the evidence embed?</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--b)">Check 3 · Budget reality</div>
+          <div class="tool-desc">Is the recommended intervention within fiscal space? An ICER below the threshold is irrelevant if the Ministry cannot allocate the implementation budget in the current cycle.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-rank" style="color:var(--b)">Check 4 · Strategic distortion</div>
+          <div class="tool-desc">Who commissioned this evidence? Who benefits from the recommendation? Embodied judgment is the layer that reads the political economy of the evidence — the one place AI cannot yet go.</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">Decision schema + feedback trigger</p>
+      <div class="artifact-box">
+        <div class="artifact-header">
+          <span>app/schemas/embodied.py</span>
+          <button class="copy-btn" onclick="copyCode('emb-code')">copy</button>
+        </div>
+        <div class="artifact-body" id="emb-code"><span class="kw">class</span> <span class="str">Decision</span>(BaseModel):
+  decision:      <span class="kw">str</span>        <span class="cmt"># adopt | reject | conditional</span>
+  modifications: List[<span class="kw">str</span>]   <span class="cmt"># required caveats</span>
+  equity_flags:  List[<span class="kw">str</span>]   <span class="cmt"># e.g. "urban bias"</span>
+  transferable:  <span class="kw">bool</span>       <span class="cmt"># to target state/district</span>
+  political_flag:<span class="kw">bool</span>       <span class="cmt"># MoHFW action feasibility</span>
+  rerun_trigger: Optional[<span class="kw">str</span>]<span class="cmt"># → refeed to World layer</span></div>
+      </div>
+
+      <div class="feedback-loop">
+        <strong>The loop:</strong> when <span style="font-family:var(--ff-mono);font-size:10px">rerun_trigger</span> is set (e.g. <span style="font-family:var(--ff-mono);font-size:10px">"urban bias detected → narrow to rural BPL"</span>), the pipeline returns to Layer I. The WorldInput is updated, the search re-runs with tighter inclusion criteria, and Layers II–IV are re-executed. This is Ukubona's differentiator — the adaptive loop neither the original session nor xAI's version formalized.
+      </div>
+
+      <p class="section-label" style="margin-top:.9rem">The complete chain</p>
+      <div class="chain-vis">
+        <div class="chain-node" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg)">W</div>
+        <span class="chain-arr">→</span>
+        <div class="chain-node" style="color:var(--o);border-color:var(--o-border);background:var(--o-bg)">P</div>
+        <span class="chain-arr">→</span>
+        <div class="chain-node" style="color:var(--y);border-color:var(--y-border);background:var(--y-bg)">A</div>
+        <span class="chain-arr">→</span>
+        <div class="chain-node" style="color:var(--g);border-color:var(--g-border);background:var(--g-bg)">G</div>
+        <span class="chain-arr">→</span>
+        <div class="chain-node" style="color:var(--b);border-color:var(--b-border);background:var(--b-bg)">E</div>
+        <span class="chain-arr" style="opacity:1;color:var(--b)">↻</span>
+        <div class="chain-node" style="color:var(--r);border-color:var(--r-border);background:var(--r-bg);opacity:.6">W</div>
+      </div>
+      <p style="font-size:9px;color:var(--muted);letter-spacing:.1em;margin-top:.25rem;font-family:var(--ff-mono)">world · perception · agentic · generative · embodied → rerun if flagged</p>
+    </div>
+  </div><!-- /pen-wrap -->
+
+  <!-- ── NAV ── -->
+  <nav class="s-nav">
+    <a class="s-nav-btn" href="session2.html">← Session 2</a>
+    <a class="s-nav-btn s-nav-next" href="session3.html">Session 3 →</a>
+  </nav>
+</div><!-- /s-page -->
+
+<script>
+/* ── TABS ── */
+function switchTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+  document.querySelectorAll('.tab-panel').forEach((p, j) => p.classList.toggle('active', i === j));
+}
+
+/* ── COPY CODE ── */
+function copyCode(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText).catch(() => {});
+  const btn = el.closest('.artifact-box').querySelector('.copy-btn');
+  const orig = btn.textContent;
+  btn.textContent = 'copied';
+  setTimeout(() => btn.textContent = orig, 1200);
+}
+
+/* ── PRISMA SIM ── */
+function simulatePrisma() {
+  const ids    = [120, 80, 42, 25, 55];
+  const labels = ['n-id','n-sc','n-el','n-in','n-ex'];
+  labels.forEach(l => document.getElementById(l).textContent = '—');
+  ids.forEach((n, i) => setTimeout(() => {
+    document.getElementById(labels[i]).textContent = n;
+  }, i * 280));
+}
+
+/* ── SCROLL SPINE ── */
+const spine = document.getElementById('spine');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  spine.style.height = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+/* ── THEME TOGGLE ── */
+const themeBtn = document.getElementById('theme-toggle');
+const logoImg  = document.getElementById('logo-img');
+let currentTheme = 'dark';
+themeBtn.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  themeBtn.textContent = currentTheme === 'dark' ? '☀' : '◑';
+  logoImg.src = currentTheme === 'dark'
+    ? 'https://abikesa.github.io/logos/assets/ukubona-dark.png'
+    : 'https://abikesa.github.io/logos/assets/ukubona-light.png';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!-- ══════════════════════════════════════════════════════
+     SEGUE → SESSION 2.1
+     Paste this block immediately before <nav class="s-nav"> in session2.html
+══════════════════════════════════════════════════════ -->
+
+<style>
+  /* Drop this into the existing <style> block in session2.html */
+  .segue-strip {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.25rem; flex-wrap: wrap;
+    margin: 3rem 0 0;
+    padding: 1.2rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--session-accent) 28%, transparent);
+    background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
+  }
+  .segue-body { flex: 1; min-width: 200px; }
+  .segue-eyebrow {
+    font-family: var(--ff-sans); font-size: .55rem; letter-spacing: .25em;
+    text-transform: uppercase; color: var(--session-accent); font-weight: 700;
+    margin-bottom: .35rem;
+  }
+  .segue-heading {
+    font-family: var(--ff-display); font-size: 1.1rem; color: var(--text);
+    font-weight: 600; margin-bottom: .3rem; line-height: 1.25;
+  }
+  .segue-desc {
+    font-family: var(--ff-sans); font-size: .78rem; color: var(--muted);
+    line-height: 1.55;
+  }
+  .segue-desc strong { color: var(--text); }
+  .segue-cta {
+    display: inline-flex; align-items: center; gap: .5rem; flex-shrink: 0;
+    font-family: var(--ff-sans); font-size: .7rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: .65rem 1.3rem; border-radius: 8px; text-decoration: none;
+    border: 1px solid var(--session-accent); color: var(--session-accent);
+    background: color-mix(in srgb, var(--session-accent) 8%, transparent);
+    transition: all .2s;
+  }
+  .segue-cta:hover {
+    background: color-mix(in srgb, var(--session-accent) 18%, transparent);
+    color: var(--text);
+  }
+  .segue-chain {
+    display: flex; align-items: center; gap: 3px; margin-top: .55rem;
+    flex-wrap: nowrap;
+  }
+  .sc-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 600; border: 1px solid; flex-shrink: 0;
+  }
+  .sc-arr { font-size: 8px; color: var(--muted); opacity: .4; }
+</style>
+
+<!-- The actual HTML block: -->
+<div class="segue-strip">
+  <div class="segue-body">
+    <div class="segue-eyebrow">↳ Going deeper · Session 2.1</div>
+    <div class="segue-heading">The Pentadic Pipeline</div>
+    <p class="segue-desc">
+      The tool catalogue maps <strong>what</strong> each AI can do.
+      Session&nbsp;2.1 maps <strong>why</strong> — five sequential layers from raw evidence to embodied judgment,
+      each with a crème-de-la-crème stack and a feedback loop back to Layer&nbsp;I.
+    </p>
+    <div class="segue-chain">
+      <div class="sc-dot" style="color:#e05555;border-color:rgba(224,85,85,.35);background:rgba(224,85,85,.09)">W</div>
+      <span class="sc-arr">→</span>
+      <div class="sc-dot" style="color:#d97706;border-color:rgba(217,119,6,.35);background:rgba(217,119,6,.09)">P</div>
+      <span class="sc-arr">→</span>
+      <div class="sc-dot" style="color:#b5960a;border-color:rgba(181,150,10,.3);background:rgba(181,150,10,.08)">A</div>
+      <span class="sc-arr">→</span>
+      <div class="sc-dot" style="color:#1d9e75;border-color:rgba(29,158,117,.35);background:rgba(29,158,117,.09)">G</div>
+      <span class="sc-arr">→</span>
+      <div class="sc-dot" style="color:#3a7dd4;border-color:rgba(58,125,212,.35);background:rgba(58,125,212,.09)">E</div>
+      <span class="sc-arr" style="opacity:1;color:#3a7dd4">↻</span>
+    </div>
+  </div>
+  <a href="session2.1.html" class="segue-cta">Open 2.1 →</a>
+</div>

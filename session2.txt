@@ -1,0 +1,4 @@
+Please match the aesthetic of the series (don't use inhouse anthropic css). Also, I'm considering using this as "alternative session 2 or 2.1html"... Perhaps first fix the 2.1 css, then create or suggeset a link from session 2 to segue -> 2.1?
+
+Looking at the existing `session2.html` and `session2.1.html`, the issue is clear: `session2.1.html` uses Claude's widget CSS variables (`--color-text-primary`, `--color-background-secondary`, etc.) instead of the Ukubona design system (`--text`, `--surface`, `--glass`, `--border`, etc.). Let me fix it to match the series aesthetic perfectly, then create the segue link.
+
