@@ -747,19 +747,6 @@ window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
   spine.style.height = Math.min(pct, 100) + '%';
 }, { passive: true });
-
-/* ── THEME TOGGLE ── */
-const themeBtn = document.getElementById('theme-toggle');
-const logoImg  = document.getElementById('logo-img');
-let currentTheme = 'dark';
-themeBtn.addEventListener('click', () => {
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', currentTheme);
-  themeBtn.textContent = currentTheme === 'dark' ? '☀' : '◑';
-  logoImg.src = currentTheme === 'dark'
-    ? 'https://abikesa.github.io/logos/assets/ukubona-dark.png'
-    : 'https://abikesa.github.io/logos/assets/ukubona-light.png';
-});
 </script>
 <div id="footer-placeholder"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
