@@ -26,6 +26,13 @@
       --g: #69db7c;
       --b: #4fc3f7;
       --v: #b197fc;
+
+      /* ── v4 PENTAD phase colours ── */
+      --phase-T: #6faee8;
+      --phase-M: #7ecbaa;
+      --phase-V: #e8b84b;
+      --phase-E: #c49ae8;
+      --phase-S: #e87060;
     }
     html { height: 100%; }
     body { min-height: 100%; display: flex; flex-direction: column; }
@@ -200,10 +207,92 @@
     }
     .leg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
+    /* ══ NEW: AI LAYER STRIP ══ */
+    .ai-layer-strip {
+      width: min(800px,96vw); margin-top: 2.5rem; opacity: 0;
+      animation: lrFadeUp .9s cubic-bezier(.22,1,.36,1) 1.18s forwards;
+    }
+    .ai-layer-divider {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+    }
+    .ai-layer-divider span {
+      font-family: 'DM Mono', monospace; font-size: .5rem;
+      letter-spacing: .25em; text-transform: uppercase;
+      color: var(--text-secondary); opacity: .5; white-space: nowrap;
+    }
+    .ai-layer-divider::before,.ai-layer-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .ai-layer-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ai-layer-card {
+      background: var(--surface);
+      padding: .85rem .9rem;
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: .3rem;
+      transition: background .15s;
+      position: relative; overflow: hidden;
+    }
+    .ai-layer-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .ai-layer-card:nth-child(1)::before { background: var(--phase-S); }
+    .ai-layer-card:nth-child(2)::before { background: var(--phase-E); }
+    .ai-layer-card:nth-child(3)::before { background: var(--phase-V); }
+    .ai-layer-card:nth-child(4)::before { background: var(--phase-M); }
+    .ai-layer-card:nth-child(5)::before { background: var(--phase-T); }
+
+    .ai-layer-card:nth-child(1):hover { background: color-mix(in srgb,var(--phase-S) 9%,var(--surface)); }
+    .ai-layer-card:nth-child(2):hover { background: color-mix(in srgb,var(--phase-E) 9%,var(--surface)); }
+    .ai-layer-card:nth-child(3):hover { background: color-mix(in srgb,var(--phase-V) 9%,var(--surface)); }
+    .ai-layer-card:nth-child(4):hover { background: color-mix(in srgb,var(--phase-M) 9%,var(--surface)); }
+    .ai-layer-card:nth-child(5):hover { background: color-mix(in srgb,var(--phase-T) 9%,var(--surface)); }
+
+    .ai-layer-phase {
+      font-family: 'DM Mono', monospace; font-size: .42rem;
+      letter-spacing: .14em; text-transform: uppercase; opacity: .5;
+      margin-bottom: .1rem;
+    }
+    .ai-layer-card:nth-child(1) .ai-layer-phase { color: var(--phase-S); }
+    .ai-layer-card:nth-child(2) .ai-layer-phase { color: var(--phase-E); }
+    .ai-layer-card:nth-child(3) .ai-layer-phase { color: var(--phase-V); }
+    .ai-layer-card:nth-child(4) .ai-layer-phase { color: var(--phase-M); }
+    .ai-layer-card:nth-child(5) .ai-layer-phase { color: var(--phase-T); }
+
+    .ai-layer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-style: italic; font-weight: 400;
+      color: var(--text,#f0ede6); line-height: 1.2;
+      transition: color .15s;
+    }
+    .ai-layer-card:nth-child(1):hover .ai-layer-name { color: var(--phase-S); }
+    .ai-layer-card:nth-child(2):hover .ai-layer-name { color: var(--phase-E); }
+    .ai-layer-card:nth-child(3):hover .ai-layer-name { color: var(--phase-V); }
+    .ai-layer-card:nth-child(4):hover .ai-layer-name { color: var(--phase-M); }
+    .ai-layer-card:nth-child(5):hover .ai-layer-name { color: var(--phase-T); }
+
+    .ai-layer-sym {
+      font-family: 'DM Mono', monospace; font-size: .52rem;
+      color: rgba(240,237,230,.3); letter-spacing: .04em;
+      margin-top: .1rem;
+    }
+    .ai-layer-role {
+      font-family: 'Inter', sans-serif; font-size: .6rem; font-weight: 300;
+      line-height: 1.4; color: var(--text-secondary); opacity: .7;
+      margin-top: .15rem;
+    }
+
     /* ── tool catalogue ── */
     .lr-search-wrap {
       width: min(580px,92vw); margin-top: 3.5rem; opacity: 0;
-      animation: lrFadeUp .9s cubic-bezier(.22,1,.36,1) 1.2s forwards;
+      animation: lrFadeUp .9s cubic-bezier(.22,1,.36,1) 1.28s forwards;
     }
     .lr-search {
       display: flex; align-items: center;
@@ -258,6 +347,10 @@
 
     @keyframes lrFadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
 
+    @media (max-width:640px) {
+      .ai-layer-grid { grid-template-columns: 1fr 1fr; }
+      .ai-layer-grid .ai-layer-card:last-child { grid-column: 1 / -1; }
+    }
     @media (max-width:600px) {
       .level-row { grid-template-columns: 1fr; }
       .level-anchor { border-right: none !important; border-bottom: 3px solid; }
@@ -269,7 +362,7 @@
       .s-name { font-size: .55rem; }
     }
     @media (prefers-reduced-motion:reduce) {
-      .lr-eyebrow,.lr-line,.lr-rule,.lr-search-wrap,.tensor-wrap,.lr-context,.legend { animation:none;opacity:1; }
+      .lr-eyebrow,.lr-line,.lr-rule,.lr-search-wrap,.tensor-wrap,.lr-context,.legend,.ai-layer-strip { animation:none;opacity:1; }
     }
   </style>
 </head>
@@ -300,7 +393,8 @@
 
 <main class="landing-stage">
 
-  <p class="lr-eyebrow">ukubona × who india · θ → L(θ) → ∇L → −η∇L → θ′</p>
+  <!-- v4 TMVES chain notation -->
+  <p class="lr-eyebrow">ukubona × who india · θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹)</p>
 
   <h1 class="lr-headline" aria-label="AI Tools for Literature Review">
     <span class="lr-line lr-ai">AI</span>
@@ -317,14 +411,15 @@
   <!-- ══ 5×5 TENSOR ══ -->
   <div class="tensor-wrap">
 
+    <!-- v4: full TMVES chain in equation display -->
     <div class="loss-eq">
-      L<sub>tot</sub> &nbsp;=&nbsp; L<sub>0</sub>(t) &nbsp;+&nbsp; <em>Σ wᵢ · Lᵢ</em> &nbsp;+&nbsp; εᵢ &nbsp;→&nbsp; <em>L<sub>0</sub>(t+1)</em>
+      θᵗ &nbsp;→&nbsp; <em>L₀+Σwᵢ·Lᵢ</em> &nbsp;→&nbsp; f(σ²,λ,ε) &nbsp;→&nbsp; γ|ε_FGT|² &nbsp;→&nbsp; <em>L(θᵗ⁺¹)</em>
     </div>
 
     <!-- I — Red — A Priori -->
     <div class="level-row">
       <a class="level-anchor" href="ukhona/html/level1/session1.html">
-        <span class="level-num">Level I · Red · L₀(t)</span>
+        <span class="level-num">Level I · Red · θᵗ</span>
         <span class="level-title">A Priori</span>
         <span class="level-math">What we already believe</span>
       </a>
@@ -340,8 +435,8 @@
     <!-- II — Orange — Weights -->
     <div class="level-row">
       <a class="level-anchor" href="ukhona/html/level2/session1.html">
-        <span class="level-num">Level II · Orange · wᵢ</span>
-        <span class="level-title">Weights</span>
+        <span class="level-num">Level II · Orange · L₀+Σwᵢ·Lᵢ</span>
+        <span class="level-title">Bias & Weights</span>
         <span class="level-math">How we attend</span>
       </a>
       <div class="session-tiles">
@@ -356,7 +451,7 @@
     <!-- III — Yellow — Composite Loss -->
     <div class="level-row">
       <a class="level-anchor" href="ukhona/html/level3/session1.html">
-        <span class="level-num">Level III · Yellow · ΣwᵢLᵢ</span>
+        <span class="level-num">Level III · Yellow · f(σ²,λ,ε)</span>
         <span class="level-title">Composite Loss</span>
         <span class="level-math">The civilizational stack</span>
       </a>
@@ -369,10 +464,10 @@
       </div>
     </div>
 
-    <!-- IV — Green — Error -->
+    <!-- IV — Green — Error / Ex-Post -->
     <div class="level-row">
       <a class="level-anchor" href="ukhona/html/level4/session1.html">
-        <span class="level-num">Level IV · Green · εᵢ + σ + λ</span>
+        <span class="level-num">Level IV · Green · γ|ε_FGT|²</span>
         <span class="level-title">Error</span>
         <span class="level-math">What the model cannot account for</span>
       </a>
@@ -388,7 +483,7 @@
     <!-- V — Blue — Posteriori -->
     <div class="level-row">
       <a class="level-anchor" href="ukhona/html/level5/session1.html">
-        <span class="level-num">Level V · Blue · L₀(t+1)</span>
+        <span class="level-num">Level V · Blue · L(θᵗ⁺¹)</span>
         <span class="level-title">Posteriori</span>
         <span class="level-math">The updated prior</span>
       </a>
@@ -405,13 +500,59 @@
 
   <!-- ── ROYGBIV legend ── -->
   <div class="legend">
-    <div class="legend-divider"><span>loss gradient · roygbiv · red = highest burden → violet = resolution</span></div>
+    <div class="legend-divider"><span>loss gradient · TMVES · tensor → matrix → vector → eigenmode → scalar</span></div>
     <div class="legend-row">
-      <span class="leg-item"><span class="leg-dot" style="background:var(--r)"></span>Red · A Priori · L₀(t)</span>
-      <span class="leg-item"><span class="leg-dot" style="background:var(--o)"></span>Orange · Weights · wᵢ</span>
-      <span class="leg-item"><span class="leg-dot" style="background:var(--y)"></span>Yellow · Composite · ΣwᵢLᵢ</span>
-      <span class="leg-item"><span class="leg-dot" style="background:var(--g)"></span>Green · Error · εᵢ</span>
-      <span class="leg-item"><span class="leg-dot" style="background:var(--b)"></span>Blue · Posteriori · L₀(t+1)</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--r)"></span>Red · A Priori · θᵗ</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--o)"></span>Orange · Bias & Weights · L₀+Σwᵢ·Lᵢ</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--y)"></span>Yellow · Vector · f(σ²,λ,ε)</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--g)"></span>Green · Eigenmode · γ|ε_FGT|²</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--b)"></span>Blue · Posteriori · L(θᵗ⁺¹)</span>
+    </div>
+  </div>
+
+  <!-- ══ NEW: FIVE AI LAYERS STRIP ══
+       Links directly to the five standalone artefacts.
+       Ordered Embodied → World (top = most supervisory, bottom = most foundational)
+       matching the table in session1. -->
+  <div class="ai-layer-strip">
+    <div class="ai-layer-divider"><span>five AI layers · evidence synthesis reference</span></div>
+    <div class="ai-layer-grid">
+
+      <a class="ai-layer-card" href="https://ukubona-llc.github.io/embodied-ai" target="_blank" rel="noopener">
+        <span class="ai-layer-phase">V · Scalar · L(θᵗ⁺¹)</span>
+        <span class="ai-layer-name">Embodied AI</span>
+        <span class="ai-layer-sym">Human in loop · audit · conscience</span>
+        <span class="ai-layer-role">Bias detection, equity checks, PRISMA compliance — the layer that makes the others trustworthy</span>
+      </a>
+
+      <a class="ai-layer-card" href="https://ukubona-llc.github.io/generative-ai" target="_blank" rel="noopener">
+        <span class="ai-layer-phase">IV · Eigenmode · γ|ε_FGT|²</span>
+        <span class="ai-layer-name">Generative AI</span>
+        <span class="ai-layer-sym">Synthesis · reports · policy briefs</span>
+        <span class="ai-layer-role">Synthesizes findings into decision-ready documents — think Claude, not just ChatGPT</span>
+      </a>
+
+      <a class="ai-layer-card" href="https://ukubona-llc.github.io/agentic-ai" target="_blank" rel="noopener">
+        <span class="ai-layer-phase">III · Vector · f(σ²,λ,ε)</span>
+        <span class="ai-layer-name">Agentic AI</span>
+        <span class="ai-layer-sym">Screening · extraction · repetitive tasks</span>
+        <span class="ai-layer-role">Automates data extraction on identified literature — the highest-ROI layer for adoption right now</span>
+      </a>
+
+      <a class="ai-layer-card" href="https://ukubona-llc.github.io/perception-ai" target="_blank" rel="noopener">
+        <span class="ai-layer-phase">II · Matrix · L₀+Σwᵢ·Lᵢ</span>
+        <span class="ai-layer-name">Perception AI</span>
+        <span class="ai-layer-sym">Ingestion · journals · grey sources</span>
+        <span class="ai-layer-role">Ingests specific literature across journals, languages, and grey sources via PDF upload and API</span>
+      </a>
+
+      <a class="ai-layer-card" href="https://ukubona-llc.github.io/world-ai" target="_blank" rel="noopener">
+        <span class="ai-layer-phase">I · Tensor · θᵗ</span>
+        <span class="ai-layer-name">World AI</span>
+        <span class="ai-layer-sym">General science · ambient intelligence</span>
+        <span class="ai-layer-role">The silent substrate — general scientific understanding across all domains already in the room</span>
+      </a>
+
     </div>
   </div>
 
