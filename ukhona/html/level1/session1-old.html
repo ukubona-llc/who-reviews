@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🌱 The Existing Process · Level 1 Session 1</title>
+  <meta name="description" content="What is the current pipeline for literature review at WHO India — and where does it break down?">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-dark.ico" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-light.ico" media="(prefers-color-scheme: light)">
+  <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-dark.png" as="image">
+  <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-light.png" as="image">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+  <link href="../../css/variables.css?v=1.1" rel="stylesheet">
+  <link href="../../css/head.css?v=1.1" rel="stylesheet">
+  <link href="../../css/card.css?v=1.1" rel="stylesheet">
+  <link href="../../css/footer.css" rel="stylesheet">     
+  <style>
+    :root {
+      --session-accent: #4fc3f7;
+      --ff-display: 'Playfair Display', Georgia, serif;
+      --ff-body:    'Source Serif 4', Georgia, serif;
+    }
+    body { font-family: var(--ff-body); font-weight: 300; }
+    .spine { position: fixed; left: 0; top: 0; width: 3px; height: 0%; background: var(--session-accent); z-index: 200; transition: height .1s linear; }
+    .s-page { padding-top: calc(var(--header-h) + 3rem); padding-bottom: 6rem; max-width: 860px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; }
+    .s-crumb { font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--text-secondary); opacity: .5; margin-bottom: 2.5rem; display: flex; gap: .75rem; align-items: center; }
+    .s-crumb span { color: var(--session-accent); opacity: 1; }
+    .s-hero { margin-bottom: 3.5rem; }
+    .s-label { font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); margin-bottom: .75rem; font-weight: 600; }
+    .s-title { font-family: var(--ff-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--text); margin-bottom: .5rem; }
+    .s-subtitle { font-family: var(--ff-display); font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; font-weight: 400; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .s-oneliner { font-size: .9rem; line-height: 1.7; color: var(--text-secondary); border-left: 3px solid var(--session-accent); padding-left: 1rem; max-width: 540px; }
+    .s-badge { display: inline-flex; align-items: center; gap: .5rem; font-family: 'Inter', sans-serif; font-size: .55rem; letter-spacing: .2em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px; border: 1px solid var(--session-accent); color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 8%, transparent); margin-bottom: 1.5rem; }
+    .s-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); gap: 1rem; }
+    .s-nav-btn { font-family: 'Inter', sans-serif; font-size: .7rem; letter-spacing: .1em; font-weight: 500; padding: .6rem 1.4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--glass); color: var(--text-secondary); text-decoration: none; transition: var(--transition); }
+    .s-nav-btn:hover { border-color: var(--session-accent); color: var(--session-accent); }
+    .s-nav-next { margin-left: auto; }
+    @media (max-width: 600px) { .s-page { padding-left: 1.25rem; padding-right: 1.25rem; } }
+
+    /* ── Session content ── */
+    .session-content { margin-top: 2rem; line-height: 1.8; color: var(--text-secondary); }
+    .session-content p { margin-bottom: 1.25rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
+    .session-content h2 {
+      font-family: var(--ff-display); font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 800; color: var(--text); margin: 3rem 0 1rem; letter-spacing: -.02em;
+    }
+    .session-content h3 {
+      font-family: 'Inter', sans-serif; font-size: .65rem; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--session-accent); margin: 2rem 0 .75rem; font-weight: 700;
+    }
+    .session-content strong { color: var(--text); font-weight: 600; }
+    .session-content ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .session-content ul li { margin-bottom: .5rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
+
+    /* Pipeline diagram */
+    .pipeline-wrap {
+      margin: 2rem 0;
+    }
+    /* ── FIX 1: "primary spine" label above the pipeline ──
+       Addresses GPT's point that two ontologies (pipeline + tensor/scalar) are co-equal.
+       One quiet label makes the pipeline the clear backbone; tensor-scalar stays as
+       the interpretation layer inside the chain visualiser. No content removed. */
+    .pipeline-spine-label {
+      font-family: 'Inter', sans-serif;
+      font-size: .52rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--session-accent);
+      opacity: .55;
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .pipeline-spine-label::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--session-accent);
+      opacity: .5;
+    }
+    .pipeline {
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: .5rem; padding: 1.75rem 2rem;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 14px 14px 0 0;
+    }
+    .p-step {
+      font-family: 'Inter', sans-serif; font-size: .7rem; font-weight: 600;
+      letter-spacing: .04em; padding: .5rem 1rem; border-radius: 6px;
+      background: color-mix(in srgb, var(--session-accent) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent);
+      color: var(--text); white-space: nowrap;
+    }
+    .p-arrow {
+      font-size: .8rem; color: var(--session-accent); opacity: .5;
+      font-family: 'Inter', sans-serif;
+    }
+    .p-step.bottleneck {
+      background: color-mix(in srgb, #ef5350 12%, transparent);
+      border-color: color-mix(in srgb, #ef5350 35%, transparent);
+      color: #ef9a9a;
+    }
+    .pipeline-annotation {
+      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
+      border: 1px solid color-mix(in srgb, var(--session-accent) 20%, transparent);
+      border-top: none; border-radius: 0 0 14px 14px;
+      padding: .75rem 2rem;
+      display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+    }
+    .pipeline-annotation-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #ef5350; flex-shrink: 0;
+    }
+    .pipeline-annotation-text {
+      font-family: 'Inter', sans-serif; font-size: .62rem; letter-spacing: .07em;
+      color: var(--session-accent); line-height: 1.5; flex: 1;
+    }
+    .pipeline-annotation-link {
+      font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--session-accent);
+      text-decoration: none; border: 1px solid color-mix(in srgb, var(--session-accent) 40%, transparent);
+      padding: .25rem .7rem; border-radius: 3px; white-space: nowrap;
+      transition: all .2s;
+    }
+    .pipeline-annotation-link:hover {
+      background: color-mix(in srgb, var(--session-accent) 12%, transparent);
+    }
+
+    /* Bottleneck cards */
+    .bottleneck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin: 1.75rem 0;
+    }
+    .b-card {
+      background: var(--glass); padding: 1.25rem 1.4rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .b-num {
+      font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700;
+      letter-spacing: .2em; color: var(--session-accent); opacity: .6;
+    }
+    .b-title {
+      font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600;
+      color: var(--text); line-height: 1.25;
+    }
+    .b-desc {
+      font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 300;
+      line-height: 1.55; color: var(--text-secondary);
+    }
+
+    /* Quote block */
+    .q-block {
+      border-left: 3px solid color-mix(in srgb, var(--session-accent) 40%, transparent);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
+      border-radius: 0 8px 8px 0; font-style: italic;
+      font-size: clamp(.9rem, 1.8vw, 1rem); color: var(--text);
+    }
+
+    /* Self-audit exercise */
+    .exercise-box {
+      background: color-mix(in srgb, var(--session-accent) 6%, var(--glass));
+      border: 1px dashed color-mix(in srgb, var(--session-accent) 50%, transparent);
+      padding: 2rem 2rem 1.5rem; border-radius: 14px; margin: 2.5rem 0;
+    }
+    .exercise-box h3 { margin-top: 0; }
+    .audit-row {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: .75rem 0; border-bottom: 1px solid var(--border);
+      font-size: .9rem;
+    }
+    .audit-row:last-child { border-bottom: none; }
+    .audit-label {
+      font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 500;
+      color: var(--text); flex: 1; line-height: 1.5;
+    }
+    .audit-sub {
+      font-family: 'Inter', sans-serif; font-size: .68rem; font-weight: 300;
+      color: var(--text-secondary); display: block; margin-top: .15rem;
+    }
+    .audit-options {
+      display: flex; gap: .4rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;
+    }
+    .audit-btn {
+      font-family: 'Inter', sans-serif; font-size: .58rem; letter-spacing: .08em;
+      padding: .3rem .75rem; border-radius: 5px; border: 1px solid var(--border);
+      background: var(--glass); color: var(--text-secondary); cursor: pointer;
+      transition: all .15s; user-select: none;
+    }
+    .audit-btn:hover, .audit-btn.selected {
+      border-color: var(--session-accent); color: var(--session-accent);
+      background: color-mix(in srgb, var(--session-accent) 10%, transparent);
+    }
+    .audit-result {
+      margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 8px;
+      background: var(--glass); border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: .82rem; line-height: 1.6;
+      color: var(--text-secondary); display: none;
+    }
+    .audit-result.visible { display: block; }
+    .audit-result strong { color: var(--session-accent); }
+
+    /* Takeaway */
+    .takeaway {
+      margin-top: 3rem; padding: 1.5rem 2rem; border-radius: 12px;
+      border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent);
+      background: color-mix(in srgb, var(--session-accent) 5%, transparent);
+    }
+    .takeaway h3 { margin-top: 0; }
+    .takeaway p { margin-bottom: 0; font-size: .95rem; }
+  </style>
+</head>
+<body>
+<div class="spine" id="spine"></div>
+<div class="scroll-indicator" aria-hidden="true"><div class="scroll-progress"></div></div>
+<div class="bg-pattern" aria-hidden="true"></div>
+<header class="header" id="header"></header>
+
+<div class="s-page">
+  <div class="s-crumb">
+    <a href="../../../" style="color:inherit;text-decoration:none;">Home</a> · Level 1 · <span>Session 1</span>
+  
+  <a href="https://ukubona-llc.github.io/" target="_blank" 
+   style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+          color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
+          padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
+  Ukubona LLC ↗
+</a>
+
+<a href="https://ukubona-llc.github.io/tokens/" target="_blank" 
+   style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+          color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
+          padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
+  Automation ↗
+</a>
+  </div>
+
+  <div class="s-hero">
+    <div class="s-badge">🌱 Level 1 of 5 · Session 1 of 5</div>
+    <p class="s-label">Level 1 · Foundations</p>
+    <h1 class="s-title">The Existing Process</h1>
+    <p class="s-subtitle">How Evidence Becomes Policy — and Where It Doesn't</p>
+    <p class="s-oneliner">What is the current pipeline for literature review at WHO India, and which steps are consuming time that AI could return to you?</p>
+  </div>
+
+  <div class="session-content">
+
+
+<style>
+  /* ── Recall intro ── */
+  .recall-intro {
+    margin-bottom: 3rem;
+  }
+  .recall-intro p {
+    font-size: clamp(.95rem, 2vw, 1.05rem);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Destination widget ── */
+  .dest-widget {
+    background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
+    border: 1px solid color-mix(in srgb, var(--session-accent) 22%, transparent);
+    border-radius: 14px;
+    padding: 2rem 2rem 1.75rem;
+    margin: 2rem 0 2.5rem;
+  }
+  .dest-prompt {
+    font-family: 'Inter', sans-serif;
+    font-size: .6rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--session-accent);
+    font-weight: 700;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .dest-prompt::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--session-accent);
+    flex-shrink: 0;
+  }
+  .dest-question {
+    font-family: var(--ff-display);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1.35;
+  }
+
+  /* Answer cards — the clickable destinations */
+  .dest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+    gap: .5rem;
+    margin-bottom: 1.5rem;
+  }
+  .dest-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .85rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all .18s;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .dest-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--dest-color, var(--session-accent));
+    opacity: 0;
+    transition: opacity .18s;
+  }
+  .dest-card:hover { border-color: var(--dest-color, var(--session-accent)); }
+  .dest-card:hover::before { opacity: 1; }
+  .dest-card.selected {
+    border-color: var(--dest-color, var(--session-accent));
+    background: color-mix(in srgb, var(--dest-color, var(--session-accent)) 10%, transparent);
+  }
+  .dest-card.selected::before { opacity: 1; }
+  .dest-card-label {
+    font-size: .7rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: .25rem;
+  }
+  .dest-card-sub {
+    font-size: .62rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+  .dest-card-step {
+    font-family: 'Inter', sans-serif;
+    font-size: .48rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--dest-color, var(--session-accent));
+    margin-top: .4rem;
+    opacity: .7;
+  }
+
+  /* Chain visualiser */
+  .chain-vis {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .chain-vis.visible { display: block; }
+  .chain-vis-label {
+    font-family: 'Inter', sans-serif;
+    font-size: .55rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    opacity: .6;
+  }
+  .chain-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+  }
+  .chain-node {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+  }
+  .chain-bubble {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: .65rem;
+    font-weight: 700;
+    border: 1.5px solid transparent;
+    transition: all .3s;
+    position: relative;
+  }
+  .chain-bubble.dim {
+    background: var(--glass);
+    border-color: var(--border);
+    color: var(--text-secondary);
+    opacity: .35;
+  }
+  .chain-bubble.lit {
+    background: color-mix(in srgb, var(--node-color) 16%, transparent);
+    border-color: var(--node-color);
+    color: var(--node-color);
+    opacity: 1;
+  }
+  .chain-bubble.target {
+    background: color-mix(in srgb, var(--node-color) 22%, transparent);
+    border-color: var(--node-color);
+    color: var(--node-color);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-color) 18%, transparent);
+    opacity: 1;
+  }
+  .chain-bubble.target::after {
+    content: '←';
+    position: absolute;
+    top: -18px;
+    font-size: .65rem;
+    color: var(--node-color);
+    animation: bounce .8s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  .chain-name {
+    font-family: 'Inter', sans-serif;
+    font-size: .48rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-align: center;
+    opacity: .5;
+    max-width: 56px;
+    line-height: 1.3;
+  }
+  .chain-arrow {
+    font-size: .7rem;
+    color: var(--session-accent);
+    opacity: .3;
+    padding: 0 .25rem;
+    padding-bottom: 1.2rem; /* align with bubble centre */
+    flex-shrink: 0;
+  }
+
+  /* insight reveal */
+  .chain-insight {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--insight-color, var(--session-accent));
+    background: color-mix(in srgb, var(--insight-color, var(--session-accent)) 6%, transparent);
+    font-family: 'Inter', sans-serif;
+    font-size: .83rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .chain-insight.visible { display: block; }
+  .chain-insight strong { color: var(--text); }
+
+  /* boss reveal */
+  .boss-reveal {
+    display: none;
+    margin-top: 1rem;
+    padding: .85rem 1.2rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, #69db7c 8%, transparent);
+    border: 1px solid color-mix(in srgb, #69db7c 30%, transparent);
+    font-family: 'Inter', sans-serif;
+    font-size: .8rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .boss-reveal.visible { display: block; }
+  .boss-reveal strong { color: #69db7c; }
+
+  /* segue line */
+  .segue-line {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--session-accent) 7%, var(--glass));
+    border: 1px dashed color-mix(in srgb, var(--session-accent) 40%, transparent);
+    font-family: var(--ff-display);
+    font-size: clamp(.95rem, 2vw, 1.1rem);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .segue-line.visible { display: block; }
+  .segue-line span {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--session-accent);
+    display: block;
+    margin-bottom: .5rem;
+  }
+* { box-sizing: border-box; }
+.dd-wrap { font-family: var(--font-sans); padding: 0; }
+
+.dd-trigger {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; cursor: pointer;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-background-secondary);
+  transition: background 0.18s, border-color 0.18s;
+  user-select: none;
+}
+.dd-trigger:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
+.dd-trigger.open { border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; border-bottom-color: transparent; }
+
+.dd-icon {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--color-background-info);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 14px; color: var(--color-text-info); font-weight: 500;
+}
+.dd-trigger-text { flex: 1; }
+.dd-trigger-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.dd-trigger-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 1px; }
+.dd-chevron { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+.dd-trigger.open .dd-chevron { transform: rotate(180deg); }
+
+.dd-body {
+  display: none;
+  border: 0.5px solid var(--color-border-secondary);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  background: var(--color-background-primary);
+  padding: 0 18px 18px;
+  animation: ddOpen 0.22s ease;
+}
+.dd-body.open { display: block; }
+@keyframes ddOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+.eq-chain {
+  display: flex; align-items: center; gap: 0;
+  padding: 16px 0 4px; overflow-x: auto; flex-wrap: nowrap;
+}
+.eq-node {
+  flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: center; gap: 4px; cursor: pointer; padding: 4px 2px;
+  border-radius: var(--border-radius-md); transition: background 0.15s;
+}
+.eq-node:hover { background: var(--color-background-secondary); }
+.eq-node.active { background: var(--color-background-secondary); }
+.eq-bubble {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; font-family: var(--font-mono);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+.eq-node.active .eq-bubble {
+  border-width: 1.5px;
+  color: var(--nb-color, var(--color-text-primary));
+  border-color: var(--nb-color, var(--color-border-primary));
+  background: var(--color-background-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nb-color, transparent) 12%, transparent);
+}
+.eq-label { font-size: 10px; color: var(--color-text-tertiary); text-align: center; max-width: 52px; line-height: 1.3; }
+.eq-node.active .eq-label { color: var(--color-text-secondary); }
+.eq-arrow { font-size: 12px; color: var(--color-text-tertiary); padding: 0 2px; padding-bottom: 18px; flex-shrink: 0; }
+
+.full-eq {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-text-secondary); padding: 10px 12px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  margin: 8px 0 14px; line-height: 1.7; overflow-x: auto; white-space: nowrap;
+}
+.full-eq .hi { color: var(--color-text-primary); font-weight: 500; }
+
+.node-detail {
+  display: none; padding: 14px 16px;
+  border-radius: var(--border-radius-md);
+  border-left: 2px solid var(--nd-color, var(--color-border-secondary));
+  background: color-mix(in srgb, var(--nd-color, var(--color-border-tertiary)) 5%, var(--color-background-primary));
+  margin-bottom: 14px;
+  animation: ddOpen 0.18s ease;
+}
+.node-detail.open { display: block; }
+
+.nd-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.nd-sym { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--nd-color); }
+.nd-name { font-size: 14px; font-weight: 500; }
+.nd-ai { font-size: 11px; color: var(--color-text-tertiary); }
+
+.nd-eq-row {
+  font-family: var(--font-mono); font-size: 12px;
+  padding: 8px 10px; background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md); margin: 8px 0;
+  color: var(--color-text-secondary); line-height: 1.6;
+}
+.nd-eq-row .hi { color: var(--color-text-primary); font-weight: 500; }
+
+.nd-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin-top: 8px; }
+.nd-body strong { color: var(--color-text-primary); font-weight: 500; }
+
+.nd-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.nd-pill {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 99px; border: 0.5px solid var(--color-border-secondary);
+  color: var(--color-text-tertiary); background: var(--color-background-secondary);
+}
+.nd-pill.key { border-color: var(--nd-color); color: var(--nd-color);
+  background: color-mix(in srgb, var(--nd-color) 8%, transparent); }
+
+.dd-footer {
+  margin-top: 6px; font-size: 12px; color: var(--color-text-tertiary);
+  border-top: 0.5px solid var(--color-border-tertiary); padding-top: 10px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.dd-footer button {
+  font-size: 12px; padding: 5px 12px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+
+<!-- ── The recall section ── -->
+<div class="recall-intro">
+
+  <h2 style="font-family:var(--ff-display);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:var(--text);margin:0 0 1rem;letter-spacing:-.02em;">
+    Where were you headed?
+  </h2>
+
+  <p>In our first session, before we looked at a single tool or pipeline diagram, we asked one question: <em>when you set off on a literature review, what is your destination?</em></p>
+  <p>The answers were spread across the full length of the evidence pipeline — and every single one was correct. They just weren't all the same destination. That gap is what this curriculum is designed to close.</p>
+  <p>Click the answer that most closely matched yours.</p>
+
+  <div class="dest-widget">
+    <div class="dest-prompt">Session 0 · Your answer</div>
+    <div class="dest-question">"When you set off on a literature review — what is your destination?"</div>
+
+    <div class="dest-grid">
+
+      <div class="dest-card" style="--dest-color:#E24B4A" 
+           onclick="selectDest(this, 0)"
+           data-node="0" data-color="#ff6b6b">
+        <div class="dest-card-label">A database search result</div>
+        <div class="dest-card-sub">PubMed hits, Scopus exports, a set of titles to read</div>
+        <div class="dest-card-step">Tensor · raw input</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#EF9F27" 
+           onclick="selectDest(this, 1)"
+           data-node="1" data-color="#ff8c00">
+        <div class="dest-card-label">A screened list of papers</div>
+        <div class="dest-card-sub">Titles and abstracts triaged for relevance</div>
+        <div class="dest-card-step">Matrix · attention</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#97C459"
+           onclick="selectDest(this, 2)"
+           data-node="2" data-color="#ffd43b">
+        <div class="dest-card-label">An extracted dataset</div>
+        <div class="dest-card-sub">Key findings, numbers, methods pulled from papers</div>
+        <div class="dest-card-step">Vector · the evidence</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#378ADD"
+           onclick="selectDest(this, 3)"
+           data-node="3" data-color="#4fc3f7">
+        <div class="dest-card-label">A synthesis or summary</div>
+        <div class="dest-card-sub">What the literature says, in aggregate</div>
+        <div class="dest-card-step">Eigenmode · the signal</div>
+      </div>
+
+      <div class="dest-card" style="--dest-color:#7F77DD"
+           onclick="selectDest(this, 4)"
+           data-node="4" data-color="#69db7c">
+        <div class="dest-card-label">A policy brief or recommendation</div>
+        <div class="dest-card-sub">A decision-ready document for leadership</div>
+        <div class="dest-card-step">Scalar · the decision</div>
+      </div>
+
+    </div><!-- /dest-grid -->
+
+    <!-- Chain visualiser — revealed on selection -->
+    <div class="chain-vis" id="chain-vis">
+      <div class="chain-vis-label">Where your destination sits in the compression chain</div>
+      <div class="chain-row" id="chain-row">
+        <!-- injected by JS -->
+      </div>
+      <div class="chain-insight" id="chain-insight"></div>
+      <div class="boss-reveal" id="boss-reveal">
+        <strong>Your boss pointed here:</strong> the scalar — a policy brief or recommendation. That's the actual end of the pipeline. Everything else is a step on the way, not the destination. This session maps exactly what happens between where most people stop and where decisions get made.
+      </div>
+      <div class="segue-line" id="segue-line">
+        <span>Why this matters</span>
+        Every answer in that first session was honest. But the further left your destination sat, the more work was being left on the table — work that AI can now do. The pipeline below shows where time disappears, and the rest of this curriculum shows you how to get it back.
+      </div>
+    </div>
+
+  </div><!-- /dest-widget -->
+
+</div><!-- /recall-intro -->
+
+<script>
+(function () {
+  const NODES = [
+    { label: '3+', name: 'Tensor', color: '#ff6b6b' },
+    { label: '2',  name: 'Matrix', color: '#ff8c00' },
+    { label: '1',  name: 'Vector', color: '#ffd43b' },
+    { label: 'E',  name: 'Eigenmode', color: '#4fc3f7' },
+    { label: '0',  name: 'Scalar', color: '#69db7c' },
+  ];
+
+  const INSIGHTS = [
+    `<strong>A database search result is the very beginning of the chain — the tensor.</strong> It's the raw, unfiltered input: thousands of titles, many irrelevant, nothing decided yet. Stopping here means the hardest work — screening, extraction, synthesis, briefing — still lies ahead. This is where most of the 60–70% time burden accumulates.`,
+    `<strong>A screened list is one compression step in.</strong> You've applied attention — filtering signal from noise. But the evidence hasn't been extracted yet, and no synthesis exists. The decision is still far away. AI tools like Elicit and Rayyan operate here, and can compress this step from days to hours.`,
+    `<strong>An extracted dataset is evidence made usable.</strong> Numbers, methods, findings in a structured form. This is real progress — but it's still not a recommendation. The synthesis step, which translates data into an argument, remains. AI excels at structured extraction, making this the highest-ROI step for tool adoption.`,
+    `<strong>A synthesis is the eigenmode — the stable signal that survives compression.</strong> What the literature says, in aggregate, on your question. This is where most formal reviews end. But it still isn't a decision. Translating synthesis into policy-ready language — calibrated to budget, context, and decision-maker — is Session 5's subject.`,
+    `<strong>A policy brief is the scalar — the actual destination.</strong> One number, one recommendation, one decision-ready document. This is where your boss was pointing. Everything upstream serves this. The pipeline exists to produce this. And AI can now accelerate every step between the tensor and the scalar.`,
+  ];
+
+  let selected = null;
+
+  function buildChain(targetIdx, color) {
+    const row = document.getElementById('chain-row');
+    row.innerHTML = '';
+    NODES.forEach((n, i) => {
+      if (i > 0) {
+        const arr = document.createElement('div');
+        arr.className = 'chain-arrow';
+        arr.textContent = '→';
+        row.appendChild(arr);
+      }
+
+      const node = document.createElement('div');
+      node.className = 'chain-node';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'chain-bubble';
+      bubble.textContent = n.label;
+
+      if (i === targetIdx) {
+        bubble.classList.add('target');
+        bubble.style.setProperty('--node-color', color);
+      } else if (i < targetIdx) {
+        bubble.classList.add('lit');
+        bubble.style.setProperty('--node-color', n.color);
+      } else {
+        bubble.classList.add('dim');
+      }
+
+      const name = document.createElement('div');
+      name.className = 'chain-name';
+      name.textContent = n.name;
+
+      node.appendChild(bubble);
+      node.appendChild(name);
+      row.appendChild(node);
+    });
+  }
+
+  window.selectDest = function (card, idx) {
+    document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selected = idx;
+
+    const color = card.dataset.color;
+
+    buildChain(idx, color);
+
+    const insight = document.getElementById('chain-insight');
+    insight.style.setProperty('--insight-color', color);
+    insight.innerHTML = INSIGHTS[idx];
+    insight.classList.add('visible');
+
+    const boss = document.getElementById('boss-reveal');
+    if (idx < 4) {
+      boss.classList.add('visible');
+    } else {
+      boss.classList.remove('visible');
+    }
+
+    document.getElementById('segue-line').classList.add('visible');
+    document.getElementById('chain-vis').classList.add('visible');
+
+    setTimeout(() => {
+      document.getElementById('chain-vis').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 80);
+  };
+})();
+</script>
+
+    <h2>The pipeline, honestly described</h2>
+    <p>Every evidence-to-policy cycle at WHO India moves through a recognisable sequence of steps. The process is not broken — it has produced genuine results, from informing PM-JAY design to shaping national NCD guidelines. But it is slow, and the slowness is not random. It concentrates at specific, identifiable points that are exactly where AI tools offer the most leverage.</p>
+
+    <p>Here is the pipeline as it typically runs for a health financing or UHC evidence brief:</p>
+
+    <!-- ── FIX 1: spine label sits above the pipeline to declare it as the primary visible backbone.
+         The tensor-scalar model remains what it is: the interpretation layer revealed on interaction.
+         No content removed — one quiet label added. ── -->
+    <div class="pipeline-wrap">
+      <div class="pipeline-spine-label">Primary pipeline · the operational backbone</div>
+      <div class="pipeline">
+        <div class="p-step">Policy question defined</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Database search</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Title / Abstract screening</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Full-text retrieval</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step bottleneck">Data extraction</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Synthesis</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Brief drafted</div>
+        <div class="p-arrow">→</div>
+        <div class="p-step">Policy decision</div>
+      </div>
+      <div class="pipeline-annotation">
+        <div class="pipeline-annotation-dot"></div>
+        <div class="pipeline-annotation-text">
+          The three red steps — <strong>Database Search, Title/Abstract Screening, and Data Extraction</strong> — account for 60–70% of total review time. Session 2 maps 20 AI tools directly against these three steps so you can see exactly which tool covers which bottleneck.
+        </div>
+        <a class="pipeline-annotation-link" href="session2.html">Session 2 tool map →</a>
+      </div>
+    </div>
+
+<div class="dd-wrap">
+<h2 class="sr-only">Deep dive: the full compression loss chain from L₀(θᵗ) to L(θᵗ⁺¹) — five sequential transformations mapping each pipeline stage to a statistical operator and an AI class</h2>
+
+<div class="dd-trigger" id="dd-trigger" onclick="toggleDD()">
+  <div class="dd-icon">∂</div>
+  <div class="dd-trigger-text">
+    <div class="dd-trigger-title">Deep dive: the compression loss chain</div>
+    <div class="dd-trigger-sub">L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹) &nbsp;·&nbsp; not for the shallow end</div>
+  </div>
+  <span class="dd-chevron">▾</span>
+</div>
+
+<div class="dd-body" id="dd-body">
+
+  <div class="eq-chain" id="eq-chain"></div>
+
+  <div class="full-eq" id="full-eq">
+    <span>L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹)</span>
+  </div>
+
+  <div id="node-detail-panel"></div>
+
+  <div class="dd-footer">
+    <span>Click any node above to expand its algebra</span>
+    <button onclick="window.open('https://claude.ai/new?q=Walk+me+through+the+full+compression+loss+chain+L%E2%82%80(%CE%B8%E1%B5%97)+step+by+step+with+concrete+examples+from+health+evidence+synthesis+at+WHO+India', '_blank')">Take me deeper ↗</button>
+  </div>
+
+</div>
+</div>
+
+
+<script>
+const NODES = [
+  {
+    sym: 'L₀(θᵗ)',
+    label: 'Prior loss',
+    color: '#E24B4A',                          /* ← RED   (was #7F77DD purple) */
+    aiClass: 'World AI',
+    pentad: 'Tensor · 3+',
+    eqLine: 'L₀(θᵗ) = −log P(θᵗ | world)',
+    hiTerms: ['L₀', 'θᵗ'],
+    bodyHtml: `<strong>L₀(θᵗ) is the cost of the current world-model.</strong> It measures how far the agent's prior belief θᵗ is from the full joint distribution of the world. World AI (Gemini, GPT, Claude) has parametrized this — it has absorbed the training corpus and encoded it as θᵗ.<br><br>This is not yet a task-specific loss. It is the <em>standing epistemic debt</em> the agent carries before any evidence arrives. In health evidence synthesis, this is the implicit model every researcher brings to a literature search: disciplinary assumptions, citation biases, familiarity with certain journals. It shapes what questions get asked before a single paper is read.<br><br>The compression step from here is not reduction — it is <em>activation</em>: selecting which slice of θᵗ is relevant to the policy question.`,
+    pills: ['Prior P(θ)', 'Joint distribution', 'Epistemic standing', 'World model']
+  },
+  {
+    sym: 'Σwᵢ·Lᵢ',
+    label: 'Weighted losses',
+    color: '#EF9F27',                          /* ← ORANGE (was #1D9E75 teal) */
+    aiClass: 'Perception AI',
+    pentad: 'Matrix · 2',
+    eqLine: 'Σwᵢ·Lᵢ  where wᵢ = relevance(doc_i, query)',
+    hiTerms: ['wᵢ', 'Lᵢ'],
+    bodyHtml: `<strong>Σwᵢ·Lᵢ is the attention-weighted sum of document-level losses.</strong> Each document i contributes a loss Lᵢ — how much residual uncertainty it leaves about the query — weighted by its relevance wᵢ to the question. Perception AI (RAG pipelines, Elicit, Consensus) computes these weights.<br><br>This is the off-diagonal step: we are mapping co-variances between documents and the query rather than treating each source independently. A WHO India policy brief on PM-JAY has high wᵢ for a financial protection question; a Norwegian RCT has low wᵢ for the same question even if it's methodologically superior.<br><br><strong>The WEIRD-data bias lives here.</strong> If the wᵢ function is trained only on indexed literature, grey-literature sources get wᵢ ≈ 0 by default — not because they are irrelevant, but because the attention mechanism was never trained to see them. Correcting this is a manual act of sovereignty.`,
+    pills: ['Attention weights wᵢ', 'Relevance scoring', 'Off-diagonal Σ', 'Grey-lit gap']
+  },
+  {
+    sym: 'f(σ²)',
+    label: 'Variance fn',
+    color: '#97C459',                          /* ← GREEN  (was #BA7517 amber) */
+    aiClass: 'Agentic AI',
+    pentad: 'Vector · 1',
+    eqLine: 'f(σ²) = Σᵢ [x̄ᵢ − μᵢ]² / nᵢ  per field',
+    hiTerms: ['σ²', 'f'],
+    bodyHtml: `<strong>f(σ²) is the field-level extraction variance function.</strong> For each structured field extracted from a document — an effect size, a cost per DALY, a coverage percentage — the extraction process produces a point estimate x̄ᵢ around a true value μᵢ with variance σ²ᵢ. Agentic AI (AutoExtract pipelines, structured prompting, Elicit extraction columns) is in the business of minimizing this σ².<br><br>This is the diagonal step: we have disentangled the joint distribution into marginal variances per variable. The off-diagonal covariances from the matrix step are temporarily bracketed — we are committing to specific values.<br><br><strong>This is the highest-ROI layer for AI adoption right now.</strong> Humans systematically introduce extraction variance through fatigue, inconsistent coding decisions, and missed fields under time pressure. AI extraction is not perfect, but its variance is lower, more consistent, and auditable. f(σ²) is the exact quantity being minimized when a tool claims "5× faster extraction with 94% agreement."`,
+    pills: ['Field-level σ²', 'Extraction fidelity', 'Diagonal Cov', 'PRISMA compliance']
+  },
+  {
+    sym: 'g(λ)',
+    label: 'Eigenvalue fn',
+    color: '#378ADD',                          /* ← BLUE   (was #4fc3f7 cyan = session-accent clash) */
+    aiClass: 'Generative AI',
+    pentad: 'Eigenmode · E',
+    eqLine: 'g(λ) = top eigenvector of evidence matrix E',
+    hiTerms: ['λ', 'g'],
+    bodyHtml: `<strong>g(λ) is the eigenvalue function — synthesis as spectral decomposition.</strong> Given the evidence matrix E (rows = studies, columns = extracted fields), the dominant eigenvalue λ₁ captures the direction of maximum variance across the literature: the single claim that explains the most heterogeneity. Generative AI (Claude, GPT-4, Gemini in synthesis mode) approximates this operation through attention-weighted summarization.<br><br>This is structurally different from summarization. A summary averages across rows. Synthesis extracts the eigenmode — the signal that is <em>invariant</em> under perturbation of the study set. Remove one study, the eigenmode barely shifts. Remove a cluster of studies, it shifts — and that shift is itself information about the robustness of the claim.<br><br><strong>The unknown-unknown sits here.</strong> The eigenmode reveals what no individual study could: the latent dimension along which the literature has been accumulating evidence without naming it. In health economics this is often the equity dimension — not because equity was never studied, but because it was never the primary exposure in any single study.`,
+    pills: ['Dominant λ₁', 'PCA of evidence', 'Synthesis residual', 'Unknown-unknown']
+  },
+  {
+    sym: 'h(ε)+L(θᵗ⁺¹)',
+    label: 'Decision + update',
+    color: '#7F77DD',                          /* ← VIOLET (was #69db7c green = clashed with teal) */
+    aiClass: 'Embodied AI',
+    pentad: 'Scalar · 0',
+    eqLine: 'h(ε) + L(θᵗ⁺¹) = decision(λ) + γ|ε_FGT|²',
+    hiTerms: ['h', 'ε', 'L', 'θᵗ⁺¹'],
+    bodyHtml: `<strong>h(ε) + L(θᵗ⁺¹) is the decision plus the Bayesian update.</strong> The scalar decision h(ε) is a function of the residual error ε — what the current model got wrong. The loss L(θᵗ⁺¹) is the cost function that will update the prior for the next iteration. Embodied AI (human-in-loop auditors, AGI-approaching systems, equity compliance engines) closes the loop.<br><br>The FGT term γ|ε_FGT|² is the Foster-Greer-Thorbecke poverty gap regularizer — a penalty that grows quadratically with the equity gap in the decision. This is not standard in ML loss functions, but it is exactly what a WHO health financing brief should impose: decisions that increase the poverty headcount ratio are penalized not linearly but quadratically, making equity violations increasingly expensive as they worsen.<br><br><strong>The loop closes here.</strong> The decision produces an outcome. The outcome reveals ε. ε updates L. L reshapes θᵗ⁺¹. The next literature review begins with a better prior. <em>Sovereignty is the ability to specify your own loss function</em> — to decide what γ is, what ε_FGT measures, and who bears the cost of getting it wrong.`,
+    pills: ['Residual ε', 'FGT regularizer γ', 'Prior update L(θ)', 'Bayesian loop']
+  }
+];
+
+let active = null;
+
+function renderChain() {
+  const c = document.getElementById('eq-chain');
+  c.innerHTML = '';
+  NODES.forEach((n, i) => {
+    if (i > 0) {
+      const arr = document.createElement('div');
+      arr.className = 'eq-arrow';
+      arr.textContent = '→';
+      c.appendChild(arr);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'eq-node' + (active === i ? ' active' : '');
+    wrap.style.setProperty('--nb-color', n.color);
+    wrap.innerHTML = `<div class="eq-bubble">${n.sym}</div><div class="eq-label">${n.label}</div>`;
+    wrap.onclick = () => selectNode(i);
+    c.appendChild(wrap);
+  });
+}
+
+function renderFullEq(activeIdx) {
+  const parts = NODES.map((n, i) => {
+    if (i === activeIdx) return `<span class="hi">${n.sym}</span>`;
+    return `<span style="opacity:0.45">${n.sym}</span>`;
+  });
+  document.getElementById('full-eq').innerHTML = parts.join(' <span style="opacity:0.3">→</span> ');
+}
+
+function selectNode(i) {
+  if (active === i) {
+    active = null;
+    renderChain();
+    renderFullEq(-1);
+    document.getElementById('node-detail-panel').innerHTML = '';
+    return;
+  }
+  active = i;
+  renderChain();
+  renderFullEq(i);
+
+  const n = NODES[i];
+  const panel = document.getElementById('node-detail-panel');
+
+  const eqHighlighted = n.eqLine.replace(new RegExp(n.hiTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'), 'g'), m => `<span class="hi">${m}</span>`);
+
+  panel.innerHTML = `
+    <div class="node-detail open" style="--nd-color:${n.color}">
+      <div class="nd-header">
+        <span class="nd-sym">${n.sym}</span>
+        <span class="nd-name">${n.pentad}</span>
+        <span class="nd-ai">${n.aiClass}</span>
+      </div>
+      <div class="nd-eq-row">${eqHighlighted}</div>
+      <div class="nd-body">${n.bodyHtml}</div>
+      <div class="nd-pills">
+        ${n.pills.map((p, pi) => `<span class="nd-pill${pi===0?' key':''}">${p}</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+
+function toggleDD() {
+  const trigger = document.getElementById('dd-trigger');
+  const body = document.getElementById('dd-body');
+  trigger.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+renderChain();
+renderFullEq(-1);
+</script>
+
+
+  <!-- ── AI LAYER TAXONOMY ── -->
+<div class="session-content" style="margin-top:2.5rem;">
+  <h2>Five layers of AI in evidence work</h2>
+  <!-- ── FIX 2: one sentence binding each AI layer to a pipeline stage.
+       Addresses GPT's observation that the taxonomy "floats" without explicit pipeline attachment.
+       The sentence is short, factual, and lives naturally in the intro paragraph.
+       No table structure altered. ── -->
+  <p>Before mapping tools to tasks, it helps to know what kind of AI you're dealing with. The taxonomy below — drawn from how AI actually enters health systems — maps each layer to its role in a literature review pipeline. Read it against the pipeline above: World AI and Perception AI operate at the search end; Agentic AI handles extraction; Generative AI produces the synthesis and brief; Embodied AI audits the whole chain for bias and compliance.</p>
+</div>
+
+<div class="collapsible-wrap" style="margin:1.5rem 0 2.5rem;">
+  <div class="collapsible-header" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open');this.querySelector('.collapsible-chevron').classList.toggle('open');">
+    <div>
+      <div class="collapsible-title">AI Layer Taxonomy · Evidence Synthesis</div>
+      <div class="collapsible-meta">From embodied wisdom to the world's raw data — five layers, five roles</div>
+    </div>
+    <span class="collapsible-chevron">▾</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-inner">
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+        <thead>
+          <tr>
+            <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);border-right:1px solid var(--border);">Layer</th>
+            <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);">Role in Evidence Synthesis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://en.wikipedia.org/wiki/Optimus_(robot)" target="_blank" style="color:var(--session-accent);text-decoration:none;">Embodied AI</a></td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Audits the entire workflow — bias detection, equity checks, PRISMA compliance (Human in loop for now, but AGI coming soon...)</td>
+          </tr>
+          <tr>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/alpha/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Generative AI</a></td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Synthesizes findings into reports, policy briefs, and insights — think: ChatGPT</td>
+          </tr>
+          <tr>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://www.oracle.com/news/announcement/oracle-ushers-in-new-era-of-ai-driven-electronic-health-records-2025-08-13/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Agentic AI</a></td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Automates screening, extraction, and repetitive tasks — on identified literature</td>
+          </tr>
+          <tr>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/who-03-rank/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Perception AI</a></td>
+            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Ingests specific literature across journals, languages, and grey sources — via PDF upload, web scraping and API integrations</td>
+          </tr>
+          <tr>
+            <td style="padding:.75rem 1rem;border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://gemini.google.com/app" target="_blank" style="color:var(--session-accent);text-decoration:none;">World AI</a></td>
+            <td style="padding:.75rem 1rem;color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Understands general science: basic, clinical, public health, health economics, etc — the raw environment</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-family:'Inter',sans-serif;font-size:.65rem;letter-spacing:.08em;color:var(--text-secondary);opacity:.55;margin-top:1rem;line-height:1.5;font-style:italic;">No standard classification exists — this taxonomy is inspired by how AI actually enters health system procurement and workflow. <a href="https://ukb-dt.github.io/who-03-b/" target="_blank" style="color:var(--session-accent);opacity:.8;">Full reference →</a></p>
+    </div>
+  </div>
+</div>
+    <p>The red steps account for roughly 60–70% of total review time in a standard health economics evidence review. They are also the steps most likely to be done inconsistently under time pressure, which means the quality of the final brief is often determined not by the synthesis but by what got dropped during screening.</p>
+
+    <h2>The four bottlenecks specific to WHO India</h2>
+    <p>Generic reviews of "how literature review works" are not what this session is for. The friction that WHO India financing and economics staff experience is specific. Here are the four most consequential pressure points:</p>
+
+    <div class="bottleneck-grid">
+      <div class="b-card">
+        <span class="b-num">01</span>
+        <div class="b-title">The grey literature gap</div>
+        <div class="b-desc">A significant share of the evidence most relevant to Indian health financing — NSSO household surveys, state NHA accounts, NITI Aayog working papers, HTAIn assessments — never reaches PubMed or Cochrane. Standard database searches systematically miss it. Screening 200 journal abstracts while missing the 2023 HTAIn report on PM-JAY equity outcomes is not a search strategy; it is a selection bias.</div>
+      </div>
+      <div class="b-card">
+        <span class="b-num">02</span>
+        <div class="b-title">The WEIRD-data bias</div>
+        <div class="b-desc">The indexed literature over-represents high-income country health systems. A search for evidence on community health insurance and catastrophic expenditure returns studies from the Netherlands, Canada, and South Korea before it surfaces comparable work from Kerala, Andhra Pradesh, or Rwanda. Without active filtering, AI tools inherit this bias — and can amplify it by defaulting to the most-cited results.</div>
+      </div>
+      <div class="b-card">
+        <span class="b-num">03</span>
+        <div class="b-title">The clinical-economics confusion</div>
+        <div class="b-desc">Most literature review tools — and many default AI prompts — are designed around clinical questions. Searching for "impact of health insurance on health outcomes India" returns RCT literature on specific diseases rather than economic evaluations of insurance coverage, financial risk protection, or utilisation equity. The question framing determines the evidence retrieved. This is addressed directly in Session 3.</div>
+      </div>
+      <div class="b-card">
+        <span class="b-num">04</span>
+        <div class="b-title">The brief-to-decision gap</div>
+        <div class="b-desc">Even well-conducted reviews regularly fail to reach decision-makers in usable form. A 45-page systematic review of health financing in LMICs does not serve a Joint Secretary at MoHFW under a two-day deadline. The translation step — from evidence synthesis to a one-page brief calibrated to budget constraints, political context, and equity commitments — is where most reviews stall. This is the subject of Session 5.</div>
+      </div>
+    </div>
+
+    <h2>What AI can and cannot fix</h2>
+    <p>It is worth being precise about where AI tools intervene in this pipeline — and where they do not.</p>
+
+    <p><strong>AI accelerates:</strong> database search construction, title and abstract screening, full-text data extraction, structuring a synthesis across multiple studies, drafting a first version of a brief. A task that takes two researchers three weeks of screening can often be reduced to a focused afternoon of prompt refinement, AI-assisted screening, and human verification.</p>
+
+    <p><strong>AI does not replace:</strong> the judgment call about which question matters, the contextual knowledge that a particular Indian state has no functional secondary care infrastructure, the equity lens that asks who benefits and who is excluded, the political reading of what a Ministry will act on. These remain yours. This curriculum is about using AI to protect your time for the parts that only you can do.</p>
+
+    <div class="q-block">
+      A 2023 analysis of India's National Health Programme guidelines found that systematic review evidence was formally cited in fewer than half of NHP guideline documents reviewed — not because the evidence did not exist, but because the pipeline from production to decision was too slow and too fragmented to be useful at the moment of decision.
+    </div>
+
+    <p>That gap is the reason this curriculum exists. The tools in the next session are not there to make literature review more academic — they are there to close the distance between evidence and the decision that needs it, before the window closes.</p>
+
+    <h2>Audit your own process</h2>
+
+    <div class="exercise-box">
+      <h3>🧪 Self-audit — where does your review time actually go?</h3>
+      <p style="font-size:.85rem;margin-bottom:1.25rem;">For a recent or ongoing evidence brief, estimate how much of your total time falls at each stage. This takes 90 seconds and generates a personalised read on where AI will give you the most back.</p>
+
+      <div class="audit-row">
+        <div class="audit-label">
+          Defining and scoping the question
+          <span class="audit-sub">Clarifying the policy context, agreeing on the research question, setting inclusion criteria</span>
+        </div>
+        <div class="audit-options">
+          <button class="audit-btn" data-row="0" data-val="low">≤ 1 day</button>
+          <button class="audit-btn" data-row="0" data-val="med">2–4 days</button>
+          <button class="audit-btn" data-row="0" data-val="high">&gt; 1 week</button>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-label">
+          Database search &amp; grey literature hunt
+          <span class="audit-sub">Building search strings, running searches, tracking down reports and government documents</span>
+        </div>
+        <div class="audit-options">
+          <button class="audit-btn" data-row="1" data-val="low">≤ 1 day</button>
+          <button class="audit-btn" data-row="1" data-val="med">2–4 days</button>
+          <button class="audit-btn" data-row="1" data-val="high">&gt; 1 week</button>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-label">
+          Title / Abstract screening
+          <span class="audit-sub">Reading through results to determine relevance — typically the single largest time sink</span>
+        </div>
+        <div class="audit-options">
+          <button class="audit-btn" data-row="2" data-val="low">≤ 1 day</button>
+          <button class="audit-btn" data-row="2" data-val="med">2–4 days</button>
+          <button class="audit-btn" data-row="2" data-val="high">&gt; 1 week</button>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-label">
+          Data extraction
+          <span class="audit-sub">Pulling numbers, methods, and findings from included papers into a usable format</span>
+        </div>
+        <div class="audit-options">
+          <button class="audit-btn" data-row="3" data-val="low">≤ 1 day</button>
+          <button class="audit-btn" data-row="3" data-val="med">2–4 days</button>
+          <button class="audit-btn" data-row="3" data-val="high">&gt; 1 week</button>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-label">
+          Writing the synthesis and brief
+          <span class="audit-sub">Turning evidence into a usable document for decision-makers</span>
+        </div>
+        <div class="audit-options">
+          <button class="audit-btn" data-row="4" data-val="low">≤ 1 day</button>
+          <button class="audit-btn" data-row="4" data-val="med">2–4 days</button>
+          <button class="audit-btn" data-row="4" data-val="high">&gt; 1 week</button>
+        </div>
+      </div>
+
+      <div class="audit-result" id="audit-result"></div>
+    </div>
+
+    <div class="takeaway">
+      <h3>🎯 Key takeaway</h3>
+      <p>The existing process is not the enemy — it is the baseline. The three steps that consume the most time — <strong>database search, title/abstract screening, and data extraction</strong> — are precisely the steps Session 2 maps to 20 AI tools. The goal of this curriculum is not to replace your judgment but to compress the mechanical steps so that more of your working week is spent on the parts that require it: defining the right question, applying the equity lens, and translating findings into something a decision-maker can act on.</p>
+    </div>
+
+  </div><!-- /session-content -->
+
+  <nav class="s-nav" aria-label="Session navigation">
+    <a class="s-nav-btn s-nav-next" href="session2.html">Next: The Tools Available →</a>
+  </nav>
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+<script src="../../js/shared.js"></script>
+<script>
+  /* ── scroll spine ── */
+  const spine = document.getElementById('spine');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    spine.style.height = Math.min(pct, 100) + '%';
+  }, { passive: true });
+
+  /* ── self-audit widget ── */
+  const answers = [null, null, null, null, null];
+  const labels  = [
+    'question scoping',
+    'database search & grey literature',
+    'title / abstract screening',
+    'data extraction',
+    'synthesis & brief writing'
+  ];
+  const highAI = [1, 2, 3];
+
+  document.querySelectorAll('.audit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = parseInt(btn.dataset.row);
+      const val = btn.dataset.val;
+      document.querySelectorAll(`.audit-btn[data-row="${row}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[row] = val;
+      maybeShowResult();
+    });
+  });
+
+  function maybeShowResult() {
+    if (answers.some(a => a === null)) return;
+    const result = document.getElementById('audit-result');
+    const highRows = answers
+      .map((v, i) => v === 'high' ? labels[i] : null)
+      .filter(Boolean);
+    const aiRows = answers
+      .map((v, i) => (v === 'med' || v === 'high') && highAI.includes(i) ? labels[i] : null)
+      .filter(Boolean);
+
+    let html = '';
+    if (highRows.length === 0) {
+      html = 'Your process is already lean. The tools in Session 2 will help you maintain that efficiency and handle the occasional high-volume search without adding overhead.';
+    } else {
+      html = `Your biggest time costs are in: <strong>${highRows.join(', ')}</strong>. `;
+      if (aiRows.length > 0) {
+        html += `Of these, <strong>${aiRows.join(' and ')}</strong> ${aiRows.length > 1 ? 'are' : 'is'} exactly where the 20-tool comparison in Session 2 will have the most immediate impact. `;
+      }
+      if (answers[4] === 'high') {
+        html += 'You are also spending significant time on synthesis and brief writing — Session 5 addresses this directly with an AI-assisted brief template calibrated for WHO India policy audiences.';
+      }
+      if (answers[0] === 'high') {
+        html += ' Question scoping is taking longer than it should — Session 3 (PECO-F) will help you get to a precise, searchable question faster.';
+      }
+    }
+
+    result.innerHTML = html;
+    result.classList.add('visible');
+  }
+</script>
+</body>
+</html>

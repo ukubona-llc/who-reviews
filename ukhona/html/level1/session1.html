@@ -1,3 +1,8 @@
+
+
+Full updated WHO India Session 1 HTML — v4 chain notation + PENTAD as named phases
+html
+
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -16,12 +21,18 @@
   <link href="../../css/variables.css?v=1.1" rel="stylesheet">
   <link href="../../css/head.css?v=1.1" rel="stylesheet">
   <link href="../../css/card.css?v=1.1" rel="stylesheet">
-  <link href="../../css/footer.css" rel="stylesheet">     
+  <link href="../../css/footer.css" rel="stylesheet">
   <style>
     :root {
       --session-accent: #4fc3f7;
       --ff-display: 'Playfair Display', Georgia, serif;
       --ff-body:    'Source Serif 4', Georgia, serif;
+      /* ── v4 PENTAD phase colours ── */
+      --phase-T: #6faee8;
+      --phase-M: #7ecbaa;
+      --phase-V: #e8b84b;
+      --phase-E: #c49ae8;
+      --phase-S: #e87060;
     }
     body { font-family: var(--ff-body); font-weight: 300; }
     .spine { position: fixed; left: 0; top: 0; width: 3px; height: 0%; background: var(--session-accent); z-index: 200; transition: height .1s linear; }
@@ -56,32 +67,16 @@
     .session-content ul li { margin-bottom: .5rem; font-size: clamp(.95rem, 2vw, 1.05rem); }
 
     /* Pipeline diagram */
-    .pipeline-wrap {
-      margin: 2rem 0;
-    }
-    /* ── FIX 1: "primary spine" label above the pipeline ──
-       Addresses GPT's point that two ontologies (pipeline + tensor/scalar) are co-equal.
-       One quiet label makes the pipeline the clear backbone; tensor-scalar stays as
-       the interpretation layer inside the chain visualiser. No content removed. */
+    .pipeline-wrap { margin: 2rem 0; }
     .pipeline-spine-label {
       font-family: 'Inter', sans-serif;
-      font-size: .52rem;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: var(--session-accent);
-      opacity: .55;
-      margin-bottom: .6rem;
-      display: flex;
-      align-items: center;
-      gap: .5rem;
+      font-size: .52rem; letter-spacing: .28em; text-transform: uppercase;
+      color: var(--session-accent); opacity: .55; margin-bottom: .6rem;
+      display: flex; align-items: center; gap: .5rem;
     }
     .pipeline-spine-label::before {
-      content: '';
-      display: inline-block;
-      width: 18px;
-      height: 1px;
-      background: var(--session-accent);
-      opacity: .5;
+      content: ''; display: inline-block; width: 18px; height: 1px;
+      background: var(--session-accent); opacity: .5;
     }
     .pipeline {
       display: flex; flex-wrap: wrap; align-items: center;
@@ -96,67 +91,40 @@
       border: 1px solid color-mix(in srgb, var(--session-accent) 30%, transparent);
       color: var(--text); white-space: nowrap;
     }
-    .p-arrow {
-      font-size: .8rem; color: var(--session-accent); opacity: .5;
-      font-family: 'Inter', sans-serif;
-    }
+    .p-arrow { font-size: .8rem; color: var(--session-accent); opacity: .5; font-family: 'Inter', sans-serif; }
     .p-step.bottleneck {
       background: color-mix(in srgb, #ef5350 12%, transparent);
-      border-color: color-mix(in srgb, #ef5350 35%, transparent);
-      color: #ef9a9a;
+      border-color: color-mix(in srgb, #ef5350 35%, transparent); color: #ef9a9a;
     }
     .pipeline-annotation {
       background: color-mix(in srgb, var(--session-accent) 5%, transparent);
       border: 1px solid color-mix(in srgb, var(--session-accent) 20%, transparent);
       border-top: none; border-radius: 0 0 14px 14px;
-      padding: .75rem 2rem;
-      display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+      padding: .75rem 2rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
     }
-    .pipeline-annotation-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #ef5350; flex-shrink: 0;
-    }
+    .pipeline-annotation-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef5350; flex-shrink: 0; }
     .pipeline-annotation-text {
       font-family: 'Inter', sans-serif; font-size: .62rem; letter-spacing: .07em;
       color: var(--session-accent); line-height: 1.5; flex: 1;
     }
     .pipeline-annotation-link {
       font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--session-accent);
-      text-decoration: none; border: 1px solid color-mix(in srgb, var(--session-accent) 40%, transparent);
-      padding: .25rem .7rem; border-radius: 3px; white-space: nowrap;
-      transition: all .2s;
+      text-transform: uppercase; color: var(--session-accent); text-decoration: none;
+      border: 1px solid color-mix(in srgb, var(--session-accent) 40%, transparent);
+      padding: .25rem .7rem; border-radius: 3px; white-space: nowrap; transition: all .2s;
     }
-    .pipeline-annotation-link:hover {
-      background: color-mix(in srgb, var(--session-accent) 12%, transparent);
-    }
+    .pipeline-annotation-link:hover { background: color-mix(in srgb, var(--session-accent) 12%, transparent); }
 
     /* Bottleneck cards */
     .bottleneck-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      margin: 1.75rem 0;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; margin: 1.75rem 0;
     }
-    .b-card {
-      background: var(--glass); padding: 1.25rem 1.4rem;
-      display: flex; flex-direction: column; gap: .5rem;
-    }
-    .b-num {
-      font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700;
-      letter-spacing: .2em; color: var(--session-accent); opacity: .6;
-    }
-    .b-title {
-      font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600;
-      color: var(--text); line-height: 1.25;
-    }
-    .b-desc {
-      font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 300;
-      line-height: 1.55; color: var(--text-secondary);
-    }
+    .b-card { background: var(--glass); padding: 1.25rem 1.4rem; display: flex; flex-direction: column; gap: .5rem; }
+    .b-num { font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700; letter-spacing: .2em; color: var(--session-accent); opacity: .6; }
+    .b-title { font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; color: var(--text); line-height: 1.25; }
+    .b-desc { font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 300; line-height: 1.55; color: var(--text-secondary); }
 
     /* Quote block */
     .q-block {
@@ -174,33 +142,17 @@
       padding: 2rem 2rem 1.5rem; border-radius: 14px; margin: 2.5rem 0;
     }
     .exercise-box h3 { margin-top: 0; }
-    .audit-row {
-      display: flex; align-items: flex-start; gap: 1rem;
-      padding: .75rem 0; border-bottom: 1px solid var(--border);
-      font-size: .9rem;
-    }
+    .audit-row { display: flex; align-items: flex-start; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--border); font-size: .9rem; }
     .audit-row:last-child { border-bottom: none; }
-    .audit-label {
-      font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 500;
-      color: var(--text); flex: 1; line-height: 1.5;
-    }
-    .audit-sub {
-      font-family: 'Inter', sans-serif; font-size: .68rem; font-weight: 300;
-      color: var(--text-secondary); display: block; margin-top: .15rem;
-    }
-    .audit-options {
-      display: flex; gap: .4rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;
-    }
+    .audit-label { font-family: 'Inter', sans-serif; font-size: .75rem; font-weight: 500; color: var(--text); flex: 1; line-height: 1.5; }
+    .audit-sub { font-family: 'Inter', sans-serif; font-size: .68rem; font-weight: 300; color: var(--text-secondary); display: block; margin-top: .15rem; }
+    .audit-options { display: flex; gap: .4rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
     .audit-btn {
       font-family: 'Inter', sans-serif; font-size: .58rem; letter-spacing: .08em;
       padding: .3rem .75rem; border-radius: 5px; border: 1px solid var(--border);
-      background: var(--glass); color: var(--text-secondary); cursor: pointer;
-      transition: all .15s; user-select: none;
+      background: var(--glass); color: var(--text-secondary); cursor: pointer; transition: all .15s; user-select: none;
     }
-    .audit-btn:hover, .audit-btn.selected {
-      border-color: var(--session-accent); color: var(--session-accent);
-      background: color-mix(in srgb, var(--session-accent) 10%, transparent);
-    }
+    .audit-btn:hover, .audit-btn.selected { border-color: var(--session-accent); color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 10%, transparent); }
     .audit-result {
       margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 8px;
       background: var(--glass); border: 1px solid var(--border);
@@ -218,6 +170,236 @@
     }
     .takeaway h3 { margin-top: 0; }
     .takeaway p { margin-bottom: 0; font-size: .95rem; }
+
+    /* ══════════════════════════════════════════════════
+       v4 UPGRADE: PENTAD PHASE BANNER
+       Five named phases, each with its own identity,
+       colour, and role in the compression chain.
+       This replaces the old "chain notation" in the
+       deep-dive header area.
+    ══════════════════════════════════════════════════ */
+    .pentad-banner {
+      margin: 2.5rem 0 1rem;
+      background: rgba(15,14,12,0.7);
+      border: 0.5px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .pentad-header {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .65rem 1.25rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.025);
+    }
+    .pentad-header-label {
+      font-family: 'Inter', sans-serif; font-size: .52rem; letter-spacing: .28em;
+      text-transform: uppercase; color: var(--session-accent); font-weight: 700;
+    }
+    .pentad-header-eq {
+      font-family: 'Source Code Pro', 'IBM Plex Mono', monospace; font-size: .6rem;
+      color: rgba(255,255,255,0.35); margin-left: auto; letter-spacing: .04em;
+    }
+    .pentad-phases {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+    }
+    @media (max-width: 640px) {
+      .pentad-phases { grid-template-columns: 1fr 1fr; }
+    }
+    .pentad-phase {
+      padding: 1.1rem 1rem 1rem;
+      border-right: 0.5px solid rgba(255,255,255,0.06);
+      position: relative;
+      cursor: default;
+      transition: background 0.2s;
+    }
+    .pentad-phase:last-child { border-right: none; }
+    .pentad-phase:hover { background: rgba(255,255,255,0.03); }
+    .pentad-phase-roman {
+      font-family: 'Inter', sans-serif; font-size: .48rem; letter-spacing: .22em;
+      text-transform: uppercase; font-weight: 700; opacity: .4; margin-bottom: .3rem;
+    }
+    .pentad-phase-sym {
+      font-family: 'Source Code Pro', 'IBM Plex Mono', monospace;
+      font-size: .82rem; font-weight: 600; display: block; margin-bottom: .22rem;
+      line-height: 1.2;
+    }
+    .pentad-phase-name {
+      font-family: 'Inter', sans-serif; font-size: .62rem; font-weight: 700;
+      letter-spacing: .04em; display: block; margin-bottom: .3rem;
+    }
+    .pentad-phase-role {
+      font-family: 'Inter', sans-serif; font-size: .6rem; font-weight: 300;
+      line-height: 1.45; color: rgba(255,255,255,0.38);
+    }
+    .pentad-phase-arrow {
+      position: absolute; right: -7px; top: 50%;
+      transform: translateY(-50%);
+      font-size: .55rem; color: rgba(255,255,255,0.2);
+      z-index: 2; pointer-events: none;
+    }
+    .pentad-phase:last-child .pentad-phase-arrow { display: none; }
+
+    /* Phase T */
+    .phase-T { --pc: var(--phase-T); }
+    .phase-T .pentad-phase-roman { color: var(--phase-T); }
+    .phase-T .pentad-phase-sym   { color: var(--phase-T); }
+    .phase-T .pentad-phase-name  { color: var(--phase-T); }
+
+    /* Phase M */
+    .phase-M { --pc: var(--phase-M); }
+    .phase-M .pentad-phase-roman { color: var(--phase-M); }
+    .phase-M .pentad-phase-sym   { color: var(--phase-M); }
+    .phase-M .pentad-phase-name  { color: var(--phase-M); }
+
+    /* Phase V */
+    .phase-V { --pc: var(--phase-V); }
+    .phase-V .pentad-phase-roman { color: var(--phase-V); }
+    .phase-V .pentad-phase-sym   { color: var(--phase-V); }
+    .phase-V .pentad-phase-name  { color: var(--phase-V); }
+
+    /* Phase E */
+    .phase-E { --pc: var(--phase-E); }
+    .phase-E .pentad-phase-roman { color: var(--phase-E); }
+    .phase-E .pentad-phase-sym   { color: var(--phase-E); }
+    .phase-E .pentad-phase-name  { color: var(--phase-E); }
+
+    /* Phase S */
+    .phase-S { --pc: var(--phase-S); }
+    .phase-S .pentad-phase-roman { color: var(--phase-S); }
+    .phase-S .pentad-phase-sym   { color: var(--phase-S); }
+    .phase-S .pentad-phase-name  { color: var(--phase-S); }
+
+    /* VoI tag inside phase */
+    .voi-tag {
+      display: inline-block; margin-top: .4rem;
+      font-family: 'Inter', sans-serif; font-size: .48rem; letter-spacing: .14em;
+      text-transform: uppercase; padding: 2px 7px; border-radius: 99px;
+      border: 0.5px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.04);
+    }
+
+    /* FGT note box — lives under the pentad banner */
+    .fgt-note {
+      margin: 0 0 2rem;
+      padding: .7rem 1.25rem;
+      background: color-mix(in srgb, var(--phase-E) 5%, transparent);
+      border: 0.5px solid color-mix(in srgb, var(--phase-E) 22%, transparent);
+      border-radius: 0 0 12px 12px;
+      font-family: 'Inter', sans-serif; font-size: .63rem; letter-spacing: .03em;
+      color: rgba(255,255,255,0.45); line-height: 1.65;
+    }
+    .fgt-note strong { color: var(--phase-E); font-weight: 600; }
+    .fgt-note code {
+      font-family: 'Source Code Pro', 'IBM Plex Mono', monospace;
+      font-size: .6rem; background: rgba(255,255,255,0.06);
+      padding: 1px 5px; border-radius: 3px; color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Recall intro ── */
+    .recall-intro { margin-bottom: 3rem; }
+    .recall-intro p { font-size: clamp(.95rem, 2vw, 1.05rem); line-height: 1.8; color: var(--text-secondary); margin-bottom: 1rem; }
+
+    /* ── Destination widget ── */
+    .dest-widget {
+      background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
+      border: 1px solid color-mix(in srgb, var(--session-accent) 22%, transparent);
+      border-radius: 14px; padding: 2rem 2rem 1.75rem; margin: 2rem 0 2.5rem;
+    }
+    .dest-prompt { font-family: 'Inter', sans-serif; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--session-accent); font-weight: 700; margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+    .dest-prompt::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--session-accent); flex-shrink: 0; }
+    .dest-question { font-family: var(--ff-display); font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-style: italic; font-weight: 400; color: var(--text); margin-bottom: 1.5rem; line-height: 1.35; }
+    .dest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr)); gap: .5rem; margin-bottom: 1.5rem; }
+    .dest-card { background: var(--glass); border: 1px solid var(--border); border-radius: 8px; padding: .85rem 1rem; cursor: pointer; text-align: left; transition: all .18s; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; }
+    .dest-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--dest-color, var(--session-accent)); opacity: 0; transition: opacity .18s; }
+    .dest-card:hover { border-color: var(--dest-color, var(--session-accent)); }
+    .dest-card:hover::before { opacity: 1; }
+    .dest-card.selected { border-color: var(--dest-color, var(--session-accent)); background: color-mix(in srgb, var(--dest-color, var(--session-accent)) 10%, transparent); }
+    .dest-card.selected::before { opacity: 1; }
+    .dest-card-label { font-size: .7rem; font-weight: 500; color: var(--text); line-height: 1.4; margin-bottom: .25rem; }
+    .dest-card-sub { font-size: .62rem; font-weight: 300; color: var(--text-secondary); line-height: 1.45; }
+    .dest-card-step { font-family: 'Inter', sans-serif; font-size: .48rem; letter-spacing: .18em; text-transform: uppercase; color: var(--dest-color, var(--session-accent)); margin-top: .4rem; opacity: .7; }
+
+    /* Chain visualiser */
+    .chain-vis { display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .chain-vis.visible { display: block; }
+    .chain-vis-label { font-family: 'Inter', sans-serif; font-size: .55rem; letter-spacing: .25em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; opacity: .6; }
+    .chain-row { display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: .5rem; }
+    .chain-node { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+    .chain-bubble { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; border: 1.5px solid transparent; transition: all .3s; position: relative; }
+    .chain-bubble.dim { background: var(--glass); border-color: var(--border); color: var(--text-secondary); opacity: .35; }
+    .chain-bubble.lit { background: color-mix(in srgb, var(--node-color) 16%, transparent); border-color: var(--node-color); color: var(--node-color); opacity: 1; }
+    .chain-bubble.target { background: color-mix(in srgb, var(--node-color) 22%, transparent); border-color: var(--node-color); color: var(--node-color); box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-color) 18%, transparent); opacity: 1; }
+    .chain-bubble.target::after { content: '←'; position: absolute; top: -18px; font-size: .65rem; color: var(--node-color); animation: bounce .8s ease-in-out infinite; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    .chain-name { font-family: 'Inter', sans-serif; font-size: .48rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-secondary); text-align: center; opacity: .5; max-width: 56px; line-height: 1.3; }
+    .chain-arrow { font-size: .7rem; color: var(--session-accent); opacity: .3; padding: 0 .25rem; padding-bottom: 1.2rem; flex-shrink: 0; }
+    .chain-insight { display: none; margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: 8px; border-left: 3px solid var(--insight-color, var(--session-accent)); background: color-mix(in srgb, var(--insight-color, var(--session-accent)) 6%, transparent); font-family: 'Inter', sans-serif; font-size: .83rem; line-height: 1.65; color: var(--text-secondary); }
+    .chain-insight.visible { display: block; }
+    .chain-insight strong { color: var(--text); }
+    .boss-reveal { display: none; margin-top: 1rem; padding: .85rem 1.2rem; border-radius: 8px; background: color-mix(in srgb, #69db7c 8%, transparent); border: 1px solid color-mix(in srgb, #69db7c 30%, transparent); font-family: 'Inter', sans-serif; font-size: .8rem; line-height: 1.6; color: var(--text-secondary); }
+    .boss-reveal.visible { display: block; }
+    .boss-reveal strong { color: #69db7c; }
+    .segue-line { display: none; margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: 10px; background: color-mix(in srgb, var(--session-accent) 7%, var(--glass)); border: 1px dashed color-mix(in srgb, var(--session-accent) 40%, transparent); font-family: var(--ff-display); font-size: clamp(.95rem, 2vw, 1.1rem); font-style: italic; color: var(--text); line-height: 1.6; }
+    .segue-line.visible { display: block; }
+    .segue-line span { font-family: 'Inter', sans-serif; font-style: normal; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--session-accent); display: block; margin-bottom: .5rem; }
+
+    /* ── deep-dive dropdown ── */
+    * { box-sizing: border-box; }
+    .dd-wrap { font-family: var(--font-sans); padding: 0; }
+    .dd-trigger { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); background: var(--color-background-secondary); transition: background 0.18s, border-color 0.18s; user-select: none; }
+    .dd-trigger:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
+    .dd-trigger.open { border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; border-bottom-color: transparent; }
+    .dd-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--color-background-info); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; color: var(--color-text-info); font-weight: 500; }
+    .dd-trigger-text { flex: 1; }
+    .dd-trigger-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+    .dd-trigger-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 1px; }
+    .dd-chevron { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+    .dd-trigger.open .dd-chevron { transform: rotate(180deg); }
+    .dd-body { display: none; border: 0.5px solid var(--color-border-secondary); border-top: none; border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); background: var(--color-background-primary); padding: 0 18px 18px; animation: ddOpen 0.22s ease; }
+    .dd-body.open { display: block; }
+    @keyframes ddOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .eq-chain { display: flex; align-items: center; gap: 0; padding: 16px 0 4px; overflow-x: auto; flex-wrap: nowrap; }
+    .eq-node { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 2px; border-radius: var(--border-radius-md); transition: background 0.15s; }
+    .eq-node:hover { background: var(--color-background-secondary); }
+    .eq-node.active { background: var(--color-background-secondary); }
+    .eq-bubble { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; font-family: var(--font-mono); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-secondary); transition: all 0.2s; }
+    .eq-node.active .eq-bubble { border-width: 1.5px; color: var(--nb-color, var(--color-text-primary)); border-color: var(--nb-color, var(--color-border-primary)); background: var(--color-background-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--nb-color, transparent) 12%, transparent); }
+    .eq-label { font-size: 10px; color: var(--color-text-tertiary); text-align: center; max-width: 52px; line-height: 1.3; }
+    .eq-node.active .eq-label { color: var(--color-text-secondary); }
+    .eq-arrow { font-size: 12px; color: var(--color-text-tertiary); padding: 0 2px; padding-bottom: 18px; flex-shrink: 0; }
+    .full-eq { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-secondary); padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); margin: 8px 0 14px; line-height: 1.7; overflow-x: auto; white-space: nowrap; }
+    .full-eq .hi { color: var(--color-text-primary); font-weight: 500; }
+    .node-detail { display: none; padding: 14px 16px; border-radius: var(--border-radius-md); border-left: 2px solid var(--nd-color, var(--color-border-secondary)); background: color-mix(in srgb, var(--nd-color, var(--color-border-tertiary)) 5%, var(--color-background-primary)); margin-bottom: 14px; animation: ddOpen 0.18s ease; }
+    .node-detail.open { display: block; }
+    .nd-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .nd-sym { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--nd-color); }
+    .nd-name { font-size: 14px; font-weight: 500; }
+    .nd-ai { font-size: 11px; color: var(--color-text-tertiary); }
+    .nd-eq-row { font-family: var(--font-mono); font-size: 12px; padding: 8px 10px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); margin: 8px 0; color: var(--color-text-secondary); line-height: 1.6; }
+    .nd-eq-row .hi { color: var(--color-text-primary); font-weight: 500; }
+    .nd-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin-top: 8px; }
+    .nd-body strong { color: var(--color-text-primary); font-weight: 500; }
+    .nd-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .nd-pill { font-size: 11px; padding: 3px 10px; border-radius: 99px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-tertiary); background: var(--color-background-secondary); }
+    .nd-pill.key { border-color: var(--nd-color); color: var(--nd-color); background: color-mix(in srgb, var(--nd-color) 8%, transparent); }
+    .dd-footer { margin-top: 6px; font-size: 12px; color: var(--color-text-tertiary); border-top: 0.5px solid var(--color-border-tertiary); padding-top: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .dd-footer button { font-size: 12px; padding: 5px 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* collapsible */
+    .collapsible-wrap { margin: 1.5rem 0 2.5rem; }
+    .collapsible-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; background: var(--glass); transition: background 0.18s; }
+    .collapsible-header.open { border-radius: 10px 10px 0 0; }
+    .collapsible-header:hover { background: color-mix(in srgb, var(--session-accent) 5%, var(--glass)); }
+    .collapsible-title { font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 600; color: var(--text); }
+    .collapsible-meta { font-family: 'Inter', sans-serif; font-size: .65rem; color: var(--text-secondary); margin-top: .2rem; }
+    .collapsible-chevron { font-size: 14px; color: var(--text-secondary); transition: transform 0.2s; }
+    .collapsible-chevron.open { transform: rotate(180deg); }
+    .collapsible-body { display: none; border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
+    .collapsible-body.open { display: block; }
+    .collapsible-inner { padding: 1.25rem; }
   </style>
 </head>
 <body>
@@ -229,20 +411,20 @@
 <div class="s-page">
   <div class="s-crumb">
     <a href="../../../" style="color:inherit;text-decoration:none;">Home</a> · Level 1 · <span>Session 1</span>
-  
-  <a href="https://ukubona-llc.github.io/" target="_blank" 
-   style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
-          color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
-          padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
-  Ukubona LLC ↗
-</a>
 
-<a href="https://ukubona-llc.github.io/tokens/" target="_blank" 
-   style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
-          color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
-          padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
-  Automation ↗
-</a>
+    <a href="https://ukubona-llc.github.io/" target="_blank"
+       style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+              color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
+              padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
+      Ukubona LLC ↗
+    </a>
+
+    <a href="https://ukubona-llc.github.io/tokens/" target="_blank"
+       style="font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+              color:var(--session-accent);opacity:.7;text-decoration:none;border:1px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
+              padding:.25rem .7rem;border-radius:3px;margin-left:.5rem;">
+      Automation ↗
+    </a>
   </div>
 
   <div class="s-hero">
@@ -255,826 +437,870 @@
 
   <div class="session-content">
 
+  <!-- ══════════════════════════════════════════════
+     v4 PENTAD PHASE BANNER — collapsible
+     Collapsed by default. Opens for the curious.
+══════════════════════════════════════════════ -->
+<div style="margin: 2.5rem 0 1rem;">
 
-<style>
-  /* ── Recall intro ── */
-  .recall-intro {
-    margin-bottom: 3rem;
-  }
-  .recall-intro p {
-    font-size: clamp(.95rem, 2vw, 1.05rem);
-    line-height: 1.8;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-  }
+  <div class="pentad-trigger" id="pentad-trigger" onclick="togglePentad()" style="
+    display:flex; align-items:flex-start; gap:14px; padding:14px 18px; cursor:pointer;
+    border:0.5px solid var(--border); border-radius:14px;
+    background:var(--glass); transition:background .18s, border-color .18s; user-select:none;">
+    <div style="
+      width:32px; height:32px; border-radius:8px; flex-shrink:0; margin-top:2px;
+      background:color-mix(in srgb,#e8b84b 15%,transparent);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Source Code Pro',monospace; font-size:14px; color:#e8b84b;">∂</div>
+    <div style="flex:1;">
+      <div style="font-family:'Inter',sans-serif; font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:3px;">
+        v4 · TMVES compression chain · five phases
+      </div>
+      <div style="font-family:'Inter',sans-serif; font-size:.72rem; color:var(--text-secondary); line-height:1.5;">
+        The statistical backbone of this curriculum — from raw world-model θᵗ through composite loss, gradient policy, 
+        federated correction, to prognosis loop L(θᵗ⁺¹). <em>Skip if equations aren't your thing. Open if you want to see why.</em>
+      </div>
+    </div>
+    <div style="
+      font-family:'Inter',sans-serif; font-size:.55rem; letter-spacing:.14em; text-transform:uppercase;
+      padding:3px 10px; border-radius:99px; white-space:nowrap; flex-shrink:0; align-self:flex-start; margin-top:2px;
+      background:color-mix(in srgb,var(--session-accent) 10%,transparent);
+      border:0.5px solid color-mix(in srgb,var(--session-accent) 30%,transparent);
+      color:var(--session-accent);">For the curious</div>
+    <div id="pentad-chev" style="font-size:14px; color:var(--text-secondary); align-self:center; flex-shrink:0; transition:transform .2s;">▾</div>
+  </div>
 
-  /* ── Destination widget ── */
-  .dest-widget {
-    background: color-mix(in srgb, var(--session-accent) 5%, var(--glass));
-    border: 1px solid color-mix(in srgb, var(--session-accent) 22%, transparent);
-    border-radius: 14px;
-    padding: 2rem 2rem 1.75rem;
-    margin: 2rem 0 2.5rem;
-  }
-  .dest-prompt {
-    font-family: 'Inter', sans-serif;
-    font-size: .6rem;
-    letter-spacing: .3em;
-    text-transform: uppercase;
-    color: var(--session-accent);
-    font-weight: 700;
-    margin-bottom: .75rem;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .dest-prompt::before {
-    content: '';
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--session-accent);
-    flex-shrink: 0;
-  }
-  .dest-question {
-    font-family: var(--ff-display);
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--text);
-    margin-bottom: 1.5rem;
-    line-height: 1.35;
-  }
+  <div id="pentad-body" style="display:none; border:0.5px solid var(--border); border-top:none; border-radius:0 0 14px 14px; overflow:hidden;">
 
-  /* Answer cards — the clickable destinations */
-  .dest-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
-    gap: .5rem;
-    margin-bottom: 1.5rem;
-  }
-  .dest-card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: .85rem 1rem;
-    cursor: pointer;
-    text-align: left;
-    transition: all .18s;
-    font-family: 'Inter', sans-serif;
-    position: relative;
-    overflow: hidden;
-  }
-  .dest-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--dest-color, var(--session-accent));
-    opacity: 0;
-    transition: opacity .18s;
-  }
-  .dest-card:hover { border-color: var(--dest-color, var(--session-accent)); }
-  .dest-card:hover::before { opacity: 1; }
-  .dest-card.selected {
-    border-color: var(--dest-color, var(--session-accent));
-    background: color-mix(in srgb, var(--dest-color, var(--session-accent)) 10%, transparent);
-  }
-  .dest-card.selected::before { opacity: 1; }
-  .dest-card-label {
-    font-size: .7rem;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.4;
-    margin-bottom: .25rem;
-  }
-  .dest-card-sub {
-    font-size: .62rem;
-    font-weight: 300;
-    color: var(--text-secondary);
-    line-height: 1.45;
-  }
-  .dest-card-step {
-    font-family: 'Inter', sans-serif;
-    font-size: .48rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--dest-color, var(--session-accent));
-    margin-top: .4rem;
-    opacity: .7;
-  }
+    <div style="padding:12px 18px; font-family:'Inter',sans-serif; font-size:.72rem; color:var(--text-secondary); line-height:1.65; border-bottom:0.5px solid var(--border);">
+      <strong style="color:var(--text);">You don't need this to use the tools in Sessions 2–4.</strong> This section exists for participants who want to understand <em>why</em> the pipeline stages are ordered the way they are — and what a formal decision-theoretic account of evidence synthesis would look like. If that's not you today, keep scrolling.
+    </div>
 
-  /* Chain visualiser */
-  .chain-vis {
-    display: none;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .chain-vis.visible { display: block; }
-  .chain-vis-label {
-    font-family: 'Inter', sans-serif;
-    font-size: .55rem;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    opacity: .6;
-  }
-  .chain-row {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: .5rem;
-  }
-  .chain-node {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .3rem;
-  }
-  .chain-bubble {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Inter', sans-serif;
-    font-size: .65rem;
-    font-weight: 700;
-    border: 1.5px solid transparent;
-    transition: all .3s;
-    position: relative;
-  }
-  .chain-bubble.dim {
-    background: var(--glass);
-    border-color: var(--border);
-    color: var(--text-secondary);
-    opacity: .35;
-  }
-  .chain-bubble.lit {
-    background: color-mix(in srgb, var(--node-color) 16%, transparent);
-    border-color: var(--node-color);
-    color: var(--node-color);
-    opacity: 1;
-  }
-  .chain-bubble.target {
-    background: color-mix(in srgb, var(--node-color) 22%, transparent);
-    border-color: var(--node-color);
-    color: var(--node-color);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-color) 18%, transparent);
-    opacity: 1;
-  }
-  .chain-bubble.target::after {
-    content: '←';
-    position: absolute;
-    top: -18px;
-    font-size: .65rem;
-    color: var(--node-color);
-    animation: bounce .8s ease-in-out infinite;
-  }
-  @keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-3px); }
-  }
-  .chain-name {
-    font-family: 'Inter', sans-serif;
-    font-size: .48rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    text-align: center;
-    opacity: .5;
-    max-width: 56px;
-    line-height: 1.3;
-  }
-  .chain-arrow {
-    font-size: .7rem;
-    color: var(--session-accent);
-    opacity: .3;
-    padding: 0 .25rem;
-    padding-bottom: 1.2rem; /* align with bubble centre */
-    flex-shrink: 0;
-  }
-
-  /* insight reveal */
-  .chain-insight {
-    display: none;
-    margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    border-left: 3px solid var(--insight-color, var(--session-accent));
-    background: color-mix(in srgb, var(--insight-color, var(--session-accent)) 6%, transparent);
-    font-family: 'Inter', sans-serif;
-    font-size: .83rem;
-    line-height: 1.65;
-    color: var(--text-secondary);
-  }
-  .chain-insight.visible { display: block; }
-  .chain-insight strong { color: var(--text); }
-
-  /* boss reveal */
-  .boss-reveal {
-    display: none;
-    margin-top: 1rem;
-    padding: .85rem 1.2rem;
-    border-radius: 8px;
-    background: color-mix(in srgb, #69db7c 8%, transparent);
-    border: 1px solid color-mix(in srgb, #69db7c 30%, transparent);
-    font-family: 'Inter', sans-serif;
-    font-size: .8rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-  }
-  .boss-reveal.visible { display: block; }
-  .boss-reveal strong { color: #69db7c; }
-
-  /* segue line */
-  .segue-line {
-    display: none;
-    margin-top: 2rem;
-    padding: 1.25rem 1.5rem;
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--session-accent) 7%, var(--glass));
-    border: 1px dashed color-mix(in srgb, var(--session-accent) 40%, transparent);
-    font-family: var(--ff-display);
-    font-size: clamp(.95rem, 2vw, 1.1rem);
-    font-style: italic;
-    color: var(--text);
-    line-height: 1.6;
-  }
-  .segue-line.visible { display: block; }
-  .segue-line span {
-    font-family: 'Inter', sans-serif;
-    font-style: normal;
-    font-size: .6rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--session-accent);
-    display: block;
-    margin-bottom: .5rem;
-  }
-* { box-sizing: border-box; }
-.dd-wrap { font-family: var(--font-sans); padding: 0; }
-
-.dd-trigger {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px; cursor: pointer;
-  border: 0.5px solid var(--color-border-secondary);
-  border-radius: var(--border-radius-lg);
-  background: var(--color-background-secondary);
-  transition: background 0.18s, border-color 0.18s;
-  user-select: none;
-}
-.dd-trigger:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
-.dd-trigger.open { border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; border-bottom-color: transparent; }
-
-.dd-icon {
-  width: 28px; height: 28px; border-radius: 6px;
-  background: var(--color-background-info);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-size: 14px; color: var(--color-text-info); font-weight: 500;
-}
-.dd-trigger-text { flex: 1; }
-.dd-trigger-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
-.dd-trigger-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 1px; }
-.dd-chevron { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.2s; }
-.dd-trigger.open .dd-chevron { transform: rotate(180deg); }
-
-.dd-body {
-  display: none;
-  border: 0.5px solid var(--color-border-secondary);
-  border-top: none;
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-  background: var(--color-background-primary);
-  padding: 0 18px 18px;
-  animation: ddOpen 0.22s ease;
-}
-.dd-body.open { display: block; }
-@keyframes ddOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-
-.eq-chain {
-  display: flex; align-items: center; gap: 0;
-  padding: 16px 0 4px; overflow-x: auto; flex-wrap: nowrap;
-}
-.eq-node {
-  flex-shrink: 0; display: flex; flex-direction: column;
-  align-items: center; gap: 4px; cursor: pointer; padding: 4px 2px;
-  border-radius: var(--border-radius-md); transition: background 0.15s;
-}
-.eq-node:hover { background: var(--color-background-secondary); }
-.eq-node.active { background: var(--color-background-secondary); }
-.eq-bubble {
-  width: 44px; height: 44px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 500; font-family: var(--font-mono);
-  border: 0.5px solid var(--color-border-secondary);
-  background: var(--color-background-secondary);
-  color: var(--color-text-secondary);
-  transition: all 0.2s;
-}
-.eq-node.active .eq-bubble {
-  border-width: 1.5px;
-  color: var(--nb-color, var(--color-text-primary));
-  border-color: var(--nb-color, var(--color-border-primary));
-  background: var(--color-background-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nb-color, transparent) 12%, transparent);
-}
-.eq-label { font-size: 10px; color: var(--color-text-tertiary); text-align: center; max-width: 52px; line-height: 1.3; }
-.eq-node.active .eq-label { color: var(--color-text-secondary); }
-.eq-arrow { font-size: 12px; color: var(--color-text-tertiary); padding: 0 2px; padding-bottom: 18px; flex-shrink: 0; }
-
-.full-eq {
-  font-family: var(--font-mono); font-size: 12px;
-  color: var(--color-text-secondary); padding: 10px 12px;
-  background: var(--color-background-secondary);
-  border-radius: var(--border-radius-md);
-  border: 0.5px solid var(--color-border-tertiary);
-  margin: 8px 0 14px; line-height: 1.7; overflow-x: auto; white-space: nowrap;
-}
-.full-eq .hi { color: var(--color-text-primary); font-weight: 500; }
-
-.node-detail {
-  display: none; padding: 14px 16px;
-  border-radius: var(--border-radius-md);
-  border-left: 2px solid var(--nd-color, var(--color-border-secondary));
-  background: color-mix(in srgb, var(--nd-color, var(--color-border-tertiary)) 5%, var(--color-background-primary));
-  margin-bottom: 14px;
-  animation: ddOpen 0.18s ease;
-}
-.node-detail.open { display: block; }
-
-.nd-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
-.nd-sym { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--nd-color); }
-.nd-name { font-size: 14px; font-weight: 500; }
-.nd-ai { font-size: 11px; color: var(--color-text-tertiary); }
-
-.nd-eq-row {
-  font-family: var(--font-mono); font-size: 12px;
-  padding: 8px 10px; background: var(--color-background-secondary);
-  border-radius: var(--border-radius-md); margin: 8px 0;
-  color: var(--color-text-secondary); line-height: 1.6;
-}
-.nd-eq-row .hi { color: var(--color-text-primary); font-weight: 500; }
-
-.nd-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin-top: 8px; }
-.nd-body strong { color: var(--color-text-primary); font-weight: 500; }
-
-.nd-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-.nd-pill {
-  font-size: 11px; padding: 3px 10px;
-  border-radius: 99px; border: 0.5px solid var(--color-border-secondary);
-  color: var(--color-text-tertiary); background: var(--color-background-secondary);
-}
-.nd-pill.key { border-color: var(--nd-color); color: var(--nd-color);
-  background: color-mix(in srgb, var(--nd-color) 8%, transparent); }
-
-.dd-footer {
-  margin-top: 6px; font-size: 12px; color: var(--color-text-tertiary);
-  border-top: 0.5px solid var(--color-border-tertiary); padding-top: 10px;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-}
-.dd-footer button {
-  font-size: 12px; padding: 5px 12px;
-}
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-</style>
-
-<!-- ── The recall section ── -->
-<div class="recall-intro">
-
-  <h2 style="font-family:var(--ff-display);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:var(--text);margin:0 0 1rem;letter-spacing:-.02em;">
-    Where were you headed?
-  </h2>
-
-  <p>In our first session, before we looked at a single tool or pipeline diagram, we asked one question: <em>when you set off on a literature review, what is your destination?</em></p>
-  <p>The answers were spread across the full length of the evidence pipeline — and every single one was correct. They just weren't all the same destination. That gap is what this curriculum is designed to close.</p>
-  <p>Click the answer that most closely matched yours.</p>
-
-  <div class="dest-widget">
-    <div class="dest-prompt">Session 0 · Your answer</div>
-    <div class="dest-question">"When you set off on a literature review — what is your destination?"</div>
-
-    <div class="dest-grid">
-
-      <div class="dest-card" style="--dest-color:#E24B4A" 
-           onclick="selectDest(this, 0)"
-           data-node="0" data-color="#ff6b6b">
-        <div class="dest-card-label">A database search result</div>
-        <div class="dest-card-sub">PubMed hits, Scopus exports, a set of titles to read</div>
-        <div class="dest-card-step">Tensor · raw input</div>
+    <!-- paste your existing .pentad-phases div here, unchanged -->
+    <div class="pentad-phases"> 
+       <div class="pentad-phase phase-T">
+        <div class="pentad-phase-roman">I · Tensor</div>
+        <span class="pentad-phase-sym">θᵗ</span>
+        <span class="pentad-phase-name">Temporal Twin</span>
+        <div class="pentad-phase-role">The agent's full world-model at timestamp t. Raw input: what is known, what is assumed, what is missing.</div>
+        <span class="voi-tag">VoI source</span>
+        <span class="pentad-phase-arrow">→</span>
       </div>
 
-      <div class="dest-card" style="--dest-color:#EF9F27" 
-           onclick="selectDest(this, 1)"
-           data-node="1" data-color="#ff8c00">
-        <div class="dest-card-label">A screened list of papers</div>
-        <div class="dest-card-sub">Titles and abstracts triaged for relevance</div>
-        <div class="dest-card-step">Matrix · attention</div>
+      <div class="pentad-phase phase-M">
+        <div class="pentad-phase-roman">II · Matrix</div>
+        <span class="pentad-phase-sym">L₀+Σwᵢ·Lᵢ</span>
+        <span class="pentad-phase-name">Composite Loss</span>
+        <div class="pentad-phase-role">Baseline loss L₀ plus attention-weighted document losses. Off-diagonal: relevance wᵢ shapes what evidence enters the synthesis.</div>
+        <span class="voi-tag">Attention layer</span>
+        <span class="pentad-phase-arrow">→</span>
       </div>
 
-      <div class="dest-card" style="--dest-color:#97C459"
-           onclick="selectDest(this, 2)"
-           data-node="2" data-color="#ffd43b">
-        <div class="dest-card-label">An extracted dataset</div>
-        <div class="dest-card-sub">Key findings, numbers, methods pulled from papers</div>
-        <div class="dest-card-step">Vector · the evidence</div>
+      <div class="pentad-phase phase-V">
+        <div class="pentad-phase-roman">III · Vector</div>
+        <span class="pentad-phase-sym">f(σ²,λ,ε)</span>
+        <span class="pentad-phase-name">Ex-Ante Gradient</span>
+        <div class="pentad-phase-role">Decision-time policy. σ²=diagnostic variance, λ=irreversibility penalty, ε=noise. Returns η_safe — how much to act now.</div>
+        <span class="voi-tag">E[Δuncert]/cost</span>
+        <span class="pentad-phase-arrow">→</span>
       </div>
 
-      <div class="dest-card" style="--dest-color:#378ADD"
-           onclick="selectDest(this, 3)"
-           data-node="3" data-color="#4fc3f7">
-        <div class="dest-card-label">A synthesis or summary</div>
-        <div class="dest-card-sub">What the literature says, in aggregate</div>
-        <div class="dest-card-step">Eigenmode · the signal</div>
+      <div class="pentad-phase phase-E">
+        <div class="pentad-phase-roman">IV · Eigenmode</div>
+        <span class="pentad-phase-sym">γ|ε_FGT|²</span>
+        <span class="pentad-phase-name">Ex-Post Credit</span>
+        <div class="pentad-phase-role">Federated ground truth correction — arrives after the decision. γ=intervention magnitude. Updates weights w_ijk. Delayed by design.</div>
+        <span class="voi-tag">Learning time</span>
+        <span class="pentad-phase-arrow">→</span>
       </div>
 
-      <div class="dest-card" style="--dest-color:#7F77DD"
-           onclick="selectDest(this, 4)"
-           data-node="4" data-color="#69db7c">
-        <div class="dest-card-label">A policy brief or recommendation</div>
-        <div class="dest-card-sub">A decision-ready document for leadership</div>
-        <div class="dest-card-step">Scalar · the decision</div>
-      </div>
-
-    </div><!-- /dest-grid -->
-
-    <!-- Chain visualiser — revealed on selection -->
-    <div class="chain-vis" id="chain-vis">
-      <div class="chain-vis-label">Where your destination sits in the compression chain</div>
-      <div class="chain-row" id="chain-row">
-        <!-- injected by JS -->
-      </div>
-      <div class="chain-insight" id="chain-insight"></div>
-      <div class="boss-reveal" id="boss-reveal">
-        <strong>Your boss pointed here:</strong> the scalar — a policy brief or recommendation. That's the actual end of the pipeline. Everything else is a step on the way, not the destination. This session maps exactly what happens between where most people stop and where decisions get made.
-      </div>
-      <div class="segue-line" id="segue-line">
-        <span>Why this matters</span>
-        Every answer in that first session was honest. But the further left your destination sat, the more work was being left on the table — work that AI can now do. The pipeline below shows where time disappears, and the rest of this curriculum shows you how to get it back.
+      <div class="pentad-phase phase-S">
+        <div class="pentad-phase-roman">V · Scalar</div>
+        <span class="pentad-phase-sym">L(θᵗ⁺¹)</span>
+        <span class="pentad-phase-name">Prognosis Loop</span>
+        <div class="pentad-phase-role">Projects the updated state into the next loss landscape. The loop closes: today's decision reshapes tomorrow's prior.</div>
+        <span class="voi-tag">Action / brief</span>
       </div>
     </div>
 
-  </div><!-- /dest-widget -->
+    <!-- paste your existing .fgt-note div here, unchanged -->
+    <div class="fgt-note">  
+      <strong>v4 upgrade — temporal separation:</strong>
+      Phase III <code>f(σ²,λ,ε)</code> operates at <strong>decision time</strong> (ex-ante).
+      Phase IV <code>γ|ε_FGT|²</code> operates at <strong>learning time</strong> (ex-post, delayed).
+      These are not the same moment. A recommendation made before the federated ground truth arrives is made under
+      <code>FGT=∅</code> — which means weight updates are frozen and the eigenmode enforces: hold.
+      <strong>VoI = E[Δuncertainty] / η_cost</strong> now selects which descent step to take next,
+      replacing the older raw η ordering. In evidence synthesis: the highest VoI action is almost always
+      waiting for the decisive information rather than acting on incomplete screening.
+    </div>
 
-</div><!-- /recall-intro -->
+  </div>
+
+</div>
 
 <script>
-(function () {
-  const NODES = [
-    { label: '3+', name: 'Tensor', color: '#ff6b6b' },
-    { label: '2',  name: 'Matrix', color: '#ff8c00' },
-    { label: '1',  name: 'Vector', color: '#ffd43b' },
-    { label: 'E',  name: 'Eigenmode', color: '#4fc3f7' },
-    { label: '0',  name: 'Scalar', color: '#69db7c' },
-  ];
+function togglePentad() {
+  const body = document.getElementById('pentad-body');
+  const chev = document.getElementById('pentad-chev');
+  const trigger = document.getElementById('pentad-trigger');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  chev.style.transform = open ? '' : 'rotate(180deg)';
+  trigger.style.borderRadius = open ? '14px' : '14px 14px 0 0';
+}
+</script>
 
-  const INSIGHTS = [
-    `<strong>A database search result is the very beginning of the chain — the tensor.</strong> It's the raw, unfiltered input: thousands of titles, many irrelevant, nothing decided yet. Stopping here means the hardest work — screening, extraction, synthesis, briefing — still lies ahead. This is where most of the 60–70% time burden accumulates.`,
-    `<strong>A screened list is one compression step in.</strong> You've applied attention — filtering signal from noise. But the evidence hasn't been extracted yet, and no synthesis exists. The decision is still far away. AI tools like Elicit and Rayyan operate here, and can compress this step from days to hours.`,
-    `<strong>An extracted dataset is evidence made usable.</strong> Numbers, methods, findings in a structured form. This is real progress — but it's still not a recommendation. The synthesis step, which translates data into an argument, remains. AI excels at structured extraction, making this the highest-ROI step for tool adoption.`,
-    `<strong>A synthesis is the eigenmode — the stable signal that survives compression.</strong> What the literature says, in aggregate, on your question. This is where most formal reviews end. But it still isn't a decision. Translating synthesis into policy-ready language — calibrated to budget, context, and decision-maker — is Session 5's subject.`,
-    `<strong>A policy brief is the scalar — the actual destination.</strong> One number, one recommendation, one decision-ready document. This is where your boss was pointing. Everything upstream serves this. The pipeline exists to produce this. And AI can now accelerate every step between the tensor and the scalar.`,
-  ];
+  <!-- ══ RECALL INTRO (unchanged) ══ -->
+  <div class="recall-intro">
 
-  let selected = null;
+    <h2 style="font-family:var(--ff-display);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:var(--text);margin:0 0 1rem;letter-spacing:-.02em;">
+      Where were you headed?
+    </h2>
 
-  function buildChain(targetIdx, color) {
-    const row = document.getElementById('chain-row');
-    row.innerHTML = '';
-    NODES.forEach((n, i) => {
-      if (i > 0) {
-        const arr = document.createElement('div');
-        arr.className = 'chain-arrow';
-        arr.textContent = '→';
-        row.appendChild(arr);
-      }
+    <p>In our first session, before we looked at a single tool or pipeline diagram, we asked one question: <em>when you set off on a literature review, what is your destination?</em></p>
+    <p>The answers were spread across the full length of the evidence pipeline — and every single one was correct. They just weren't all the same destination. That gap is what this curriculum is designed to close.</p>
+    <p>Click the answer that most closely matched yours.</p>
 
-      const node = document.createElement('div');
-      node.className = 'chain-node';
+    <div class="dest-widget">
+      <div class="dest-prompt">Session 0 · Your answer</div>
+      <div class="dest-question">"When you set off on a literature review — what is your destination?"</div>
 
-      const bubble = document.createElement('div');
-      bubble.className = 'chain-bubble';
-      bubble.textContent = n.label;
+      <div class="dest-grid">
 
-      if (i === targetIdx) {
-        bubble.classList.add('target');
-        bubble.style.setProperty('--node-color', color);
-      } else if (i < targetIdx) {
-        bubble.classList.add('lit');
-        bubble.style.setProperty('--node-color', n.color);
-      } else {
-        bubble.classList.add('dim');
-      }
+        <div class="dest-card" style="--dest-color:#E24B4A"
+             onclick="selectDest(this, 0)"
+             data-node="0" data-color="#ff6b6b">
+          <div class="dest-card-label">A database search result</div>
+          <div class="dest-card-sub">PubMed hits, Scopus exports, a set of titles to read</div>
+          <!-- v4: phase label replaces old "Tensor · raw input" -->
+          <div class="dest-card-step">Phase I · Tensor · θᵗ</div>
+        </div>
 
-      const name = document.createElement('div');
-      name.className = 'chain-name';
-      name.textContent = n.name;
+        <div class="dest-card" style="--dest-color:#EF9F27"
+             onclick="selectDest(this, 1)"
+             data-node="1" data-color="#ff8c00">
+          <div class="dest-card-label">A screened list of papers</div>
+          <div class="dest-card-sub">Titles and abstracts triaged for relevance</div>
+          <div class="dest-card-step">Phase II · Matrix · L₀+Σwᵢ·Lᵢ</div>
+        </div>
 
-      node.appendChild(bubble);
-      node.appendChild(name);
-      row.appendChild(node);
-    });
-  }
+        <div class="dest-card" style="--dest-color:#97C459"
+             onclick="selectDest(this, 2)"
+             data-node="2" data-color="#ffd43b">
+          <div class="dest-card-label">An extracted dataset</div>
+          <div class="dest-card-sub">Key findings, numbers, methods pulled from papers</div>
+          <div class="dest-card-step">Phase III · Vector · f(σ²,λ,ε)</div>
+        </div>
 
-  window.selectDest = function (card, idx) {
-    document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selected = idx;
+        <div class="dest-card" style="--dest-color:#378ADD"
+             onclick="selectDest(this, 3)"
+             data-node="3" data-color="#4fc3f7">
+          <div class="dest-card-label">A synthesis or summary</div>
+          <div class="dest-card-sub">What the literature says, in aggregate</div>
+          <div class="dest-card-step">Phase IV · Eigenmode · γ|ε_FGT|²</div>
+        </div>
 
-    const color = card.dataset.color;
+        <div class="dest-card" style="--dest-color:#7F77DD"
+             onclick="selectDest(this, 4)"
+             data-node="4" data-color="#69db7c">
+          <div class="dest-card-label">A policy brief or recommendation</div>
+          <div class="dest-card-sub">A decision-ready document for leadership</div>
+          <div class="dest-card-step">Phase V · Scalar · L(θᵗ⁺¹)</div>
+        </div>
 
-    buildChain(idx, color);
+      </div><!-- /dest-grid -->
 
-    const insight = document.getElementById('chain-insight');
-    insight.style.setProperty('--insight-color', color);
-    insight.innerHTML = INSIGHTS[idx];
-    insight.classList.add('visible');
+      <!-- Chain visualiser — revealed on selection -->
+      <div class="chain-vis" id="chain-vis">
+        <div class="chain-vis-label">Where your destination sits in the compression chain</div>
+        <div class="chain-row" id="chain-row">
+          <!-- injected by JS -->
+        </div>
+        <div class="chain-insight" id="chain-insight"></div>
+        <div class="boss-reveal" id="boss-reveal">
+          <strong>Your boss pointed here:</strong> the scalar — a policy brief or recommendation. That's Phase V: L(θᵗ⁺¹), the prognosis loop. Everything else is a step on the way, not the destination. This session maps exactly what happens between where most people stop and where decisions get made.
+        </div>
+        <div class="segue-line" id="segue-line">
+          <span>Why this matters</span>
+          Every answer in that first session was honest. But the further left your destination sat, the more work was being left on the table — work that AI can now do. The pipeline below shows where time disappears, and the rest of this curriculum shows you how to get it back.
+        </div>
+      </div>
 
-    const boss = document.getElementById('boss-reveal');
-    if (idx < 4) {
-      boss.classList.add('visible');
-    } else {
-      boss.classList.remove('visible');
+    </div><!-- /dest-widget -->
+
+  </div><!-- /recall-intro -->
+
+  <script>
+  (function () {
+    /* v4: node labels use phase names */
+    const NODES = [
+      { label: 'I',   name: 'Tensor',    color: '#ff6b6b' },
+      { label: 'II',  name: 'Matrix',    color: '#ff8c00' },
+      { label: 'III', name: 'Vector',    color: '#ffd43b' },
+      { label: 'IV',  name: 'Eigenmode', color: '#4fc3f7' },
+      { label: 'V',   name: 'Scalar',    color: '#69db7c' },
+    ];
+
+    const INSIGHTS = [
+      `<strong>Phase I · Tensor (θᵗ) — the very beginning of the compression chain.</strong> It's the raw, unfiltered input: thousands of titles, many irrelevant, nothing decided yet. Stopping here means the hardest work — screening, extraction, synthesis, briefing — still lies ahead. This is where most of the 60–70% time burden accumulates.`,
+      `<strong>Phase II · Matrix (L₀+Σwᵢ·Lᵢ) — one compression step in.</strong> You've applied attention — filtering signal from noise via weighted losses. But the evidence hasn't been extracted yet, and no synthesis exists. The decision is still far away. AI tools like Elicit and Rayyan operate here, and can compress this step from days to hours.`,
+      `<strong>Phase III · Vector f(σ²,λ,ε) — evidence made usable, policy still ahead.</strong> Numbers, methods, findings in a structured form. The ex-ante gradient now shapes how much action is warranted given uncertainty σ², irreversibility λ, and noise ε. This is the highest-ROI step for AI tool adoption — structured extraction minimises σ² directly.`,
+      `<strong>Phase IV · Eigenmode γ|ε_FGT|² — the stable signal that survives compression.</strong> The federated ground truth correction arrives here, ex-post, after the decision window. What the literature says in aggregate — but also: what the evidence got wrong, and how much to correct the weights. This is where synthesis lives. But it still isn't a decision.`,
+      `<strong>Phase V · Scalar L(θᵗ⁺¹) — the actual destination.</strong> One recommendation, one decision-ready document, and a Bayesian update that reshapes the prior for the next cycle. This is where your boss was pointing. And it's where the prognosis loop closes: the brief produces an outcome, the outcome updates the model, the next review begins better.`,
+    ];
+
+    let selected = null;
+
+    function buildChain(targetIdx, color) {
+      const row = document.getElementById('chain-row');
+      row.innerHTML = '';
+      NODES.forEach((n, i) => {
+        if (i > 0) {
+          const arr = document.createElement('div');
+          arr.className = 'chain-arrow';
+          arr.textContent = '→';
+          row.appendChild(arr);
+        }
+
+        const node = document.createElement('div');
+        node.className = 'chain-node';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chain-bubble';
+        bubble.textContent = n.label;
+
+        if (i === targetIdx) {
+          bubble.classList.add('target');
+          bubble.style.setProperty('--node-color', color);
+        } else if (i < targetIdx) {
+          bubble.classList.add('lit');
+          bubble.style.setProperty('--node-color', n.color);
+        } else {
+          bubble.classList.add('dim');
+        }
+
+        const name = document.createElement('div');
+        name.className = 'chain-name';
+        name.textContent = n.name;
+
+        node.appendChild(bubble);
+        node.appendChild(name);
+        row.appendChild(node);
+      });
     }
 
-    document.getElementById('segue-line').classList.add('visible');
-    document.getElementById('chain-vis').classList.add('visible');
+    window.selectDest = function (card, idx) {
+      document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selected = idx;
 
-    setTimeout(() => {
-      document.getElementById('chain-vis').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 80);
-  };
-})();
-</script>
+      const color = card.dataset.color;
+
+      buildChain(idx, color);
+
+      const insight = document.getElementById('chain-insight');
+      insight.style.setProperty('--insight-color', color);
+      insight.innerHTML = INSIGHTS[idx];
+      insight.classList.add('visible');
+
+      const boss = document.getElementById('boss-reveal');
+      if (idx < 4) {
+        boss.classList.add('visible');
+      } else {
+        boss.classList.remove('visible');
+      }
+
+      document.getElementById('segue-line').classList.add('visible');
+      document.getElementById('chain-vis').classList.add('visible');
+
+      setTimeout(() => {
+        document.getElementById('chain-vis').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    };
+  })();
+  </script>
 
     <h2>The pipeline, honestly described</h2>
     <p>Every evidence-to-policy cycle at WHO India moves through a recognisable sequence of steps. The process is not broken — it has produced genuine results, from informing PM-JAY design to shaping national NCD guidelines. But it is slow, and the slowness is not random. It concentrates at specific, identifiable points that are exactly where AI tools offer the most leverage.</p>
 
     <p>Here is the pipeline as it typically runs for a health financing or UHC evidence brief:</p>
 
-    <!-- ── FIX 1: spine label sits above the pipeline to declare it as the primary visible backbone.
-         The tensor-scalar model remains what it is: the interpretation layer revealed on interaction.
-         No content removed — one quiet label added. ── -->
+    <!--
+  ══════════════════════════════════════════════════════════════════
+  DROP-IN REPLACEMENT for the .pipeline-wrap + annotation block
+  in WHO India Session 1.
+
+  Paste this in place of everything from:
     <div class="pipeline-wrap">
-      <div class="pipeline-spine-label">Primary pipeline · the operational backbone</div>
-      <div class="pipeline">
-        <div class="p-step">Policy question defined</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step bottleneck">Database search</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step bottleneck">Title / Abstract screening</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step">Full-text retrieval</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step bottleneck">Data extraction</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step">Synthesis</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step">Brief drafted</div>
-        <div class="p-arrow">→</div>
-        <div class="p-step">Policy decision</div>
-      </div>
-      <div class="pipeline-annotation">
-        <div class="pipeline-annotation-dot"></div>
-        <div class="pipeline-annotation-text">
-          The three red steps — <strong>Database Search, Title/Abstract Screening, and Data Extraction</strong> — account for 60–70% of total review time. Session 2 maps 20 AI tools directly against these three steps so you can see exactly which tool covers which bottleneck.
+  through to (and including):
+    </div>   ← the closing div of .pipeline-annotation
+
+  All existing CSS variables, phase colours, and font stacks are
+  preserved — this block adds only the new styles it needs inline.
+  ══════════════════════════════════════════════════════════════════
+-->
+
+<!-- ── PENTADIC PIPELINE ─────────────────────────────────────── -->
+<div class="pipeline-wrap">
+
+  <div class="pipeline-spine-label">
+    Primary pipeline · five-phase compression chain · TMVES
+  </div>
+
+  <!-- Five phase blocks -->
+  <div style="
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+  ">
+
+    <!-- ── Phase I · Tensor ────────────────────────────── -->
+    <div style="
+      background: var(--glass);
+      padding: 1.1rem 1rem 1rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: .55rem;
+      position: relative;
+    ">
+      <!-- phase label -->
+      <div style="
+        font-family: 'Inter', sans-serif; font-size: .48rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 700; color: var(--phase-T);
+      ">I · Tensor</div>
+
+      <!-- symbol -->
+      <div style="
+        font-family: 'Source Code Pro','IBM Plex Mono',monospace;
+        font-size: .72rem; font-weight: 600; color: var(--phase-T);
+        opacity: .75; line-height: 1.2;
+      ">θᵗ</div>
+
+      <!-- steps — both non-bottleneck -->
+      <div style="display: flex; flex-direction: column; gap: .35rem; flex: 1;">
+
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, var(--phase-T) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--phase-T) 28%, transparent);
+          color: var(--text);
+        ">Policy question defined</div>
+
+        <!-- BOTTLENECK -->
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, #ef5350 12%, transparent);
+          border: 1px solid color-mix(in srgb, #ef5350 35%, transparent);
+          color: #ef9a9a;
+          position: relative;
+        ">
+          Database search
+          <span style="
+            position: absolute; top: -5px; right: -4px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #ef5350;
+          "></span>
         </div>
-        <a class="pipeline-annotation-link" href="session2.html">Session 2 tool map →</a>
+
+      </div>
+
+      <!-- right arrow — bold SVG -->
+      <div style="
+        position: absolute; right: -13px; top: 50%;
+        transform: translateY(-50%);
+        z-index: 10; pointer-events: none;
+        display: flex; align-items: center;
+      ">
+        <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="11" x2="18" y2="11" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round"/>
+          <polyline points="11,3 21,11 11,19" fill="none" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
     </div>
 
-<div class="dd-wrap">
-<h2 class="sr-only">Deep dive: the full compression loss chain from L₀(θᵗ) to L(θᵗ⁺¹) — five sequential transformations mapping each pipeline stage to a statistical operator and an AI class</h2>
+    <!-- ── Phase II · Matrix ───────────────────────────── -->
+    <div style="
+      background: var(--glass);
+      padding: 1.1rem 1rem 1rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: .55rem;
+      position: relative;
+    ">
+      <div style="
+        font-family: 'Inter', sans-serif; font-size: .48rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 700; color: var(--phase-M);
+      ">II · Matrix</div>
 
-<div class="dd-trigger" id="dd-trigger" onclick="toggleDD()">
-  <div class="dd-icon">∂</div>
-  <div class="dd-trigger-text">
-    <div class="dd-trigger-title">Deep dive: the compression loss chain</div>
-    <div class="dd-trigger-sub">L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹) &nbsp;·&nbsp; not for the shallow end</div>
+      <div style="
+        font-family: 'Source Code Pro','IBM Plex Mono',monospace;
+        font-size: .55rem; font-weight: 600; color: var(--phase-M);
+        opacity: .75; line-height: 1.2;
+      ">L₀+Σwᵢ·Lᵢ</div>
+
+      <div style="display: flex; flex-direction: column; gap: .35rem; flex: 1;">
+
+        <!-- BOTTLENECK -->
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, #ef5350 12%, transparent);
+          border: 1px solid color-mix(in srgb, #ef5350 35%, transparent);
+          color: #ef9a9a;
+          position: relative;
+        ">
+          Title / Abstract screening
+          <span style="
+            position: absolute; top: -5px; right: -4px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #ef5350;
+          "></span>
+        </div>
+
+      </div>
+
+      <!-- right arrow — bold SVG -->
+      <div style="
+        position: absolute; right: -13px; top: 50%;
+        transform: translateY(-50%);
+        z-index: 10; pointer-events: none;
+        display: flex; align-items: center;
+      ">
+        <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="11" x2="18" y2="11" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round"/>
+          <polyline points="11,3 21,11 11,19" fill="none" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ── Phase III · Vector ──────────────────────────── -->
+    <div style="
+      background: var(--glass);
+      padding: 1.1rem 1rem 1rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: .55rem;
+      position: relative;
+    ">
+      <div style="
+        font-family: 'Inter', sans-serif; font-size: .48rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 700; color: var(--phase-V);
+      ">III · Vector</div>
+
+      <div style="
+        font-family: 'Source Code Pro','IBM Plex Mono',monospace;
+        font-size: .65rem; font-weight: 600; color: var(--phase-V);
+        opacity: .75; line-height: 1.2;
+      ">f(σ²,λ,ε)</div>
+
+      <div style="display: flex; flex-direction: column; gap: .35rem; flex: 1;">
+
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, var(--phase-V) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--phase-V) 28%, transparent);
+          color: var(--text);
+        ">Full-text retrieval</div>
+
+      </div>
+
+      <!-- right arrow — bold SVG -->
+      <div style="
+        position: absolute; right: -13px; top: 50%;
+        transform: translateY(-50%);
+        z-index: 10; pointer-events: none;
+        display: flex; align-items: center;
+      ">
+        <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="11" x2="18" y2="11" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round"/>
+          <polyline points="11,3 21,11 11,19" fill="none" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ── Phase IV · Eigenmode ────────────────────────── -->
+    <div style="
+      background: var(--glass);
+      padding: 1.1rem 1rem 1rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: .55rem;
+      position: relative;
+    ">
+      <div style="
+        font-family: 'Inter', sans-serif; font-size: .48rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 700; color: var(--phase-E);
+      ">IV · Eigenmode</div>
+
+      <div style="
+        font-family: 'Source Code Pro','IBM Plex Mono',monospace;
+        font-size: .62rem; font-weight: 600; color: var(--phase-E);
+        opacity: .75; line-height: 1.2;
+      ">γ|ε_FGT|²</div>
+
+      <div style="display: flex; flex-direction: column; gap: .35rem; flex: 1;">
+
+        <!-- BOTTLENECK -->
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, #ef5350 12%, transparent);
+          border: 1px solid color-mix(in srgb, #ef5350 35%, transparent);
+          color: #ef9a9a;
+          position: relative;
+        ">
+          Data extraction
+          <span style="
+            position: absolute; top: -5px; right: -4px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #ef5350;
+          "></span>
+        </div>
+
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, var(--phase-E) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--phase-E) 28%, transparent);
+          color: var(--text);
+        ">Synthesis</div>
+
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, var(--phase-E) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--phase-E) 28%, transparent);
+          color: var(--text);
+        ">Brief drafted</div>
+
+      </div>
+
+      <!-- right arrow — bold SVG -->
+      <div style="
+        position: absolute; right: -13px; top: 50%;
+        transform: translateY(-50%);
+        z-index: 10; pointer-events: none;
+        display: flex; align-items: center;
+      ">
+        <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="11" x2="18" y2="11" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round"/>
+          <polyline points="11,3 21,11 11,19" fill="none" stroke="#4fc3f7" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ── Phase V · Scalar ────────────────────────────── -->
+    <div style="
+      background: var(--glass);
+      padding: 1.1rem 1rem 1rem;
+      display: flex; flex-direction: column; gap: .55rem;
+    ">
+      <div style="
+        font-family: 'Inter', sans-serif; font-size: .48rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 700; color: var(--phase-S);
+      ">V · Scalar</div>
+
+      <div style="
+        font-family: 'Source Code Pro','IBM Plex Mono',monospace;
+        font-size: .62rem; font-weight: 600; color: var(--phase-S);
+        opacity: .75; line-height: 1.2;
+      ">L(θᵗ⁺¹)</div>
+
+      <div style="display: flex; flex-direction: column; gap: .35rem; flex: 1;">
+
+        <div style="
+          font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 600;
+          padding: .4rem .7rem; border-radius: 5px;
+          background: color-mix(in srgb, var(--phase-S) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--phase-S) 28%, transparent);
+          color: var(--text);
+        ">Policy decision</div>
+
+      </div>
+    </div>
+
+  </div><!-- /five-phase grid -->
+
+  <!-- ── annotation bar (preserved, updated text) ──────────── -->
+  <div class="pipeline-annotation">
+    <div class="pipeline-annotation-dot"></div>
+    <div class="pipeline-annotation-text">
+      Red steps — <strong>Database Search (I), Title/Abstract Screening (II), and Data Extraction (IV)</strong> — account for 60–70% of total review time. They map directly to Phases I, II, and IV of the TMVES chain. Session 2 maps 20 AI tools against exactly these three steps. The algebra terms are optional reading; the red blocks are not.
+    </div>
+    <a class="pipeline-annotation-link" href="session2.html">Session 2 tool map →</a>
   </div>
-  <span class="dd-chevron">▾</span>
-</div>
 
-<div class="dd-body" id="dd-body">
-
-  <div class="eq-chain" id="eq-chain"></div>
-
-  <div class="full-eq" id="full-eq">
-    <span>L₀(θᵗ) → Σwᵢ·Lᵢ → f(σ²) → g(λ) → h(ε) + L(θᵗ⁺¹)</span>
-  </div>
-
-  <div id="node-detail-panel"></div>
-
-  <div class="dd-footer">
-    <span>Click any node above to expand its algebra</span>
-    <button onclick="window.open('https://claude.ai/new?q=Walk+me+through+the+full+compression+loss+chain+L%E2%82%80(%CE%B8%E1%B5%97)+step+by+step+with+concrete+examples+from+health+evidence+synthesis+at+WHO+India', '_blank')">Take me deeper ↗</button>
-  </div>
-
-</div>
-</div>
-
-
-<script>
-const NODES = [
-  {
-    sym: 'L₀(θᵗ)',
-    label: 'Prior loss',
-    color: '#E24B4A',                          /* ← RED   (was #7F77DD purple) */
-    aiClass: 'World AI',
-    pentad: 'Tensor · 3+',
-    eqLine: 'L₀(θᵗ) = −log P(θᵗ | world)',
-    hiTerms: ['L₀', 'θᵗ'],
-    bodyHtml: `<strong>L₀(θᵗ) is the cost of the current world-model.</strong> It measures how far the agent's prior belief θᵗ is from the full joint distribution of the world. World AI (Gemini, GPT, Claude) has parametrized this — it has absorbed the training corpus and encoded it as θᵗ.<br><br>This is not yet a task-specific loss. It is the <em>standing epistemic debt</em> the agent carries before any evidence arrives. In health evidence synthesis, this is the implicit model every researcher brings to a literature search: disciplinary assumptions, citation biases, familiarity with certain journals. It shapes what questions get asked before a single paper is read.<br><br>The compression step from here is not reduction — it is <em>activation</em>: selecting which slice of θᵗ is relevant to the policy question.`,
-    pills: ['Prior P(θ)', 'Joint distribution', 'Epistemic standing', 'World model']
-  },
-  {
-    sym: 'Σwᵢ·Lᵢ',
-    label: 'Weighted losses',
-    color: '#EF9F27',                          /* ← ORANGE (was #1D9E75 teal) */
-    aiClass: 'Perception AI',
-    pentad: 'Matrix · 2',
-    eqLine: 'Σwᵢ·Lᵢ  where wᵢ = relevance(doc_i, query)',
-    hiTerms: ['wᵢ', 'Lᵢ'],
-    bodyHtml: `<strong>Σwᵢ·Lᵢ is the attention-weighted sum of document-level losses.</strong> Each document i contributes a loss Lᵢ — how much residual uncertainty it leaves about the query — weighted by its relevance wᵢ to the question. Perception AI (RAG pipelines, Elicit, Consensus) computes these weights.<br><br>This is the off-diagonal step: we are mapping co-variances between documents and the query rather than treating each source independently. A WHO India policy brief on PM-JAY has high wᵢ for a financial protection question; a Norwegian RCT has low wᵢ for the same question even if it's methodologically superior.<br><br><strong>The WEIRD-data bias lives here.</strong> If the wᵢ function is trained only on indexed literature, grey-literature sources get wᵢ ≈ 0 by default — not because they are irrelevant, but because the attention mechanism was never trained to see them. Correcting this is a manual act of sovereignty.`,
-    pills: ['Attention weights wᵢ', 'Relevance scoring', 'Off-diagonal Σ', 'Grey-lit gap']
-  },
-  {
-    sym: 'f(σ²)',
-    label: 'Variance fn',
-    color: '#97C459',                          /* ← GREEN  (was #BA7517 amber) */
-    aiClass: 'Agentic AI',
-    pentad: 'Vector · 1',
-    eqLine: 'f(σ²) = Σᵢ [x̄ᵢ − μᵢ]² / nᵢ  per field',
-    hiTerms: ['σ²', 'f'],
-    bodyHtml: `<strong>f(σ²) is the field-level extraction variance function.</strong> For each structured field extracted from a document — an effect size, a cost per DALY, a coverage percentage — the extraction process produces a point estimate x̄ᵢ around a true value μᵢ with variance σ²ᵢ. Agentic AI (AutoExtract pipelines, structured prompting, Elicit extraction columns) is in the business of minimizing this σ².<br><br>This is the diagonal step: we have disentangled the joint distribution into marginal variances per variable. The off-diagonal covariances from the matrix step are temporarily bracketed — we are committing to specific values.<br><br><strong>This is the highest-ROI layer for AI adoption right now.</strong> Humans systematically introduce extraction variance through fatigue, inconsistent coding decisions, and missed fields under time pressure. AI extraction is not perfect, but its variance is lower, more consistent, and auditable. f(σ²) is the exact quantity being minimized when a tool claims "5× faster extraction with 94% agreement."`,
-    pills: ['Field-level σ²', 'Extraction fidelity', 'Diagonal Cov', 'PRISMA compliance']
-  },
-  {
-    sym: 'g(λ)',
-    label: 'Eigenvalue fn',
-    color: '#378ADD',                          /* ← BLUE   (was #4fc3f7 cyan = session-accent clash) */
-    aiClass: 'Generative AI',
-    pentad: 'Eigenmode · E',
-    eqLine: 'g(λ) = top eigenvector of evidence matrix E',
-    hiTerms: ['λ', 'g'],
-    bodyHtml: `<strong>g(λ) is the eigenvalue function — synthesis as spectral decomposition.</strong> Given the evidence matrix E (rows = studies, columns = extracted fields), the dominant eigenvalue λ₁ captures the direction of maximum variance across the literature: the single claim that explains the most heterogeneity. Generative AI (Claude, GPT-4, Gemini in synthesis mode) approximates this operation through attention-weighted summarization.<br><br>This is structurally different from summarization. A summary averages across rows. Synthesis extracts the eigenmode — the signal that is <em>invariant</em> under perturbation of the study set. Remove one study, the eigenmode barely shifts. Remove a cluster of studies, it shifts — and that shift is itself information about the robustness of the claim.<br><br><strong>The unknown-unknown sits here.</strong> The eigenmode reveals what no individual study could: the latent dimension along which the literature has been accumulating evidence without naming it. In health economics this is often the equity dimension — not because equity was never studied, but because it was never the primary exposure in any single study.`,
-    pills: ['Dominant λ₁', 'PCA of evidence', 'Synthesis residual', 'Unknown-unknown']
-  },
-  {
-    sym: 'h(ε)+L(θᵗ⁺¹)',
-    label: 'Decision + update',
-    color: '#7F77DD',                          /* ← VIOLET (was #69db7c green = clashed with teal) */
-    aiClass: 'Embodied AI',
-    pentad: 'Scalar · 0',
-    eqLine: 'h(ε) + L(θᵗ⁺¹) = decision(λ) + γ|ε_FGT|²',
-    hiTerms: ['h', 'ε', 'L', 'θᵗ⁺¹'],
-    bodyHtml: `<strong>h(ε) + L(θᵗ⁺¹) is the decision plus the Bayesian update.</strong> The scalar decision h(ε) is a function of the residual error ε — what the current model got wrong. The loss L(θᵗ⁺¹) is the cost function that will update the prior for the next iteration. Embodied AI (human-in-loop auditors, AGI-approaching systems, equity compliance engines) closes the loop.<br><br>The FGT term γ|ε_FGT|² is the Foster-Greer-Thorbecke poverty gap regularizer — a penalty that grows quadratically with the equity gap in the decision. This is not standard in ML loss functions, but it is exactly what a WHO health financing brief should impose: decisions that increase the poverty headcount ratio are penalized not linearly but quadratically, making equity violations increasingly expensive as they worsen.<br><br><strong>The loop closes here.</strong> The decision produces an outcome. The outcome reveals ε. ε updates L. L reshapes θᵗ⁺¹. The next literature review begins with a better prior. <em>Sovereignty is the ability to specify your own loss function</em> — to decide what γ is, what ε_FGT measures, and who bears the cost of getting it wrong.`,
-    pills: ['Residual ε', 'FGT regularizer γ', 'Prior update L(θ)', 'Bayesian loop']
-  }
-];
-
-let active = null;
-
-function renderChain() {
-  const c = document.getElementById('eq-chain');
-  c.innerHTML = '';
-  NODES.forEach((n, i) => {
-    if (i > 0) {
-      const arr = document.createElement('div');
-      arr.className = 'eq-arrow';
-      arr.textContent = '→';
-      c.appendChild(arr);
+  <!-- ── responsive override ───────────────────────────────── -->
+  <style>
+    @media (max-width: 680px) {
+      /* stack to 2+2+1 on narrow screens */
+      .pipeline-wrap > div[style*="grid-template-columns: repeat(5"] {
+        grid-template-columns: 1fr 1fr !important;
+      }
+      .pipeline-wrap > div[style*="grid-template-columns: repeat(5"] > div:last-child {
+        grid-column: 1 / -1;
+      }
+      /* hide the inter-phase arrows on mobile — they don't make sense stacked */
+      .pipeline-wrap > div[style*="grid-template-columns"] > div > div[style*="position: absolute"] {
+        display: none;
+      }
     }
-    const wrap = document.createElement('div');
-    wrap.className = 'eq-node' + (active === i ? ' active' : '');
-    wrap.style.setProperty('--nb-color', n.color);
-    wrap.innerHTML = `<div class="eq-bubble">${n.sym}</div><div class="eq-label">${n.label}</div>`;
-    wrap.onclick = () => selectNode(i);
-    c.appendChild(wrap);
-  });
-}
+  </style>
 
-function renderFullEq(activeIdx) {
-  const parts = NODES.map((n, i) => {
-    if (i === activeIdx) return `<span class="hi">${n.sym}</span>`;
-    return `<span style="opacity:0.45">${n.sym}</span>`;
-  });
-  document.getElementById('full-eq').innerHTML = parts.join(' <span style="opacity:0.3">→</span> ');
-}
+</div><!-- /pipeline-wrap -->
+    
 
-function selectNode(i) {
-  if (active === i) {
-    active = null;
+    <!-- ══ DEEP DIVE DROPDOWN — v4 updated nodes ══ -->
+    <div class="dd-wrap">
+    <h2 class="sr-only">Deep dive: the v4 compression loss chain θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹) — five phases mapping each pipeline stage to a statistical operator and an AI class</h2>
+
+    <div id="dd-trigger" onclick="toggleDD()" style="
+      display:flex; align-items:flex-start; gap:14px; padding:14px 18px; cursor:pointer;
+      border:0.5px solid var(--border); border-radius:14px;
+      background:var(--glass); transition:background .18s; user-select:none;">
+      <div style="
+        width:32px; height:32px; border-radius:8px; flex-shrink:0; margin-top:2px;
+        background:var(--glass); border:1px solid var(--border);
+        display:flex; align-items:center; justify-content:center;
+        font-family:'Source Code Pro',monospace; font-size:15px; color:var(--text-secondary);">∂</div>
+      <div style="flex:1;">
+        <div style="font-family:'Inter',sans-serif; font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:3px;">
+          Deep dive: the v4 compression loss chain
+        </div>
+        <div style="font-family:'Source Code Pro','IBM Plex Mono',monospace; font-size:.68rem; color:var(--text-secondary); line-height:1.5;">
+          θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹) · five phases · ex-ante / ex-post separation
+        </div>
+      </div>
+      <div style="
+        font-family:'Inter',sans-serif; font-size:.55rem; letter-spacing:.14em; text-transform:uppercase;
+        padding:3px 10px; border-radius:99px; white-space:nowrap; flex-shrink:0; align-self:flex-start; margin-top:2px;
+        background:var(--glass); border:0.5px solid var(--border); color:var(--text-secondary);">
+        Five phases · algebra
+      </div>
+      <div id="dd-chev" style="font-size:14px; color:var(--text-secondary); align-self:center; flex-shrink:0; margin-left:4px; transition:transform .2s;">▾</div>
+    </div>
+
+    <div class="dd-body" id="dd-body">
+
+      <div class="eq-chain" id="eq-chain"></div>
+
+      <div class="full-eq" id="full-eq">
+        <span>θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹)</span>
+      </div>
+
+      <div id="node-detail-panel"></div>
+
+      <div class="dd-footer">
+        <span>Click any phase above to expand its algebra</span>
+        <button onclick="window.open('https://claude.ai/new?q=Walk+me+through+the+v4+compression+loss+chain+theta_t+through+L(theta_t%2B1)+step+by+step+with+concrete+examples+from+health+evidence+synthesis+at+WHO+India', '_blank')">Take me deeper ↗</button>
+      </div>
+
+    </div>
+    </div>
+
+
+    <script>
+    /* v4 TMVES nodes — five phases with updated algebra */
+    const NODES = [
+      {
+        sym: 'θᵗ',
+        label: 'Temporal Twin',
+        color: '#6faee8',
+        aiClass: 'World AI',
+        pentad: 'Phase I · Tensor',
+        eqLine: 'θᵗ = world-model at timestamp t',
+        hiTerms: ['θ', 'ᵗ'],
+        bodyHtml: `<strong>θᵗ is the temporal twin — the agent's full world-model at time t.</strong> Unlike the older static snapshot θ₀, θᵗ is explicitly timestamped. It encodes everything the agent knows, assumes, and has yet to learn at this specific moment. World AI (Gemini, GPT, Claude) has parametrized the most recent version of this across the training corpus.<br><br>In health evidence synthesis, θᵗ is the implicit model every researcher carries into a literature search: disciplinary priors, familiarity with certain journals, awareness of which grey literature sources exist. It is not neutral. It has a timestamp — and that timestamp determines which gaps are visible.<br><br><strong>VoI starts here.</strong> VoI = E[Δuncertainty]/η_cost measures how much uncertainty each possible next action would remove. The tensor phase is where you read the current uncertainty landscape before deciding which descent step to take.`,
+        pills: ['World-model θᵗ', 'Timestamped prior', 'VoI source', 'Epistemic standing']
+      },
+      {
+        sym: 'L₀+Σwᵢ·Lᵢ',
+        label: 'Composite Loss',
+        color: '#7ecbaa',
+        aiClass: 'Perception AI',
+        pentad: 'Phase II · Matrix',
+        eqLine: 'L₀+Σwᵢ·Lᵢ  where wᵢ = relevance(doc_i, query)',
+        hiTerms: ['L₀', 'wᵢ', 'Lᵢ'],
+        bodyHtml: `<strong>L₀+Σwᵢ·Lᵢ is the composite weighted loss.</strong> L₀ is the baseline epistemic cost before any evidence is read. Σwᵢ·Lᵢ sums document-level losses, each weighted by relevance wᵢ to the query. Perception AI (RAG pipelines, Elicit, Consensus) computes these weights — deciding what gets in.<br><br>This is the off-diagonal step: mapping co-variances between documents and the query rather than treating each source independently. A WHO India policy brief on PM-JAY has high wᵢ for a financial protection question; a Norwegian RCT has low wᵢ for the same question even if it's methodologically superior.<br><br><strong>The WEIRD-data bias lives here.</strong> If wᵢ is trained only on indexed literature, grey-literature sources get wᵢ ≈ 0 by default — not because they are irrelevant, but because the attention mechanism was never trained to see them. Correcting this is a manual act of epistemic sovereignty.`,
+        pills: ['Baseline L₀', 'Attention weights wᵢ', 'Relevance scoring', 'Grey-lit gap']
+      },
+      {
+        sym: 'f(σ²,λ,ε)',
+        label: 'Ex-Ante Gradient',
+        color: '#e8b84b',
+        aiClass: 'Agentic AI',
+        pentad: 'Phase III · Vector',
+        eqLine: 'η_safe = f(σ²,λ,ε)  ·  Δθ = −η_safe · ∇L',
+        hiTerms: ['σ²', 'λ', 'ε', 'η_safe'],
+        bodyHtml: `<strong>f(σ²,λ,ε) is the ex-ante gradient policy — the decision-time function.</strong> It returns η_safe: how aggressively to act given current uncertainty. σ²=diagnostic variance (how spread the evidence is), λ=irreversibility penalty (how costly a wrong step would be), ε=noise (how much the signal can be trusted). Agentic AI (AutoExtract pipelines, structured prompting) is in the business of minimising σ².<br><br><strong>This is Phase III, not the full descent step.</strong> The ex-ante policy shapes the gradient at decision time — before the federated ground truth arrives. It is the answer to: "given what we know right now, how much should we act?" The answer when FGT=∅ is: η_safe ≈ 0. Wait.<br><br><strong>This is the highest-ROI layer for AI adoption right now.</strong> AI extraction is not perfect, but its variance σ² is lower, more consistent, and auditable. Minimising f(σ²) is the exact quantity being reduced when a tool claims "5× faster extraction with 94% agreement."`,
+        pills: ['Variance σ²', 'Irreversibility λ', 'Noise ε', 'η_safe', 'Ex-ante · decision time']
+      },
+      {
+        sym: 'γ|ε_FGT|²',
+        label: 'Ex-Post Credit',
+        color: '#c49ae8',
+        aiClass: 'Generative AI',
+        pentad: 'Phase IV · Eigenmode',
+        eqLine: 'w_ijkᵗ⁺¹ = w_ijkᵗ − γ · ∂|ε_FGT|²/∂w_ijk',
+        hiTerms: ['γ', 'ε_FGT'],
+        bodyHtml: `<strong>γ|ε_FGT|² is the federated ground truth correction — the ex-post credit signal.</strong> It arrives after the decision window. ε_FGT = y_true − y_pred is the error between what the model predicted and what actually happened. γ is the intervention magnitude — how strongly to correct. Generative AI (Claude, GPT-4 in synthesis mode) approximates the eigenmode; the FGT term updates whether that approximation was right.<br><br><strong>The critical v4 distinction: this is not available at decision time.</strong> Anyone pushing for action before ε_FGT arrives is implicitly assuming FGT≈0 — treating the outcome as already known. The v4 architecture enforces: FGT unavailable → weight updates frozen → hold.<br><br>In evidence synthesis: the FGT is the empirical outcome that validates or refutes the recommendation. A policy brief on PM-JAY coverage is the ex-ante step. Measuring whether coverage actually improved financial protection one year later — that is the ε_FGT. The synthesis eigenmode is stable until that signal arrives.`,
+        pills: ['FGT error ε_FGT', 'Correction γ', 'Weight update w_ijk', 'Ex-post · learning time', 'Frozen if FGT=∅']
+      },
+      {
+        sym: 'L(θᵗ⁺¹)',
+        label: 'Prognosis Loop',
+        color: '#e87060',
+        aiClass: 'Embodied AI',
+        pentad: 'Phase V · Scalar',
+        eqLine: 'L(θᵗ⁺¹) = loss landscape after Bayesian update',
+        hiTerms: ['L', 'θᵗ⁺¹'],
+        bodyHtml: `<strong>L(θᵗ⁺¹) is the prognosis loop — the updated loss landscape after the cycle completes.</strong> The decision produces an outcome. The outcome reveals ε_FGT. ε_FGT updates the weights. The new weights reshape the prior θᵗ⁺¹. The next literature review begins with a better model. The loop closes here.<br><br>This is Phase V: the scalar. One recommendation, one decision-ready document — but also a live Bayesian update that improves every subsequent review. In health economics this is the equity correction: decisions that widen the poverty gap generate a quadratic penalty γ|ε_FGT|² that grows non-linearly, making equity violations increasingly expensive the worse they become.<br><br><strong>Sovereignty is the ability to specify your own loss function</strong> — to decide what γ is, what ε_FGT measures, and who bears the cost of getting it wrong. The scalar is not just a recommendation. It is a commitment to a particular future loss landscape. Okubala si Kulaba — to count is not to see.`,
+        pills: ['Updated prior θᵗ⁺¹', 'Bayesian update', 'Equity correction', 'Prognosis loop', 'Scalar decision']
+      }
+    ];
+
+    let active = null;
+
+    function renderChain() {
+      const c = document.getElementById('eq-chain');
+      c.innerHTML = '';
+      NODES.forEach((n, i) => {
+        if (i > 0) {
+          const arr = document.createElement('div');
+          arr.className = 'eq-arrow';
+          arr.textContent = '→';
+          c.appendChild(arr);
+        }
+        const wrap = document.createElement('div');
+        wrap.className = 'eq-node' + (active === i ? ' active' : '');
+        wrap.style.setProperty('--nb-color', n.color);
+        wrap.innerHTML = `<div class="eq-bubble">${n.sym}</div><div class="eq-label">${n.label}</div>`;
+        wrap.onclick = () => selectNode(i);
+        c.appendChild(wrap);
+      });
+    }
+
+    function renderFullEq(activeIdx) {
+      const parts = NODES.map((n, i) => {
+        if (i === activeIdx) return `<span class="hi">${n.sym}</span>`;
+        return `<span style="opacity:0.45">${n.sym}</span>`;
+      });
+      document.getElementById('full-eq').innerHTML = parts.join(' <span style="opacity:0.3">→</span> ');
+    }
+
+    function selectNode(i) {
+      if (active === i) {
+        active = null;
+        renderChain();
+        renderFullEq(-1);
+        document.getElementById('node-detail-panel').innerHTML = '';
+        return;
+      }
+      active = i;
+      renderChain();
+      renderFullEq(i);
+
+      const n = NODES[i];
+      const panel = document.getElementById('node-detail-panel');
+
+      const eqHighlighted = n.eqLine.replace(
+        new RegExp(n.hiTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'), 'g'),
+        m => `<span class="hi">${m}</span>`
+      );
+
+      panel.innerHTML = `
+        <div class="node-detail open" style="--nd-color:${n.color}">
+          <div class="nd-header">
+            <span class="nd-sym">${n.sym}</span>
+            <span class="nd-name">${n.pentad}</span>
+            <span class="nd-ai">${n.aiClass}</span>
+          </div>
+          <div class="nd-eq-row">${eqHighlighted}</div>
+          <div class="nd-body">${n.bodyHtml}</div>
+          <div class="nd-pills">
+            ${n.pills.map((p, pi) => `<span class="nd-pill${pi===0?' key':''}">${p}</span>`).join('')}
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    }
+
+    function toggleDD() {
+      const body = document.getElementById('dd-body');
+      const chev = document.getElementById('dd-chev');
+      const trigger = document.getElementById('dd-trigger');
+      const open = body.style.display === 'block';
+      body.style.display = open ? 'none' : 'block';
+      chev.style.transform = open ? '' : 'rotate(180deg)';
+      trigger.style.borderRadius = open ? '14px' : '14px 14px 0 0';
+      if (!open) { renderChain(); renderFullEq(-1); }
+    }
+
     renderChain();
     renderFullEq(-1);
-    document.getElementById('node-detail-panel').innerHTML = '';
-    return;
-  }
-  active = i;
-  renderChain();
-  renderFullEq(i);
+    </script>
 
-  const n = NODES[i];
-  const panel = document.getElementById('node-detail-panel');
+    <!-- ══ AI LAYER TAXONOMY (unchanged) ══ -->
+    <div class="session-content" style="margin-top:2.5rem;">
+      <h2>Five layers of AI in evidence work</h2>
+      <p>Before mapping tools to tasks, it helps to know what kind of AI you're dealing with. The taxonomy below — drawn from how AI actually enters health systems — maps each layer to its role in a literature review pipeline. Read it against the pipeline above: World AI and Perception AI operate at the search end (Phases I–II); Agentic AI handles extraction (Phase III); Generative AI produces the synthesis (Phase IV); Embodied AI audits the whole chain for bias, equity, and compliance (closing the loop into Phase V).</p>
+    </div>
 
-  const eqHighlighted = n.eqLine.replace(new RegExp(n.hiTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'), 'g'), m => `<span class="hi">${m}</span>`);
-
-  panel.innerHTML = `
-    <div class="node-detail open" style="--nd-color:${n.color}">
-      <div class="nd-header">
-        <span class="nd-sym">${n.sym}</span>
-        <span class="nd-name">${n.pentad}</span>
-        <span class="nd-ai">${n.aiClass}</span>
+    <div class="collapsible-wrap" style="margin:1.5rem 0 2.5rem;">
+      <div class="collapsible-header" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open');this.querySelector('.collapsible-chevron').classList.toggle('open');">
+        <div>
+          <div class="collapsible-title">AI Layer Taxonomy · Evidence Synthesis</div>
+          <div class="collapsible-meta">From embodied wisdom to the world's raw data — five layers, five roles</div>
+        </div>
+        <span class="collapsible-chevron">▾</span>
       </div>
-      <div class="nd-eq-row">${eqHighlighted}</div>
-      <div class="nd-body">${n.bodyHtml}</div>
-      <div class="nd-pills">
-        ${n.pills.map((p, pi) => `<span class="nd-pill${pi===0?' key':''}">${p}</span>`).join('')}
+      <div class="collapsible-body">
+        <div class="collapsible-inner">
+          <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+            <thead>
+              <tr>
+                <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);border-right:1px solid var(--border);">Layer</th>
+                <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);">Role in Evidence Synthesis · v4 Phase</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://en.wikipedia.org/wiki/Optimus_(robot)" target="_blank" style="color:var(--session-accent);text-decoration:none;">Embodied AI</a></td>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Audits the entire workflow — bias detection, equity checks, PRISMA compliance · <strong style="color:var(--phase-S)">Phase V · Scalar · L(θᵗ⁺¹)</strong></td>
+              </tr>
+              <tr>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/alpha/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Generative AI</a></td>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Synthesizes findings into reports, policy briefs, and insights · <strong style="color:var(--phase-E)">Phase IV · Eigenmode · γ|ε_FGT|²</strong></td>
+              </tr>
+              <tr>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://www.oracle.com/news/announcement/oracle-ushers-in-new-era-of-ai-driven-electronic-health-records-2025-08-13/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Agentic AI</a></td>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Automates screening, extraction, and repetitive tasks · <strong style="color:var(--phase-V)">Phase III · Vector · f(σ²,λ,ε)</strong></td>
+              </tr>
+              <tr>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/who-03-rank/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Perception AI</a></td>
+                <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Ingests specific literature across journals, languages, and grey sources · <strong style="color:var(--phase-M)">Phase II · Matrix · L₀+Σwᵢ·Lᵢ</strong></td>
+              </tr>
+              <tr>
+                <td style="padding:.75rem 1rem;border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://gemini.google.com/app" target="_blank" style="color:var(--session-accent);text-decoration:none;">World AI</a></td>
+                <td style="padding:.75rem 1rem;color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Understands general science across all domains · <strong style="color:var(--phase-T)">Phase I · Tensor · θᵗ</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-family:'Inter',sans-serif;font-size:.65rem;letter-spacing:.08em;color:var(--text-secondary);opacity:.55;margin-top:1rem;line-height:1.5;font-style:italic;">No standard classification exists — this taxonomy is inspired by how AI actually enters health system procurement and workflow. <a href="https://ukb-dt.github.io/who-03-b/" target="_blank" style="color:var(--session-accent);opacity:.8;">Full reference →</a></p>
+        </div>
       </div>
     </div>
-  `;
 
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
-}
-
-function toggleDD() {
-  const trigger = document.getElementById('dd-trigger');
-  const body = document.getElementById('dd-body');
-  trigger.classList.toggle('open');
-  body.classList.toggle('open');
-}
-
-renderChain();
-renderFullEq(-1);
-</script>
-
-
-  <!-- ── AI LAYER TAXONOMY ── -->
-<div class="session-content" style="margin-top:2.5rem;">
-  <h2>Five layers of AI in evidence work</h2>
-  <!-- ── FIX 2: one sentence binding each AI layer to a pipeline stage.
-       Addresses GPT's observation that the taxonomy "floats" without explicit pipeline attachment.
-       The sentence is short, factual, and lives naturally in the intro paragraph.
-       No table structure altered. ── -->
-  <p>Before mapping tools to tasks, it helps to know what kind of AI you're dealing with. The taxonomy below — drawn from how AI actually enters health systems — maps each layer to its role in a literature review pipeline. Read it against the pipeline above: World AI and Perception AI operate at the search end; Agentic AI handles extraction; Generative AI produces the synthesis and brief; Embodied AI audits the whole chain for bias and compliance.</p>
-</div>
-
-<div class="collapsible-wrap" style="margin:1.5rem 0 2.5rem;">
-  <div class="collapsible-header" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open');this.querySelector('.collapsible-chevron').classList.toggle('open');">
-    <div>
-      <div class="collapsible-title">AI Layer Taxonomy · Evidence Synthesis</div>
-      <div class="collapsible-meta">From embodied wisdom to the world's raw data — five layers, five roles</div>
-    </div>
-    <span class="collapsible-chevron">▾</span>
-  </div>
-  <div class="collapsible-body">
-    <div class="collapsible-inner">
-      <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
-        <thead>
-          <tr>
-            <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);border-right:1px solid var(--border);">Layer</th>
-            <th style="background:color-mix(in srgb,var(--session-accent) 12%,transparent);color:var(--session-accent);font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--session-accent);">Role in Evidence Synthesis</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://en.wikipedia.org/wiki/Optimus_(robot)" target="_blank" style="color:var(--session-accent);text-decoration:none;">Embodied AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Audits the entire workflow — bias detection, equity checks, PRISMA compliance (Human in loop for now, but AGI coming soon...)</td>
-          </tr>
-          <tr>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/alpha/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Generative AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Synthesizes findings into reports, policy briefs, and insights — think: ChatGPT</td>
-          </tr>
-          <tr>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://www.oracle.com/news/announcement/oracle-ushers-in-new-era-of-ai-driven-electronic-health-records-2025-08-13/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Agentic AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Automates screening, extraction, and repetitive tasks — on identified literature</td>
-          </tr>
-          <tr>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://ukb-dt.github.io/who-03-rank/" target="_blank" style="color:var(--session-accent);text-decoration:none;">Perception AI</a></td>
-            <td style="padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Ingests specific literature across journals, languages, and grey sources — via PDF upload, web scraping and API integrations</td>
-          </tr>
-          <tr>
-            <td style="padding:.75rem 1rem;border-right:1px solid var(--border);font-weight:600;color:var(--text);font-family:'Inter',sans-serif;white-space:nowrap;"><a href="https://gemini.google.com/app" target="_blank" style="color:var(--session-accent);text-decoration:none;">World AI</a></td>
-            <td style="padding:.75rem 1rem;color:var(--text-secondary);font-family:'Inter',sans-serif;line-height:1.5;">Understands general science: basic, clinical, public health, health economics, etc — the raw environment</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-family:'Inter',sans-serif;font-size:.65rem;letter-spacing:.08em;color:var(--text-secondary);opacity:.55;margin-top:1rem;line-height:1.5;font-style:italic;">No standard classification exists — this taxonomy is inspired by how AI actually enters health system procurement and workflow. <a href="https://ukb-dt.github.io/who-03-b/" target="_blank" style="color:var(--session-accent);opacity:.8;">Full reference →</a></p>
-    </div>
-  </div>
-</div>
     <p>The red steps account for roughly 60–70% of total review time in a standard health economics evidence review. They are also the steps most likely to be done inconsistently under time pressure, which means the quality of the final brief is often determined not by the synthesis but by what got dropped during screening.</p>
 
     <h2>The four bottlenecks specific to WHO India</h2>
@@ -1187,7 +1413,7 @@ renderFullEq(-1);
 
     <div class="takeaway">
       <h3>🎯 Key takeaway</h3>
-      <p>The existing process is not the enemy — it is the baseline. The three steps that consume the most time — <strong>database search, title/abstract screening, and data extraction</strong> — are precisely the steps Session 2 maps to 20 AI tools. The goal of this curriculum is not to replace your judgment but to compress the mechanical steps so that more of your working week is spent on the parts that require it: defining the right question, applying the equity lens, and translating findings into something a decision-maker can act on.</p>
+      <p>The existing process is not the enemy — it is the baseline. The three steps that consume the most time — <strong>database search, title/abstract screening, and data extraction</strong> — correspond to Phases I–III of the TMVES chain: θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε). These are precisely the steps Session 2 maps to 20 AI tools. The goal of this curriculum is not to replace your judgment but to compress the mechanical steps so that more of your working week is spent on the parts that require it: defining the right question, applying the equity lens, and translating findings into something a decision-maker can act on — Phase V.</p>
     </div>
 
   </div><!-- /session-content -->
@@ -1208,7 +1434,7 @@ renderFullEq(-1);
     spine.style.height = Math.min(pct, 100) + '%';
   }, { passive: true });
 
-  /* ── self-audit widget ── */
+  /* ── self-audit widget (unchanged) ── */
   const answers = [null, null, null, null, null];
   const labels  = [
     'question scoping',
