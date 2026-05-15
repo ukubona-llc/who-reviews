@@ -1,5 +1,10 @@
 - Session 1? Great!
   - Output from Session 3 = Prompt Engineering (top-tier LLMs) for Next Iteration
+     - A serious constraint emerges
+     - Namely, free tokens / day
+     - Freemium model dominates
+     - But you'll need a paid subscription 
+     - Massive prompt (emerging from real-work) dictates that 
   - This was a master-stroke
   - Lived experience!
   - Developed a vocabulary
@@ -8,4 +13,6 @@
      - Philosophy of AI (augmentation of our body, mind, soul ain't new)
      - Danger of AI (full-stack grounding)  
 - Session 2 
-   - Coming soon.. 
+   - Freemium is best
+   - But one must spend money
+   - Inescapable
