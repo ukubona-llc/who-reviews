@@ -1,0 +1,11 @@
+- Session 1? Great!
+  - Output from Session 3 = Prompt Engineering for Next Iteration
+  - This was a master-stroke
+  - Lived experience!
+  - Developed a vocabulary
+  - We dived into a lot
+     - Ethics of AI (just cite in methods)
+     - Philosophy of AI (augmentation of our body, mind, soul ain't new)
+     - Danger of AI (full-stack grounding)  
+- Session 2 
+   - Coming soon.. 
