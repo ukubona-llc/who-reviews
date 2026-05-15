@@ -1,5 +1,5 @@
 - Session 1? Great!
-  - Output from Session 3 = Prompt Engineering for Next Iteration
+  - Output from Session 3 = Prompt Engineering (top-tier LLMs) for Next Iteration
   - This was a master-stroke
   - Lived experience!
   - Developed a vocabulary
